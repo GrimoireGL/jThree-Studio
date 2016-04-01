@@ -1,0 +1,133 @@
+// Color variables (appears count calculates by raw css)
+@color0: #bbb; // Appears 3 times
+
+.editor-theme {
+  .editor-container {
+    background: #fafafa;
+    font-family: 'Titillium';
+  }
+
+  .editors {
+    height: 50vh;
+    width: 100%;
+    position: relative;
+  }
+
+  .clearfix {
+    &:after {
+      clear: both;
+      content: "";
+      display: block;
+    }
+  }
+
+  .left-side {
+    float: left;
+    width: 50%;
+  }
+
+  .right-side {
+    border-left: 1px solid @color0;
+    box-sizing: border-box;
+    float: right;
+    height: 100vh;
+    width: 50%;
+  }
+
+  .goml-editor {
+    border-bottom: 1px solid @color0;
+    box-sizing: border-box;
+  }
+
+  [class*="-editor-wrap"] {
+    position: relative;
+  }
+
+  [class*="-caption"] {
+    position: absolute;
+    z-index: 1000;
+    top: 15px;
+    right: 20px;
+    background: rgba(0,0,0,0.1);
+    padding: 1px 17px 3px;
+    border-radius: 100px;
+    border: 1px solid rgba(0,0,0,0.3);
+    // color: white;
+    font-size: 14px;
+  }
+
+  .left-top-wrapper {
+    box-sizing: border-box;
+    padding: 40px 60px;
+    height: 40vh;
+    background: url('/images/gplaypattern.png');
+  }
+
+  .jthree-logo {
+    float: left;
+  }
+
+  .name-logo {
+    margin: -60px 0;
+  }
+
+  .function-buttons {
+    float: left;
+    margin-left: 40px;
+    padding-top: 30px;
+    span {
+      line-height: 30px;
+      vertical-align: center;
+      padding: 4px 24px 4px 8px;
+      font-size: 20px;
+    }
+    #execute {
+      &:hover {
+        background: rgba(255,170,104, 0.3);
+      }
+      span {
+        border-bottom: 2px solid #FFAA68;
+      }
+    }
+    #reformat {
+      &:hover {
+        background: rgba(173,211,151, 0.3);
+      }
+      span {
+        border-bottom: 2px solid #ADD397;
+      }
+    }
+    #generate {
+      &:hover {
+        background: rgba(80,166,208, 0.3);
+      }
+      span {
+        border-bottom: 2px solid #50A6D0;
+      }
+    }
+
+    > div {
+      padding: 10px 20px;
+      cursor: pointer;;
+    }
+  }
+
+  .function-icon {
+    opacity: 0.9;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .result {
+    border-top: 1px solid @color0;
+    padding-top: 3px;
+    margin-top: -3px;
+  }
+
+  #jthree-iframe {
+    border: none;
+    height: 60vh;
+    width: 100%;
+    vertical-align: bottom;
+  }
+}
