@@ -39,7 +39,7 @@
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node server.js",
+    "start": "sudo sails lift --port=80",
     "watch": "gulp watch"
   },
   "main": "server.js",
