@@ -251,7 +251,8 @@
 
     IframeCtrl.prototype.generateIframe = function(gomlCode, jsCode) {
       var code;
-      code = "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\"/>\n    <link rel=\"stylesheet\" href=\"/styles/importer.css\">\n    <script type=\"text/javascript\" src=\"/js/j3.js\"></script>\n  </head>\n  <body>\n    <div class=\"iframe-theme\">\n      <div class=\"container\">\n        <div id=\"canvas\" class=\"canvasContainer\"/>\n      </div>\n    </div>\n    <script type=\"text/goml\">\n      <!-- your goml here --> " + gomlCode + "</script>\n<script type=\"text/javascript\">\n  //<![CDATA[\n    // your js here " + jsCode + "      //]]>\n    </script>\n  </body>\n</html>";
+      console.log(jsCode);
+      code = "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\"/>\n    <link rel=\"stylesheet\" href=\"/styles/importer.css\">\n    <script type=\"text/javascript\" src=\"/js/j3.js\"></script>\n  </head>\n  <body>\n    <div class=\"iframe-theme\">\n      <div class=\"container\">\n        <div id=\"canvas\" class=\"canvasContainer\"/>\n      </div>\n    </div>\n    <script type=\"text/goml\">\n      <!-- your goml here --> " + gomlCode + "</script>\n<script type=\"text/javascript\">\n  //<![CDATA[\n    /* your js here */ " + jsCode + "      //]]>\n    </script>\n  </body>\n</html>";
       return this.setIframeInner(code);
     };
 
