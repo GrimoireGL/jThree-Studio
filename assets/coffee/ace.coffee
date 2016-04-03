@@ -4,9 +4,8 @@ require 'brace/mode/xml'
 require 'brace/theme/jthree'
 
 class Ace
-  constructor: (editorName) ->
-    @editorName = editorName
-    @editorLang = if editorName == "goml" then "xml" else editorName
+  constructor: (@editorName) ->
+    @editorLang = if @editorName == "goml" then "xml" else if @editorName == "glsl" then "xml" else @editorName
     @editor = ace.edit("#{@editorName}-editor")
     @editor.getSession().setMode "ace/mode/#{@editorLang}"
     @editor.setTheme 'ace/theme/jthree'

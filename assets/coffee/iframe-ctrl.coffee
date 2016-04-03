@@ -24,7 +24,8 @@ class IframeCtrl
     """
     @setIframeInner code
 
-  generateIframe: (gomlCode, jsCode) ->
+  generateIframe: ({goml, js, xmml}) ->
+    goml = goml.replace('{{XMML_SOURCE_URL}}', "/api/xmml/#{xmml}")
     code = """
       <!DOCTYPE html>
       <html lang="en">
@@ -41,12 +42,12 @@ class IframeCtrl
           </div>
           <script type="text/goml">
             <!-- your goml here --> """ +
-            gomlCode + """
+            goml + """
           </script>
           <script type="text/javascript">
             //<![CDATA[
               // your js here """ +
-              jsCode + """
+              js + """
             //]]>
           </script>
         </body>

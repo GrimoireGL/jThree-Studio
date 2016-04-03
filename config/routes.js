@@ -37,6 +37,8 @@ module.exports.routes = {
   'get /preview/:key': 'ShortUrl.redirect',
   'get /': 'Editor.index',
   'get /editor/': '/',
+  'get /api/xmml': 'OneTimeXmml.generate',
+  'get /api/xmml/:xmml': 'OneTimeXmml.generate',
 
   /***************************************************************************
   *                                                                          *

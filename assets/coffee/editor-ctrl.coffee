@@ -4,6 +4,7 @@ IframeCtrl = require './iframe-ctrl'
 Editor = require './ace'
 gomlEditor = new Editor 'goml'
 jsEditor = new Editor 'javascript'
+xmmlEditor = new Editor 'xmml'
 beautify = require('js-beautify')
 jsBeautify = beautify.js_beautify
 gomlBeautify = beautify.html_beautify
@@ -25,8 +26,8 @@ class EditorCtrl
       @setStateFromEditor goml: code
     jsEditor.watch (code) =>
       @setStateFromEditor js: code
-    window.onhashchange = =>
-      console.log @state
+    xmmlEditor.watch (code) =>
+      @setStateFromEditor xmml: code
     $ =>
       $ '#execute'
         .click =>
@@ -75,6 +76,6 @@ class EditorCtrl
         modal.shortUrl "#{location.origin}/preview/#{key}"
 
   run: =>
-    @iframe.generateIframe @state.goml, @state.js
+    @iframe.generateIframe @state
 
 module.exports = EditorCtrl
