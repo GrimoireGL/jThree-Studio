@@ -25,6 +25,7 @@ class IframeCtrl
     @setIframeInner code
 
   generateIframe: (gomlCode, jsCode) ->
+    console.log jsCode
     code = """
       <!DOCTYPE html>
       <html lang="en">
@@ -45,7 +46,7 @@ class IframeCtrl
           </script>
           <script type="text/javascript">
             //<![CDATA[
-              // your js here """ +
+              /* your js here */ """ +
               jsCode + """
             //]]>
           </script>
