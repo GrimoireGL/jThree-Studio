@@ -7,4 +7,4 @@ module.exports =
 
   attributes:
     key: 'string'
-    query: 'string'
+    query: 'text'

@@ -11,7 +11,7 @@ module.exports =
       unique: true
       required: true
     query:
-      type: 'string'
+      type: 'text'
       required: true
 
     toJSON: ->
