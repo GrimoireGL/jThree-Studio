@@ -10,6 +10,7 @@ gomlBeautify = beautify.html_beautify
 $ = require 'jquery'
 request = require 'request'
 modal = require './modal'
+conf = require './editor-config'
 
 class EditorCtrl
   constructor: (@scope, @location) ->
@@ -47,8 +48,14 @@ class EditorCtrl
 
   setStateFromUrl: =>
     query = location.hash.match(/#\?(.+$)/)?[1] || ""
-    @setState qs.parse(query), =>
+    isQueryEmpty = query == ""
+    state = if isQueryEmpty then conf.defaultCode else qs.parse(query)
+    @setState state, =>
       @setCode @state
+      if isQueryEmpty
+        setTimeout =>
+            @run()
+          , 0
 
   setCode: (state) =>
     jsEditor.setCode state.js
