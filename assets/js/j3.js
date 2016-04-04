@@ -225,7 +225,7 @@ function applyMixins(derivedCtor, baseCtors) {
 applyMixins(JThreeObjectEE, [_events.EventEmitter]);
 exports.default = JThreeObjectEE;
 
-},{"./JThreeObject":3,"events":315}],5:[function(require,module,exports){
+},{"./JThreeObject":3,"events":318}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -272,7 +272,7 @@ function applyMixins(derivedCtor, baseCtors) {
 applyMixins(JThreeObjectEEWithID, [_events.EventEmitter]);
 exports.default = JThreeObjectEEWithID;
 
-},{"./JThreeObjectWithID":6,"events":315}],6:[function(require,module,exports){
+},{"./JThreeObjectWithID":6,"events":318}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -623,7 +623,7 @@ var Canvas = function (_CanvasRegion) {
 
 exports.default = Canvas;
 
-},{"../../ContextComponents":8,"../../Exceptions":154,"../../JThreeContext":262,"../../Math/Color4":265,"../../Math/Rectangle":271,"./CanvasRegion":12,"./CanvasSizeChangedEventArgs":13,"./GL/GLExtensionRegistory":20}],10:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../Exceptions":159,"../../JThreeContext":267,"../../Math/Color4":270,"../../Math/Rectangle":276,"./CanvasRegion":12,"./CanvasSizeChangedEventArgs":13,"./GL/GLExtensionRegistory":20}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -844,7 +844,7 @@ var CanvasManager = function (_JThreeObjectEE) {
 
 exports.default = CanvasManager;
 
-},{"../../Base/JThreeObjectEE":4,"../../ContextComponents":8,"../../JThreeContext":262}],12:[function(require,module,exports){
+},{"../../Base/JThreeObjectEE":4,"../../ContextComponents":8,"../../JThreeContext":267}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1087,7 +1087,7 @@ var CanvasRegion = function (_JThreeObjectEEWithID) {
 
 exports.default = CanvasRegion;
 
-},{"../../Base/JThreeObjectEEWithID":5,"../../ContextComponents":8,"../../JThreeContext":262}],13:[function(require,module,exports){
+},{"../../Base/JThreeObjectEEWithID":5,"../../ContextComponents":8,"../../JThreeContext":267}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1696,8 +1696,8 @@ var BasicGeometry = function (_IndexedGeometry) {
     }
 
     _createClass(BasicGeometry, [{
-        key: "applyAttributeVariables",
-        value: function applyAttributeVariables(pWrapper, attributes) {
+        key: "__applyAttributeVariables",
+        value: function __applyAttributeVariables(pWrapper, attributes) {
             this.__assignAttributeIfExists(pWrapper, attributes, "position", this.positionBuffer);
             this.__assignAttributeIfExists(pWrapper, attributes, "normal", this.normalBuffer);
             this.__assignAttributeIfExists(pWrapper, attributes, "uv", this.uvBuffer);
@@ -1761,6 +1761,15 @@ var Geometry = function (_jThreeObject) {
     }
 
     _createClass(Geometry, [{
+        key: "useGeometry",
+        value: function useGeometry(pWrapper, attributes) {
+            if (Geometry.lastGeometry !== this || Geometry.lastProgram !== pWrapper) {
+                this.__applyAttributeVariables(pWrapper, attributes);
+                Geometry.lastGeometry = this;
+                Geometry.lastProgram = pWrapper;
+            }
+        }
+    }, {
         key: "__assignAttributeIfExists",
         value: function __assignAttributeIfExists(pWrapper, attributes, valName, buffer) {
             if (attributes[valName]) {
@@ -1777,6 +1786,8 @@ var Geometry = function (_jThreeObject) {
     return Geometry;
 }(_JThreeObject2.default);
 
+Geometry.lastGeometry = null;
+Geometry.lastProgram = null;
 exports.default = Geometry;
 
 },{"../../../Base/JThreeObject":3}],23:[function(require,module,exports){
@@ -1985,7 +1996,7 @@ var GeometryBuilder = function () {
 
 exports.default = GeometryBuilder;
 
-},{"../../../Math/Vector3":273}],24:[function(require,module,exports){
+},{"../../../Math/Vector3":278}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2049,7 +2060,10 @@ var IndexedGeometry = function (_Geometry) {
     }, {
         key: "drawElements",
         value: function drawElements(canvas, material) {
-            this.__bindIndexBuffer(canvas);
+            if (IndexedGeometry.lastIndexedGeometry !== this) {
+                this.__bindIndexBuffer(canvas);
+                IndexedGeometry.lastIndexedGeometry = this;
+            }
             canvas.gl.drawElements(this.primitiveTopology, material.getDrawGeometryLength(this), this.indexBuffer.ElementType, material.getDrawGeometryOffset(this));
         }
         /**
@@ -2282,7 +2296,7 @@ var CircleGeometry = function (_BasicGeometry) {
 
 exports.default = CircleGeometry;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../../Math/Vector3":273,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],27:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"../../Math/Vector3":278,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],27:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2362,7 +2376,7 @@ var ConeGeometry = function (_BasicGeometry) {
 
 exports.default = ConeGeometry;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],28:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2441,7 +2455,7 @@ var CubeGeometry = function (_BasicGeometry) {
 
 exports.default = CubeGeometry;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../../Math/Vector3":273,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],29:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"../../Math/Vector3":278,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2525,7 +2539,7 @@ var CylinderGeometry = function (_BasicGeometry) {
 
 exports.default = CylinderGeometry;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../../Math/Vector3":273,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],30:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"../../Math/Vector3":278,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2645,7 +2659,7 @@ var GridGeometry = function (_BasicGeometry) {
 
 exports.default = GridGeometry;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"./Base/BasicGeometry":21}],31:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"./Base/BasicGeometry":21}],31:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2729,7 +2743,7 @@ var QuadGeometry = function (_BasicGeometry) {
 
 exports.default = QuadGeometry;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],32:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],32:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2823,7 +2837,7 @@ var SphereGeometry = function (_BasicGeometry) {
 
 exports.default = SphereGeometry;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../../Math/Vector3":273,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],33:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"../../Math/Vector3":278,"./Base/BasicGeometry":21,"./Base/GeometryBuilder":23}],33:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2929,7 +2943,7 @@ var TriangleGeometry = function (_BasicGeometry) {
 
 exports.default = TriangleGeometry;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../../Math/Vector3":273,"./Base/BasicGeometry":21}],34:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"../../Math/Vector3":278,"./Base/BasicGeometry":21}],34:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3108,17 +3122,13 @@ var _Material2 = require("./Material");
 
 var _Material3 = _interopRequireDefault(_Material2);
 
-var _ContextComponents = require("../../ContextComponents");
-
-var _ContextComponents2 = _interopRequireDefault(_ContextComponents);
-
-var _JThreeContext = require("../../JThreeContext");
-
-var _JThreeContext2 = _interopRequireDefault(_JThreeContext);
-
 var _MaterialPass = require("../Pass/MaterialPass");
 
 var _MaterialPass2 = _interopRequireDefault(_MaterialPass);
+
+var _XMMLParser = require("./Parser/XMMLParser");
+
+var _XMMLParser2 = _interopRequireDefault(_XMMLParser);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3136,11 +3146,14 @@ var BasicMaterial = function (_Material) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BasicMaterial).call(this));
 
-        _this._passes = [];
-        _this._uniformRegisters = [];
-        _this._passCount = 0;
         _this._mergedShaderVariables = {};
-        _this._parseMaterialDocument(sourceString, name);
+        _XMMLParser2.default.parse(name, sourceString).then(function (desc) {
+            _this._description = desc;
+            _this._passes = desc.pass.map(function (pass) {
+                return new _MaterialPass2.default(_this, pass);
+            });
+            _this.__setLoaded();
+        });
         return _this;
     }
 
@@ -3166,7 +3179,7 @@ var BasicMaterial = function (_Material) {
             _get(Object.getPrototypeOf(BasicMaterial.prototype), "apply", this).call(this, matArg);
             this._mergedShaderVariables = _ArgumentMerger2.default.merge(matArg.renderStage, this, matArg.object); // should be optimized
             var targetPass = this._passes[matArg.passIndex];
-            targetPass.apply(matArg, this._uniformRegisters, this, this._mergedShaderVariables);
+            targetPass.apply(matArg, this._description.registerers, this, this._mergedShaderVariables);
         }
         /**
         * Should return how many times required to render this material.
@@ -3177,62 +3190,12 @@ var BasicMaterial = function (_Material) {
     }, {
         key: "getPassCount",
         value: function getPassCount(techniqueIndex) {
-            return this._passCount;
-        }
-    }, {
-        key: "_parseMaterialDocument",
-        value: function _parseMaterialDocument(source, name) {
-            var _this2 = this;
-
-            var xmml = new DOMParser().parseFromString(source, "text/xml");
-            this._materialName = xmml.querySelector("material").getAttribute("name");
-            this._materialGroup = xmml.querySelector("material").getAttribute("group");
-            if (!this._materialName && !name) {
-                console.error("Material name must be specified");
-            }
-            this._materialName = this._materialName || name;
-            this._initializeUniformRegisters(xmml);
-            this._parsePasses(xmml).then(function () {
-                _this2.__setLoaded();
-            });
-        }
-    }, {
-        key: "_parsePasses",
-        value: function _parsePasses(doc) {
-            var _this3 = this;
-
-            var passes = doc.querySelectorAll("material > passes > pass");
-            for (var i = 0; i < passes.length; i++) {
-                var pass = passes.item(i);
-                this._passes.push(new _MaterialPass2.default(this, pass, this._materialName, i));
-            }
-            this._passCount = passes.length;
-            return Promise.all(this._passes.map(function (e) {
-                return e.initialize(_this3._uniformRegisters);
-            }));
-        }
-    }, {
-        key: "_initializeUniformRegisters",
-        value: function _initializeUniformRegisters(doc) {
-            var registersDOM = doc.querySelectorAll("material > uniform-register > register");
-            for (var i = 0; i < registersDOM.length; i++) {
-                var registerDOM = registersDOM.item(i);
-                var registererConstructor = this._materialManager.getUniformRegister(registerDOM.attributes.getNamedItem("name").value);
-                if (!registererConstructor) {
-                    continue;
-                }
-                this._uniformRegisters.push(new registererConstructor());
-            }
+            return this._description.pass.length;
         }
     }, {
         key: "MaterialGroup",
         get: function get() {
-            return this._materialGroup;
-        }
-    }, {
-        key: "_materialManager",
-        get: function get() {
-            return _JThreeContext2.default.getContextComponent(_ContextComponents2.default.MaterialManager);
+            return this._description.group;
         }
     }]);
 
@@ -3241,7 +3204,7 @@ var BasicMaterial = function (_Material) {
 
 exports.default = BasicMaterial;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../Pass/MaterialPass":60,"./ArgumentMerger":35,"./Material":57}],37:[function(require,module,exports){
+},{"../Pass/MaterialPass":62,"./ArgumentMerger":35,"./Material":57,"./Parser/XMMLParser":60}],37:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3274,7 +3237,7 @@ var HitAreaMaterial = function (_BasicMaterial) {
     function HitAreaMaterial() {
         _classCallCheck(this, HitAreaMaterial);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(HitAreaMaterial).call(this, require("../BuiltIn/HitAreaTest.xmml")));
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(HitAreaMaterial).call(this, require("../BuiltIn/HitAreaTest.xmml"), "builtin.hitarea"));
     }
 
     _createClass(HitAreaMaterial, [{
@@ -3292,7 +3255,7 @@ var HitAreaMaterial = function (_BasicMaterial) {
 
 exports.default = HitAreaMaterial;
 
-},{"../../../Math/Vector4":274,"../BasicMaterial":36,"../BuiltIn/HitAreaTest.xmml":43}],38:[function(require,module,exports){
+},{"../../../Math/Vector4":279,"../BasicMaterial":36,"../BuiltIn/HitAreaTest.xmml":43}],38:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3321,7 +3284,7 @@ var PrimaryBufferMaterial = function (_BasicMaterial) {
     function PrimaryBufferMaterial() {
         _classCallCheck(this, PrimaryBufferMaterial);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(PrimaryBufferMaterial).call(this, require("../BuiltIn/GBuffer/PrimaryBuffer.xmml")));
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(PrimaryBufferMaterial).call(this, require("../BuiltIn/GBuffer/PrimaryBuffer.xmml"), "builtin.gbuffer.1"));
     }
 
     _createClass(PrimaryBufferMaterial, [{
@@ -3346,35 +3309,35 @@ exports.default = PrimaryBufferMaterial;
 },{"../BasicMaterial":36,"../BuiltIn/GBuffer/PrimaryBuffer.xmml":41}],39:[function(require,module,exports){
 module.exports = "vec4 packUNorm32(const highp float value)\n{\n  const vec4 bitSh = vec4(256.0*256.0*256.0, 256.0*256.0, 256.0, 1.0);\n  const vec4 bitMsk = vec4(0.0, 1.0/256.0, 1.0/256.0, 1.0/256.0);\n  vec4 res = fract(value * bitSh);\n  res -= res.xxyz * bitMsk;\n  return res;\n}\n\nvec4 packRanged32(const highp float value,const highp float minimum,const highp float maximum)\n{\n  return packUNorm32((value-minimum)/(maximum - minimum));\n}\n\nhighp float unpackUNorm32(const vec4 value)\n{\n  const vec4 bitSh = vec4(1.0/(256.0*256.0*256.0), 1.0/(256.0*256.0), 1.0/256.0, 1.0);\n  return(dot(value, bitSh));\n}\n\nhighp float unpackRanged32(const vec4 value,const highp float minimum,const highp float maximum)\n{\n  return unpackUNorm32(value) * (maximum - minimum) + minimum;\n}\n\nvec3 packUNorm24(const highp float value){\n  const vec3 bitSh = vec3(256.0*256.0, 256.0, 1.0);\n  const vec3 bitMsk = vec3(0.0, 1.0/256.0, 1.0/256.0);\n  highp vec3 res = fract(value * bitSh);\n  res -= res.xxy * bitMsk;\n  return res;\n}\n\nvec3 packRanged24(const highp float value,const highp float minimum,const highp float maximum){\n  return packUNorm24((value - minimum)/(maximum - minimum));\n}\n\nhighp float unpackUNorm24(const vec3 value)\n{\n  const vec3 bitSh = vec3(1.0/(256.0*256.0), 1.0/256.0, 1.0);\n  return(dot(value, bitSh));\n}\n\nhighp float unpackRanged24(const vec3 value,const highp float minimum,const highp float maximum){\n  return unpackUNorm24(value) * (maximum - minimum) + minimum;\n}\n\nvec2 packUNorm16(const highp float value){\n  const highp vec2 bitSh = vec2(256.0, 1.0);\n  const highp vec2 bitMsk = vec2(0.0, 1.0/256.0);\n  vec2 res = fract(value * bitSh);\n  res -= res.xx * bitMsk;\n  return res;\n}\n\nvec2 packRanged16(const highp float value,const highp float minimum,const highp float maximum){\n  return packUNorm16((value - minimum)/(maximum - minimum));\n}\n\nhighp float unpackUNorm16(const highp vec2 value)\n{\n  const highp vec2 bitSh = vec2(1.0/256.0, 1.0);\n  return(dot(value, bitSh));\n}\n\nhighp float unpackRanged16(const vec2 value,const highp float minimum,const highp float maximum){\n  return unpackUNorm16(value) * (maximum - minimum) + minimum;\n}\n"
 },{}],40:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"builtin.depth\" group=\"builtin.depth\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n</uniform-register>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec4 position;\n      varying highp vec4 vPosition;\n\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n        \tvPosition = gl_Position  = _matPVM * position;\n        }\n      }\n\n      @frag{\n        @import \"builtin.packing\"\n\n        void main(void)\n        {\n        \tgl_FragColor.rgb = packRanged24(vPosition.z/vPosition.w,-1.,1.);\n        }\n      }\n\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"builtin.depth\" group=\"builtin.depth\" order=\"300\">\n<registers>\n  <register name=\"builtin.basic\"/>\n</registers>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec4 position;\n      varying highp vec4 vPosition;\n\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n        \tvPosition = gl_Position  = _matPVM * position;\n        }\n      }\n\n      @frag{\n        @import \"builtin.packing\"\n\n        void main(void)\n        {\n        \tgl_FragColor.rgb = packRanged24(vPosition.z/vPosition.w,-1.,1.);\n        }\n      }\n\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
 },{}],41:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.gbuffer.1\" group=\"jthree.basic.gbuffer.1\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n</uniform-register>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec4 position;\n      attribute vec3 normal;\n      varying vec3 vNormal;\n\n      @vert{\n        uniform mat4 _matVM;\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n        \tgl_Position  = _matPVM * position;\n        \tvNormal =normalize(( _matVM * vec4(normal,0)).xyz);\n        }\n      }\n\n      @frag{\n        @import \"builtin.packing\"\n        @import \"builtin.gbuffer-packing\"\n\n        vec2 compressNormal()\n        {\n        \tfloat p = sqrt(vNormal.z * 8. + 8.);\n        \treturn vNormal.xy/p + 0.5;\n        }\n\n        vec4 packedNormal()\n        {\n          vec2 cNor = compressNormal();\n          return vec4(packRanged16(cNor.x,CNOR_MIN,CNOR_MAX),packRanged16(cNor.y,CNOR_MIN,CNOR_MAX));\n        }\n\n        void main(void)\n        {\n        \tgl_FragColor = packedNormal();\n        }\n      }\n\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.gbuffer.1\" group=\"jthree.basic.gbuffer.1\" order=\"300\">\n<registers>\n  <register name=\"builtin.basic\"/>\n</registers>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec4 position;\n      attribute vec3 normal;\n      varying vec3 vNormal;\n\n      @vert{\n        uniform mat4 _matVM;\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n        \tgl_Position  = _matPVM * position;\n        \tvNormal =normalize(( _matVM * vec4(normal,0)).xyz);\n        }\n      }\n\n      @frag{\n        @import \"builtin.packing\"\n        @import \"builtin.gbuffer-packing\"\n\n        vec2 compressNormal()\n        {\n        \tfloat p = sqrt(vNormal.z * 8. + 8.);\n        \treturn vNormal.xy/p + 0.5;\n        }\n\n        vec4 packedNormal()\n        {\n          vec2 cNor = compressNormal();\n          return vec4(packRanged16(cNor.x,CNOR_MIN,CNOR_MAX),packRanged16(cNor.y,CNOR_MIN,CNOR_MAX));\n        }\n\n        void main(void)\n        {\n        \tgl_FragColor = packedNormal();\n        }\n      }\n\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
 },{}],42:[function(require,module,exports){
 module.exports = "#define CNOR_MIN 0.1464466\n#define CNOR_MAX 0.8535534\n"
 },{}],43:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.basic.hitarea\" group=\"jthree.materials.hitarea\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n</uniform-register>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec4 position;\n\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n        \tgl_Position =_matPVM * position;\n        }\n      }\n\n      @frag{\n        uniform vec4 indexColor;\n\n        void main()\n        {\n        \tgl_FragColor = indexColor;\n        }\n      }\n\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.basic.hitarea\" group=\"jthree.materials.hitarea\" order=\"300\">\n<registers>\n  <register name=\"builtin.basic\"/>\n</registers>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec4 position;\n\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n        \tgl_Position =_matPVM * position;\n        }\n      }\n\n      @frag{\n        uniform vec4 indexColor;\n\n        void main()\n        {\n        \tgl_FragColor = indexColor;\n        }\n      }\n\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
 },{}],44:[function(require,module,exports){
 module.exports = "// builtin.gbuffer-reader\n@import \"builtin.packing\"\n@import \"builtin.gbuffer-packing\"\n\n// Get depth from texture\nfloat getDepth(vec4 rawBuffer)\n{\n  return rawBuffer.z;\n}\n// Get normal from texture\nvec3 getNormal(vec4 rawBuffer)\n{\n  highp vec2 cNor = vec2(unpackRanged16(rawBuffer.xy,CNOR_MIN,CNOR_MAX),unpackRanged16(rawBuffer.zw,CNOR_MIN,CNOR_MAX));\n  highp vec2 compressed = cNor * 4. - vec2(2.,2.);\n  highp vec3 result;\n  highp float f = dot(compressed,compressed);\n  highp float g = sqrt(1. - f/4.);\n  result.z = 1. - f/2.;\n  result.xy = compressed * g;\n  return normalize(result);\n}\n\n// Reconstruct position\nhighp vec3 getPosition(highp float depth,vec4 projectedLightPoint,mat4 invProj)\n{\n  vec4 reconstructed = invProj*vec4(projectedLightPoint.xy/projectedLightPoint.w,depth,1.);\n  return reconstructed.xyz / reconstructed.w;\n}\n\nvec2 calcBufferPosition(vec4 projectedLightPoint)\n{\n  return ((projectedLightPoint.xy/projectedLightPoint.w) + vec2(1.0,1.0)) * 0.5;\n}\n\nvec4 readRawBuffer(sampler2D rawBuffer,vec4 projectedLightPoint)\n{\n  return texture2D(rawBuffer,calcBufferPosition(projectedLightPoint));\n}\n\nfloat lambert(vec3 normal,vec3 p2l){\n  return max(0.0,dot(normal,p2l)) / 3.1415;\n}\n\nfloat halfLambert(vec3 normal,vec3 p2l){\n  float val = max( dot( normal, p2l ), 0.0 ) * 0.5 + 0.5;\n  return val * val * ( 3.0 / ( 4.0 * 3.1415 ) );\n}\n"
 },{}],45:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.diffuse.area\" group=\"jthree.light.diffuse\" order=\"300\">\n    <uniform-register>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </uniform-register>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition = _matPVM * vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform mat4 _matIP;\n        uniform mat4 areaMatrix;\n        uniform vec3 basePosition;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          float depth = getDepth(rawBuffer);\n          vec3 pos = getPosition(depth,vLightProjectedPosition,_matIP);\n          vec4 e = areaMatrix * vec4(pos,1.0);\n          e.xyz /= e.w;\n          if(e.x < 1. && e.x >-1. && e.y <1. && e.y >-1. && e.z < 1. && e.z >-1.)\n          {\n            gl_FragColor = vec4(lightColor,1);\n          }else{\n            gl_FragColor = vec4(0,0,0,1);\n          }\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.diffuse.area\" group=\"jthree.light.diffuse\" order=\"300\">\n    <registers>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </registers>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition = _matPVM * vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform mat4 _matIP;\n        uniform mat4 areaMatrix;\n        uniform vec3 basePosition;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          float depth = getDepth(rawBuffer);\n          vec3 pos = getPosition(depth,vLightProjectedPosition,_matIP);\n          vec4 e = areaMatrix * vec4(pos,1.0);\n          e.xyz /= e.w;\n          if(e.x < 1. && e.x >-1. && e.y <1. && e.y >-1. && e.z < 1. && e.z >-1.)\n          {\n            gl_FragColor = vec4(lightColor,1);\n          }else{\n            gl_FragColor = vec4(0,0,0,1);\n          }\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
 },{}],46:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.diffuse.directional\" group=\"jthree.light.diffuse\" order=\"300\">\n    <uniform-register>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </uniform-register>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition =  vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform vec3 lightDirection;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        @{type:\"buffer\",register:1,name:\"DEPTH\"}\n        uniform sampler2D _depthBuffer;\n\n        void main(void)\n        {\n          //gl_FragColor.rgb = packRanged24(texture2D(_depthBuffer,calcBufferPosition(vLightProjectedPosition)).r,-1.,1.);\n          //gl_FragColor.a = 1.;\n          //return;\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          vec3 normal = getNormal(rawBuffer);\n          float power = dot(-lightDirection,normal);\n          gl_FragColor = vec4(lightColor * power,1.0);\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.diffuse.directional\" group=\"jthree.light.diffuse\" order=\"300\">\n    <registers>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </registers>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition =  vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform vec3 lightDirection;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        @{type:\"buffer\",register:1,name:\"DEPTH\"}\n        uniform sampler2D _depthBuffer;\n\n        void main(void)\n        {\n          //gl_FragColor.rgb = packRanged24(texture2D(_depthBuffer,calcBufferPosition(vLightProjectedPosition)).r,-1.,1.);\n          //gl_FragColor.a = 1.;\n          //return;\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          vec3 normal = getNormal(rawBuffer);\n          float power = dot(-lightDirection,normal);\n          gl_FragColor = vec4(lightColor * power,1.0);\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
 },{}],47:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.diffuse.point\" group=\"jthree.light.diffuse\" order=\"300\">\n    <uniform-register>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </uniform-register>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition = _matPVM *  vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform float decay;\n        uniform highp float dist;\n        uniform mat4 _matIP;\n        uniform vec3 lightPosition;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @{type:\"buffer\",register:1,name:\"DEPTH\"}\n        uniform sampler2D _depthBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec2 bufferPos = calcBufferPosition(vLightProjectedPosition);\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          vec3 normal = getNormal(rawBuffer);\n          highp float depth = unpackRanged24(texture2D(_depthBuffer,bufferPos).rgb,-1.,1.);\n          highp vec3 pos = getPosition( depth, vLightProjectedPosition, _matIP);\n          highp float d = distance( pos, lightPosition) / dist;\n          if(d > 1.)discard;\n          float power = pow(1. - d, decay);\n          float lambart = halfLambert(normal, normalize(lightPosition - pos));\n          gl_FragColor = vec4(lightColor * power * lambart,1.0);\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.diffuse.point\" group=\"jthree.light.diffuse\" order=\"300\">\n    <registers>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </registers>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition = _matPVM *  vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform float decay;\n        uniform highp float dist;\n        uniform mat4 _matIP;\n        uniform vec3 lightPosition;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @{type:\"buffer\",register:1,name:\"DEPTH\"}\n        uniform sampler2D _depthBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec2 bufferPos = calcBufferPosition(vLightProjectedPosition);\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          vec3 normal = getNormal(rawBuffer);\n          highp float depth = unpackRanged24(texture2D(_depthBuffer,bufferPos).rgb,-1.,1.);\n          highp vec3 pos = getPosition( depth, vLightProjectedPosition, _matIP);\n          highp float d = distance( pos, lightPosition) / dist;\n          if(d > 1.)discard;\n          float power = pow(1. - d, decay);\n          float lambart = halfLambert(normal, normalize(lightPosition - pos));\n          gl_FragColor = vec4(lightColor * power * lambart,1.0);\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
 },{}],48:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.diffuse.scene\" group=\"jthree.light.diffuse\" order=\"300\">\n    <uniform-register>\n    </uniform-register>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      @vert{\n\n        void main(void)\n        {\n          gl_Position =  vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        void main(void)\n        {\n          gl_FragColor = vec4(lightColor,1.0);\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.diffuse.scene\" group=\"jthree.light.diffuse\" order=\"300\">\n    <registers>\n    </registers>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      @vert{\n\n        void main(void)\n        {\n          gl_Position =  vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        void main(void)\n        {\n          gl_FragColor = vec4(lightColor,1.0);\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
 },{}],49:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.diffuse.spot\" group=\"jthree.light.diffuse\" order=\"300\">\n    <uniform-register>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </uniform-register>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert\n      {\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition = _matPVM * vec4(position + vec3(0,-1,0),1.0);\n        }\n      }\n\n      @frag\n      {\n        uniform vec3 lightColor;\n        uniform float innerAngle;//無減衰角\n        uniform float outerAngle;//最大影響角\n        uniform float innerDistance;//減衰開始距離\n        uniform float outerDistance;//最大影響距離\n        uniform vec3 lightPosition;//ライトの位置\n        uniform vec3 lightDirection;//ライトの向き\n        uniform float angleDecay;\n        uniform float distanceDecay;\n        uniform float dist;\n        uniform mat4 _matIP;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          vec3 normal = getNormal(rawBuffer);\n          float depth = getDepth(rawBuffer);\n          vec3 pos = getPosition(depth,vLightProjectedPosition,_matIP);\n\n          //法線反射係数\n          float lambart = dot(normal,normalize(lightPosition - pos));\n          if(lambart<0.)discard;\n\n          float outCos=cos(outerAngle);\n          float innCos=cos(innerAngle);\n\n          //範囲外を除外\n          vec3 l2p=normalize(pos-lightPosition);\n          float c=dot(l2p,lightDirection);\n          if(c<outCos){\n            //gl_FragColor = vec4(1,0,0,1);\n            //return;\n            discard;\n          }\n\n          //距離外を除外\n          float d=distance(pos,lightPosition);\n          if(d>outerDistance){\n            //gl_FragColor = vec4(0,1,0,1);\n            //return;\n            discard;\n          }\n\n          float k=1.;//減衰係数\n          if(d<innerDistance){//距離減衰なし\n            if(c<innCos){//角度減衰のみ\n              //gl_FragColor = vec4(0,0,1,1);\n              //return;\n                float pk=(c-outCos)/(innCos-outCos);\n                k = pow(pk,angleDecay);\n            }\n          }else{\n            float pd=(outerDistance-d)/(outerDistance-innerDistance);\n            k=pow(pd,distanceDecay);\n            if(c<innCos){\n              //gl_FragColor = vec4(0,0,1,1);\n              //return;\n                float pk=(c-outCos)/(innCos-outCos);\n                k = k*pow(pk,angleDecay);\n            }\n          }\n\n          gl_FragColor = vec4(lightColor*k*lambart,1.0);\n\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.diffuse.spot\" group=\"jthree.light.diffuse\" order=\"300\">\n    <registers>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </registers>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert\n      {\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition = _matPVM * vec4(position + vec3(0,-1,0),1.0);\n        }\n      }\n\n      @frag\n      {\n        uniform vec3 lightColor;\n        uniform float innerAngle;//無減衰角\n        uniform float outerAngle;//最大影響角\n        uniform float innerDistance;//減衰開始距離\n        uniform float outerDistance;//最大影響距離\n        uniform vec3 lightPosition;//ライトの位置\n        uniform vec3 lightDirection;//ライトの向き\n        uniform float angleDecay;\n        uniform float distanceDecay;\n        uniform float dist;\n        uniform mat4 _matIP;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          vec3 normal = getNormal(rawBuffer);\n          float depth = getDepth(rawBuffer);\n          vec3 pos = getPosition(depth,vLightProjectedPosition,_matIP);\n\n          //法線反射係数\n          float lambart = dot(normal,normalize(lightPosition - pos));\n          if(lambart<0.)discard;\n\n          float outCos=cos(outerAngle);\n          float innCos=cos(innerAngle);\n\n          //範囲外を除外\n          vec3 l2p=normalize(pos-lightPosition);\n          float c=dot(l2p,lightDirection);\n          if(c<outCos){\n            //gl_FragColor = vec4(1,0,0,1);\n            //return;\n            discard;\n          }\n\n          //距離外を除外\n          float d=distance(pos,lightPosition);\n          if(d>outerDistance){\n            //gl_FragColor = vec4(0,1,0,1);\n            //return;\n            discard;\n          }\n\n          float k=1.;//減衰係数\n          if(d<innerDistance){//距離減衰なし\n            if(c<innCos){//角度減衰のみ\n              //gl_FragColor = vec4(0,0,1,1);\n              //return;\n                float pk=(c-outCos)/(innCos-outCos);\n                k = pow(pk,angleDecay);\n            }\n          }else{\n            float pd=(outerDistance-d)/(outerDistance-innerDistance);\n            k=pow(pd,distanceDecay);\n            if(c<innCos){\n              //gl_FragColor = vec4(0,0,1,1);\n              //return;\n                float pk=(c-outCos)/(innCos-outCos);\n                k = k*pow(pk,angleDecay);\n            }\n          }\n\n          gl_FragColor = vec4(lightColor*k*lambart,1.0);\n\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
 },{}],50:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.specular.directional\" group=\"jthree.light.specular\" order=\"300\">\n    <uniform-register>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </uniform-register>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition =  vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform vec3 lightDirection;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n        uniform mat4 _matIP;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          if(rawBuffer.w == 0.)discard;\n          vec3 normal = getNormal(rawBuffer);\n          float depth = getDepth(rawBuffer);\n          vec3 pos = getPosition(depth,vLightProjectedPosition,_matIP);\n          float power = dot(-lightDirection,normal);\n          vec3 hv = normalize(normalize(-lightDirection) + normalize(-pos));\n          float brightness = rawBuffer.w;\n          float phong = pow(max(0.,dot(hv,normal)),brightness);\n          gl_FragColor = vec4(lightColor * phong,1.0);\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.specular.directional\" group=\"jthree.light.specular\" order=\"300\">\n    <registers>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </registers>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition =  vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform vec3 lightDirection;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n        uniform mat4 _matIP;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          if(rawBuffer.w == 0.)discard;\n          vec3 normal = getNormal(rawBuffer);\n          float depth = getDepth(rawBuffer);\n          vec3 pos = getPosition(depth,vLightProjectedPosition,_matIP);\n          float power = dot(-lightDirection,normal);\n          vec3 hv = normalize(normalize(-lightDirection) + normalize(-pos));\n          float brightness = rawBuffer.w;\n          float phong = pow(max(0.,dot(hv,normal)),brightness);\n          gl_FragColor = vec4(lightColor * phong,1.0);\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
 },{}],51:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.basic.light.specular.point\" group=\"jthree.light.specular\" order=\"300\">\n  <uniform-register>\n    <register name=\"builtin.basic\" />\n    <register name=\"builtin.buffer\" />\n  </uniform-register>\n  <passes>\n    <pass>\n      <glsl>\n        <![CDATA[\n      precision highp float;\n      attribute vec3 position;\n      varying highp vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition = _matPVM * vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform float decay;\n        uniform lowp float dist;\n        uniform highp mat4 _matIP;\n        uniform vec3 lightPosition;\n\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @{type:\"buffer\",register:1,name:\"DEPTH\"}\n        uniform sampler2D _depthBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec2 bufferPos = calcBufferPosition(vLightProjectedPosition);\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          lowp vec3 normal = getNormal(rawBuffer);\n          float depth = unpackRanged24(texture2D(_depthBuffer,bufferPos).rgb,-1.,1.);\n          vec3 pos = getPosition(depth,vLightProjectedPosition,_matIP);\n          if(dot(normal,normalize(lightPosition - pos)) < 0.){\n            discard;\n          }\n          float d=distance(pos,lightPosition)/dist;\n          if(d>1.)discard;\n          float power = pow(1. - d,decay);\n          vec3 hv = normalize(normalize(lightPosition-pos)+normalize(-pos));\n          gl_FragColor = vec4(pow(dot(hv,normal),5.0) * power * lightColor,1.0);\n        }\n      }\n      ]]>\n      </glsl>\n    </pass>\n  </passes>\n</material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.basic.light.specular.point\" group=\"jthree.light.specular\" order=\"300\">\n  <registers>\n    <register name=\"builtin.basic\" />\n    <register name=\"builtin.buffer\" />\n  </registers>\n  <passes>\n    <pass>\n      <glsl>\n        <![CDATA[\n      precision highp float;\n      attribute vec3 position;\n      varying highp vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition = _matPVM * vec4(position,1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform float decay;\n        uniform lowp float dist;\n        uniform highp mat4 _matIP;\n        uniform vec3 lightPosition;\n\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @{type:\"buffer\",register:1,name:\"DEPTH\"}\n        uniform sampler2D _depthBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec2 bufferPos = calcBufferPosition(vLightProjectedPosition);\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          lowp vec3 normal = getNormal(rawBuffer);\n          float depth = unpackRanged24(texture2D(_depthBuffer,bufferPos).rgb,-1.,1.);\n          vec3 pos = getPosition(depth,vLightProjectedPosition,_matIP);\n          if(dot(normal,normalize(lightPosition - pos)) < 0.){\n            discard;\n          }\n          float d=distance(pos,lightPosition)/dist;\n          if(d>1.)discard;\n          float power = pow(1. - d,decay);\n          vec3 hv = normalize(normalize(lightPosition-pos)+normalize(-pos));\n          gl_FragColor = vec4(pow(dot(hv,normal),5.0) * power * lightColor,1.0);\n        }\n      }\n      ]]>\n      </glsl>\n    </pass>\n  </passes>\n</material>\n"
 },{}],52:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.specular.spot\" group=\"jthree.light.specular\" order=\"300\">\n    <uniform-register>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </uniform-register>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition = _matPVM * vec4(position + vec3(0,-1,0),1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform float angle;\n        uniform vec3 lightPosition;//ライトの位置\n        uniform vec3 lightDirection;//ライトの向き\n        uniform float decay;\n        uniform float dist;\n        uniform mat4 _matIP;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          if(rawBuffer.w == 0.){//反射係数\n            discard;\n          }\n          vec3 normal = getNormal(rawBuffer);\n          float depth = getDepth(rawBuffer);\n          vec3 pos = getPosition(depth,vLightProjectedPosition,_matIP);\n\n          if(dot(normal,normalize(lightPosition - pos)) < 0.){\n            discard;\n          }\n\n          //範囲外を除外\n          vec3 l2p=normalize(pos-lightPosition);\n          if(dot(l2p,lightDirection)<cos(angle)){\n            discard;\n          }\n\n          //距離外を除外\n          float d=distance(pos,lightPosition);\n          if(d>dist){\n            discard;\n          }\n\n          float power = pow(1. - distance(pos,lightPosition)/dist,decay);\n          vec3 hv = normalize(normalize(-pos)-l2p);\n          gl_FragColor = vec4(pow(dot(hv,normal),rawBuffer.w) * power * lightColor*10.,1.0);\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <material name=\"jthree.basic.light.specular.spot\" group=\"jthree.light.specular\" order=\"300\">\n    <registers>\n      <register name=\"builtin.basic\" />\n      <register name=\"builtin.buffer\" />\n    </registers>\n    <passes>\n      <pass>\n        <glsl>\n          <![CDATA[\n      attribute vec3 position;\n      varying vec4 vLightProjectedPosition;\n      @vert{\n        uniform mat4 _matPVM;\n\n\n        void main(void)\n        {\n          gl_Position = vLightProjectedPosition = _matPVM * vec4(position + vec3(0,-1,0),1.0);\n        }\n      }\n\n      @frag{\n        uniform vec3 lightColor;\n        uniform float angle;\n        uniform vec3 lightPosition;//ライトの位置\n        uniform vec3 lightDirection;//ライトの向き\n        uniform float decay;\n        uniform float dist;\n        uniform mat4 _matIP;\n        @{type:\"buffer\",register:0,name:\"PRIMARY\"}\n        uniform sampler2D _gBuffer;\n\n        @import \"builtin.gbuffer-reader\"\n\n        void main(void)\n        {\n          vec4 rawBuffer = readRawBuffer(_gBuffer,vLightProjectedPosition);\n          if(rawBuffer.w == 0.){//反射係数\n            discard;\n          }\n          vec3 normal = getNormal(rawBuffer);\n          float depth = getDepth(rawBuffer);\n          vec3 pos = getPosition(depth,vLightProjectedPosition,_matIP);\n\n          if(dot(normal,normalize(lightPosition - pos)) < 0.){\n            discard;\n          }\n\n          //範囲外を除外\n          vec3 l2p=normalize(pos-lightPosition);\n          if(dot(l2p,lightDirection)<cos(angle)){\n            discard;\n          }\n\n          //距離外を除外\n          float d=distance(pos,lightPosition);\n          if(d>dist){\n            discard;\n          }\n\n          float power = pow(1. - distance(pos,lightPosition)/dist,decay);\n          vec3 hv = normalize(normalize(-pos)-l2p);\n          gl_FragColor = vec4(pow(dot(hv,normal),rawBuffer.w) * power * lightColor*10.,1.0);\n        }\n      }\n      ]]>\n        </glsl>\n      </pass>\n    </passes>\n  </material>\n"
 },{}],53:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"builtin.phong\" group=\"builtin.forward\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n  <register name=\"builtin.buffer\"/>\n</uniform-register>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec3 normal;\n      attribute vec2 uv;\n\n      @vert {\n      @import \"jthree.builtin.vertex\"\n        uniform mat4 _matPVM;\n        uniform mat4 _matVM;\n      }\n\n      varying vec3 vNormal;\n      varying vec2 vUv;\n      varying vec4 vPosition;\n\n      vec2 calcLightUV(vec4 projectionSpacePos)\n      {\n         return (projectionSpacePos.xy/projectionSpacePos.w+vec2(1,1))/2.;\n      }\n\n      @vert{\n        void main(void)\n        {\n          BasicVertexTransformOutput o =  basicVertexTransform(position,normal,uv,_matPVM,_matVM);\n          gl_Position = vPosition = o.position;\n          //gl_Position.xyz *= vec3(position.x,position.x * position.z,position.z);\n          vNormal = o.normal;\n          vUv = o.uv;\n        }\n      }\n\n      @frag{\n        @{register:1,type:\"buffer\",name:\"DLIGHT\"}\n        uniform sampler2D _dlBuffer;\n        @{register:2,type:\"buffer\",name:\"SLIGHT\"}\n        uniform sampler2D _slBuffer;\n        uniform vec4 diffuse;\n        uniform vec3 specular;\n        uniform vec4 ambient;\n        uniform vec3 ambientCoefficient;\n        uniform float brightness;\n        @{register:3,flag:\"_textureUsed\"}\n        uniform sampler2D texture;\n        uniform int _textureUsed;\n        void main(void)\n        {\n          gl_FragColor=vec4(0,0,0,1);\n          gl_FragColor.rgb+=ambient.rgb;\n          ////calculate light uv\n          vec2 lightUV=calcLightUV(vPosition);\n          vec3 d = _textureUsed == 1 ? texture2D(texture,vUv).rgb : diffuse.rgb;\n          gl_FragColor.rgb+= d * texture2D(_dlBuffer,lightUV).rgb+specular.rgb *texture2D(_slBuffer,lightUV).rgb;\n          gl_FragColor.rgb += ambient.rgb;\n        }\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"builtin.phong\" group=\"builtin.forward\" order=\"300\">\n<registers>\n  <register name=\"builtin.basic\"/>\n  <register name=\"builtin.buffer\"/>\n</registers>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec3 normal;\n      attribute vec2 uv;\n\n      @vert {\n      @import \"jthree.builtin.vertex\"\n        uniform mat4 _matPVM;\n        uniform mat4 _matVM;\n      }\n\n      varying vec3 vNormal;\n      varying vec2 vUv;\n      varying vec4 vPosition;\n\n      vec2 calcLightUV(vec4 projectionSpacePos)\n      {\n         return (projectionSpacePos.xy/projectionSpacePos.w+vec2(1,1))/2.;\n      }\n\n      @vert{\n        void main(void)\n        {\n          BasicVertexTransformOutput o =  basicVertexTransform(position,normal,uv,_matPVM,_matVM);\n          gl_Position = vPosition = o.position;\n          //gl_Position.xyz *= vec3(position.x,position.x * position.z,position.z);\n          vNormal = o.normal;\n          vUv = o.uv;\n        }\n      }\n\n      @frag{\n        @{register:1,type:\"buffer\",name:\"DLIGHT\"}\n        uniform sampler2D _dlBuffer;\n        @{register:2,type:\"buffer\",name:\"SLIGHT\"}\n        uniform sampler2D _slBuffer;\n        uniform vec4 diffuse;\n        uniform vec3 specular;\n        uniform vec4 ambient;\n        uniform vec3 ambientCoefficient;\n        uniform float brightness;\n        @{register:3,flag:\"_textureUsed\"}\n        uniform sampler2D texture;\n        uniform int _textureUsed;\n        void main(void)\n        {\n          gl_FragColor=vec4(0,0,0,1);\n          gl_FragColor.rgb+=ambient.rgb;\n          ////calculate light uv\n          vec2 lightUV=calcLightUV(vPosition);\n          vec3 d = _textureUsed == 1 ? texture2D(texture,vUv).rgb : diffuse.rgb;\n          gl_FragColor.rgb+= d * texture2D(_dlBuffer,lightUV).rgb+specular.rgb *texture2D(_slBuffer,lightUV).rgb;\n          gl_FragColor.rgb += ambient.rgb;\n        }\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
 },{}],54:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"builtin.solid\" group=\"builtin.forward\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n</uniform-register>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      varying vec4 vPosition;\n\n      @vert {\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vPosition = _matPVM * vec4(position,1.0);\n        }\n      }\n\n      @frag {\n        uniform vec4 color;\n\n        void main(void)\n        {\n          gl_FragColor = color;\n        }\n      }\n\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"builtin.solid\" group=\"builtin.forward\" order=\"300\">\n<registers>\n  <register name=\"builtin.basic\"/>\n</registers>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      varying vec4 vPosition;\n\n      @vert {\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n          gl_Position = vPosition = _matPVM * vec4(position,1.0);\n        }\n      }\n\n      @frag {\n        uniform vec4 color;\n\n        void main(void)\n        {\n          gl_FragColor = color;\n        }\n      }\n\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
 },{}],55:[function(require,module,exports){
 module.exports = "vec3 pack_float(float f){\n   const vec3 bit_shift = vec3( 256.0*256.0, 256.0, 1.0);\n   const vec3 bit_mask = vec3(0.0, 1.0/256.0, 1.0/256.0);\n   vec3 res = fract(f * bit_shift);\n   res -= res.xxy * bit_mask;\n   return res;\n}\n\nvoid main(void)\n{\n  gl_FragColor = vec4(pack_float(vPosition.z/vPosition.w/2. + 0.5),1.0);\n}\n"
 },{}],56:[function(require,module,exports){
@@ -3671,6 +3634,69 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Provides feature to use material to draw specific geometry in specified situation.
+ * This is most primitive caller for materials and geometries.
+ */
+
+var MaterialDrawer = function () {
+    function MaterialDrawer() {
+        _classCallCheck(this, MaterialDrawer);
+    }
+
+    _createClass(MaterialDrawer, null, [{
+        key: "drawForMaterials",
+        value: function drawForMaterials(scene, renderStage, object, techniqueCount, techniqueIndex, materialGroup, isWireframed) {
+            if (!object.isVisible) {
+                return;
+            }
+            var materials = object.getMaterials(materialGroup);
+            for (var i = 0; i < materials.length; i++) {
+                MaterialDrawer.drawForMaterial(scene, renderStage, object, techniqueCount, techniqueIndex, materials[i], isWireframed);
+            }
+        }
+    }, {
+        key: "drawForMaterial",
+        value: function drawForMaterial(scene, renderStage, object, techniqueCount, techniqueIndex, material, isWireframed) {
+            if (!material || !material.Initialized || !material.Enabled || !object.isVisible) {
+                return;
+            }
+            var passCount = material.getPassCount(techniqueIndex);
+            for (var pass = 0; pass < passCount; pass++) {
+                material.apply({
+                    scene: scene,
+                    renderStage: renderStage,
+                    object: object,
+                    techniqueIndex: techniqueIndex,
+                    techniqueCount: techniqueCount,
+                    passIndex: pass,
+                    passCount: passCount
+                });
+                if (isWireframed) {
+                    object.Geometry.drawWireframe(renderStage.renderer.canvas, material);
+                    return;
+                }
+                object.Geometry.drawElements(renderStage.renderer.canvas, material);
+            }
+        }
+    }]);
+
+    return MaterialDrawer;
+}();
+
+exports.default = MaterialDrawer;
+
+},{}],59:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _ImportTransformer = require("../ProgramTransformer/Transformer/ImportTransformer");
 
 var _ImportTransformer2 = _interopRequireDefault(_ImportTransformer);
@@ -3703,9 +3729,9 @@ var _TimeRegisterer = require("../Pass/Registerer/TimeRegisterer");
 
 var _TimeRegisterer2 = _interopRequireDefault(_TimeRegisterer);
 
-var _AsyncLoader = require("../Resources/AsyncLoader");
+var _BasicCacheResolver = require("../Resources/BasicCacheResolver");
 
-var _AsyncLoader2 = _interopRequireDefault(_AsyncLoader);
+var _BasicCacheResolver2 = _interopRequireDefault(_BasicCacheResolver);
 
 var _q = require("q");
 
@@ -3726,7 +3752,7 @@ var MaterialManager = function () {
 
         this._uniformRegisters = {};
         this._materialDocuments = {};
-        this._chunkLoader = new _AsyncLoader2.default();
+        this._chunkLoader = new _BasicCacheResolver2.default();
         this.addShaderChunk("builtin.packing", require("./BuiltIn/Chunk/_Packing.glsl"));
         this.addShaderChunk("builtin.gbuffer-packing", require("./BuiltIn/GBuffer/_GBufferPacking.glsl"));
         this.addShaderChunk("jthree.builtin.vertex", require("./BuiltIn/Vertex/_BasicVertexTransform.glsl"));
@@ -3831,7 +3857,7 @@ var MaterialManager = function () {
                 // console.error(`Specified material name '${matName}' was not found!`);
                 return undefined;
             } else {
-                return new _BasicMaterial2.default(matDoc);
+                return new _BasicMaterial2.default(matDoc, matName);
             }
         }
     }, {
@@ -3864,7 +3890,169 @@ var MaterialManager = function () {
 
 exports.default = MaterialManager;
 
-},{"../../ContextComponents":8,"../Pass/Registerer/BasicRegisterer":61,"../Pass/Registerer/BufferRegisterer":62,"../Pass/Registerer/StageDescriptionRegisterer":64,"../Pass/Registerer/TimeRegisterer":65,"../ProgramTransformer/ProgramTranspiler":67,"../ProgramTransformer/Transformer/ImportTransformer":71,"../Resources/AsyncLoader":110,"./BasicMaterial":36,"./BuiltIn/Chunk/_Packing.glsl":39,"./BuiltIn/GBuffer/_GBufferPacking.glsl":42,"./BuiltIn/Light/Chunk/_LightAccumulation.glsl":44,"./BuiltIn/Materials/Phong.xmml":53,"./BuiltIn/Materials/SolidColor.xmml":54,"./BuiltIn/ShadowMap/_ShadowMapFragment.glsl":55,"./BuiltIn/Vertex/_BasicVertexTransform.glsl":56,"q":335}],59:[function(require,module,exports){
+},{"../../ContextComponents":8,"../Pass/Registerer/BasicRegisterer":63,"../Pass/Registerer/BufferRegisterer":64,"../Pass/Registerer/StageDescriptionRegisterer":66,"../Pass/Registerer/TimeRegisterer":67,"../ProgramTransformer/ProgramTranspiler":69,"../ProgramTransformer/Transformer/ImportTransformer":73,"../Resources/BasicCacheResolver":112,"./BasicMaterial":36,"./BuiltIn/Chunk/_Packing.glsl":39,"./BuiltIn/GBuffer/_GBufferPacking.glsl":42,"./BuiltIn/Light/Chunk/_LightAccumulation.glsl":44,"./BuiltIn/Materials/Phong.xmml":53,"./BuiltIn/Materials/SolidColor.xmml":54,"./BuiltIn/ShadowMap/_ShadowMapFragment.glsl":55,"./BuiltIn/Vertex/_BasicVertexTransform.glsl":56,"q":338}],60:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _DefaultValuePreProcessor = require("../../Pass/DefaultValuePreProcessor");
+
+var _DefaultValuePreProcessor2 = _interopRequireDefault(_DefaultValuePreProcessor);
+
+var _ProgramTranspiler = require("../../ProgramTransformer/ProgramTranspiler");
+
+var _ProgramTranspiler2 = _interopRequireDefault(_ProgramTranspiler);
+
+var _XMLRenderConfigUtility = require("../../Pass/XMLRenderConfigUtility");
+
+var _XMLRenderConfigUtility2 = _interopRequireDefault(_XMLRenderConfigUtility);
+
+var _ContextComponents = require("../../../ContextComponents");
+
+var _ContextComponents2 = _interopRequireDefault(_ContextComponents);
+
+var _JThreeContext = require("../../../JThreeContext");
+
+var _JThreeContext2 = _interopRequireDefault(_JThreeContext);
+
+var _BasicCacheResolver = require("../../Resources/BasicCacheResolver");
+
+var _BasicCacheResolver2 = _interopRequireDefault(_BasicCacheResolver);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * The static class to parse XMML.
+ */
+
+var XMMLParser = function () {
+    function XMMLParser() {
+        _classCallCheck(this, XMMLParser);
+    }
+
+    _createClass(XMMLParser, null, [{
+        key: "parse",
+
+        /**
+         * Parse the xmml document.
+         * @return {IXMMLDescription} [description]
+         */
+        value: function parse(name, source) {
+            return new Promise(function (resolve, reject) {
+                XMMLParser._resolver.fetch(name, function (identity) {
+                    return XMMLParser._parseXMML(name, source);
+                }).then(function (result) {
+                    resolve(result);
+                });
+            });
+        }
+    }, {
+        key: "_parseXMML",
+        value: function _parseXMML(name, source) {
+            return new Promise(function (resolve, reject) {
+                var dom = XMMLParser._domParser.parseFromString(source, "text/xml");
+                var result = {
+                    name: name
+                };
+                // Parse material element
+                var materialElem = XMMLParser._getSingleElement("material", dom);
+                result.group = materialElem.getAttribute("group");
+                result.order = parseFloat(materialElem.getAttribute("order"));
+                // Parse registers
+                var registersElem = XMMLParser._getSingleElement("registers", materialElem);
+                result.registerers = XMMLParser._initializeUniformRegisters(registersElem);
+                // Parse passes
+                var passesElem = XMMLParser._getSingleElement("passes", materialElem);
+                XMMLParser._instanciatePasses(passesElem, name, result.registerers).then(function (p) {
+                    result.pass = p;
+                    resolve(result);
+                });
+            });
+        }
+    }, {
+        key: "_initializeUniformRegisters",
+        value: function _initializeUniformRegisters(elem) {
+            var mm = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.MaterialManager);
+            var registerElems = XMMLParser._getElements("register", elem);
+            return registerElems.map(function (r) {
+                return new (mm.getUniformRegister(r.getAttribute("name")))();
+            });
+        }
+    }, {
+        key: "_instanciatePasses",
+        value: function _instanciatePasses(passes, materialName, registerers) {
+            var pass = XMMLParser._getElements("pass", passes);
+            return Promise.all(pass.map(function (p, i) {
+                return new Promise(function (resolve, reject) {
+                    var renderconfig = _XMLRenderConfigUtility2.default.parseRenderConfig(p);
+                    var glsl = XMMLParser._getSingleElement("glsl", p);
+                    var result = {
+                        renderConfig: renderconfig,
+                        passIndex: i
+                    };
+                    _ProgramTranspiler2.default.parseCombined(glsl.textContent).then(function (desc) {
+                        result.programDescription = desc;
+                        result.program = XMMLParser._constructProgram(materialName, i, desc);
+                        return _DefaultValuePreProcessor2.default.preprocess(desc.uniforms);
+                    }).then(function () {
+                        return Promise.all(registerers.map(function (r) {
+                            return r.preprocess(result, result.programDescription.uniforms);
+                        }));
+                    }).then(function () {
+                        resolve(result);
+                    });
+                });
+            }));
+        }
+    }, {
+        key: "_constructProgram",
+        value: function _constructProgram(name, index, desc) {
+            var idPrefix = name + index;
+            var rm = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.ResourceManager);
+            var fs = rm.createShader(idPrefix + "-fs", desc.fragment, WebGLRenderingContext.FRAGMENT_SHADER);
+            var vs = rm.createShader(idPrefix + "-vs", desc.vertex, WebGLRenderingContext.VERTEX_SHADER);
+            fs.loadAll();
+            vs.loadAll();
+            return rm.createProgram(idPrefix + "-program", [vs, fs]);
+        }
+    }, {
+        key: "_getElements",
+        value: function _getElements(name, elem) {
+            var result = [];
+            var elems = elem.getElementsByTagName(name);
+            for (var i = 0; i < elems.length; i++) {
+                result.push(elems.item(i));
+            }
+            return result;
+        }
+    }, {
+        key: "_getSingleElement",
+        value: function _getSingleElement(name, elem) {
+            var result = XMMLParser._getElements(name, elem);
+            if (result.length === 1) {
+                return result[0];
+            } else if (result.length === 0) {
+                throw new Error("The mandatory element " + name + " was required, but not found");
+            } else {
+                throw new Error("The element " + name + " requires to exist in single. But there is " + result.length + " count of elements");
+            }
+        }
+    }]);
+
+    return XMMLParser;
+}();
+
+XMMLParser._resolver = new _BasicCacheResolver2.default();
+XMMLParser._domParser = new DOMParser();
+exports.default = XMMLParser;
+
+},{"../../../ContextComponents":8,"../../../JThreeContext":267,"../../Pass/DefaultValuePreProcessor":61,"../../Pass/XMLRenderConfigUtility":68,"../../ProgramTransformer/ProgramTranspiler":69,"../../Resources/BasicCacheResolver":112}],61:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -3995,7 +4183,11 @@ var DefaultValuePreProcessor = function () {
             for (var variableName in uniforms) {
                 _loop(variableName);
             }
-            return _q2.default.all(tasks);
+            return _q2.default.all(tasks).then(function () {
+                for (var name in uniforms) {
+                    uniforms[name].value = uniforms[name].variableAnnotation.default;
+                }
+            });
         }
     }, {
         key: "_syncPromise",
@@ -4166,7 +4358,7 @@ exports.default = DefaultValuePreProcessor;
 
 }).call(this,require('_process'))
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../../Math/Matrix":266,"../../Math/MatrixArray":267,"../../Math/Vector2":272,"../../Math/Vector3":273,"../../Math/Vector4":274,"../../Math/VectorArray":275,"_process":316,"lodash.isarray":328,"q":335}],60:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"../../Math/Matrix":271,"../../Math/MatrixArray":272,"../../Math/Vector2":277,"../../Math/Vector3":278,"../../Math/Vector4":279,"../../Math/VectorArray":280,"_process":319,"lodash.isarray":331,"q":338}],62:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4175,10 +4367,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _DefaultValuePreProcessor = require("./DefaultValuePreProcessor");
-
-var _DefaultValuePreProcessor2 = _interopRequireDefault(_DefaultValuePreProcessor);
-
 var _JThreeObjectWithID2 = require("../../Base/JThreeObjectWithID");
 
 var _JThreeObjectWithID3 = _interopRequireDefault(_JThreeObjectWithID2);
@@ -4186,18 +4374,6 @@ var _JThreeObjectWithID3 = _interopRequireDefault(_JThreeObjectWithID2);
 var _XMLRenderConfigUtility = require("./XMLRenderConfigUtility");
 
 var _XMLRenderConfigUtility2 = _interopRequireDefault(_XMLRenderConfigUtility);
-
-var _ContextComponents = require("../../ContextComponents");
-
-var _ContextComponents2 = _interopRequireDefault(_ContextComponents);
-
-var _JThreeContext = require("../../JThreeContext");
-
-var _JThreeContext2 = _interopRequireDefault(_JThreeContext);
-
-var _ProgramTranspiler = require("../ProgramTransformer/ProgramTranspiler");
-
-var _ProgramTranspiler2 = _interopRequireDefault(_ProgramTranspiler);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4210,106 +4386,59 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MaterialPass = function (_JThreeObjectWithID) {
     _inherits(MaterialPass, _JThreeObjectWithID);
 
-    function MaterialPass(material, passDocument, materialName, index) {
+    function MaterialPass(material, pass) {
         _classCallCheck(this, MaterialPass);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MaterialPass).call(this));
 
-        _this.ready = false;
         _this._renderConfigureCache = {};
-        _this.passIndex = index;
         _this._material = material;
-        _this._passDocument = passDocument;
-        _this.materialName = materialName;
+        _this.passDescription = pass;
         return _this;
     }
 
     _createClass(MaterialPass, [{
-        key: "initialize",
-        value: function initialize(uniformRegisters) {
-            var _this2 = this;
-
-            var shaderCode = this._passDocument.getElementsByTagName("glsl").item(0).textContent;
-            return _ProgramTranspiler2.default.parseCombined(shaderCode).then(function (result) {
-                _this2.programDescription = result;
-                _this2._constructProgram(_this2.materialName + _this2.passIndex);
-                return _DefaultValuePreProcessor2.default.preprocess(_this2.programDescription.uniforms);
-            }).then(function () {
-                return Promise.all(uniformRegisters.map(function (m) {
-                    return m.preprocess(_this2, _this2.programDescription.uniforms);
-                }));
-            }).then(function () {
-                _this2.ready = true;
-            });
-        }
-    }, {
         key: "dispose",
         value: function dispose() {
-            this.fragmentShader.dispose();
-            this.vertexShader.dispose();
-            this.program.dispose();
+            return;
         }
     }, {
         key: "apply",
         value: function apply(matArg, uniformRegisters, material, shaderVariables) {
-            var _this3 = this;
+            var _this2 = this;
 
-            if (!this.ready) {
-                throw new Error("initialization was not completed yet!");
-            }
-            var gl = matArg.renderStage.GL;
-            var pWrapper = this.program.getForGL(gl);
+            var gl = matArg.renderStage.gl;
+            var pWrapper = this.passDescription.program.getForGL(gl);
             var renderConfig = this._fetchRenderConfigure(matArg);
             _XMLRenderConfigUtility2.default.applyAll(gl, renderConfig);
             // Declare using program before assigning material variables
             pWrapper.useProgram();
             // Apply attribute variables by geometries
-            matArg.object.Geometry.applyAttributeVariables(pWrapper, this.programDescription.attributes);
+            matArg.object.Geometry.useGeometry(pWrapper, this.passDescription.programDescription.attributes);
             // Apply uniform variables
             uniformRegisters.forEach(function (r) {
-                r.register(gl, pWrapper, matArg, _this3.programDescription.uniforms);
+                r.register(gl, pWrapper, matArg, _this2.passDescription.programDescription.uniforms);
             });
-            material.registerMaterialVariables(matArg.renderStage.Renderer, pWrapper, this.programDescription.uniforms, shaderVariables);
-        }
-    }, {
-        key: "__preprocessUniformVariables",
-        value: function __preprocessUniformVariables() {
-            // Preprocess default value for uniforms
+            material.registerMaterialVariables(matArg.renderStage.renderer, pWrapper, this.passDescription.programDescription.uniforms, shaderVariables);
         }
     }, {
         key: "_fetchRenderConfigure",
         value: function _fetchRenderConfigure(matArg) {
-            var id = matArg.renderStage.id;
+            var id = matArg.renderStage.id + matArg.techniqueIndex;
             var result = undefined;
             if (this._renderConfigureCache[id]) {
                 result = this._renderConfigureCache[id];
             } else {
-                var configure = _XMLRenderConfigUtility2.default.parseRenderConfig(this._passDocument, matArg.renderStage.getDefaultRendererConfigure(matArg.techniqueIndex));
-                this._renderConfigureCache[id] = configure;
+                var configure = this._renderConfigureCache[id] = _XMLRenderConfigUtility2.default.mergeRenderConfigure(this.passDescription.renderConfig, matArg.renderStage.getDefaultRendererConfigure(matArg.techniqueIndex));
                 result = configure;
             }
             this._material.emit("configure", {
                 pass: this,
-                passIndex: this.passIndex,
+                passIndex: this.passDescription.passIndex,
                 material: this._material,
                 configure: result
             });
             return result;
-        }
-    }, {
-        key: "_constructProgram",
-        value: function _constructProgram(idPrefix) {
-            this._passId = idPrefix;
-            this.fragmentShader = MaterialPass._resourceManager.createShader(idPrefix + "-fs", this.programDescription.fragment, WebGLRenderingContext.FRAGMENT_SHADER);
-            this.vertexShader = MaterialPass._resourceManager.createShader(idPrefix + "-vs", this.programDescription.vertex, WebGLRenderingContext.VERTEX_SHADER);
-            this.fragmentShader.loadAll();
-            this.vertexShader.loadAll();
-            this.program = MaterialPass._resourceManager.createProgram(idPrefix + "-program", [this.vertexShader, this.fragmentShader]);
-        }
-    }], [{
-        key: "_resourceManager",
-        get: function get() {
-            return _JThreeContext2.default.getContextComponent(_ContextComponents2.default.ResourceManager);
         }
     }]);
 
@@ -4318,7 +4447,7 @@ var MaterialPass = function (_JThreeObjectWithID) {
 
 exports.default = MaterialPass;
 
-},{"../../Base/JThreeObjectWithID":6,"../../ContextComponents":8,"../../JThreeContext":262,"../ProgramTransformer/ProgramTranspiler":67,"./DefaultValuePreProcessor":59,"./XMLRenderConfigUtility":66}],61:[function(require,module,exports){
+},{"../../Base/JThreeObjectWithID":6,"./XMLRenderConfigUtility":68}],63:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4365,37 +4494,37 @@ var BasicRegisterer = function (_RegistererBase) {
         key: "register",
         value: function register(gl, pWrapper, matArg, uniforms) {
             if (uniforms["_matM"]) {
-                pWrapper.uniformMatrix("_matM", matArg.object.Transformer.LocalToGlobal);
+                pWrapper.uniformMatrix("_matM", matArg.object.Transformer.localToGlobal);
             }
             if (uniforms["_matV"]) {
-                pWrapper.uniformMatrix("_matV", matArg.camera.viewMatrix);
+                pWrapper.uniformMatrix("_matV", matArg.renderStage.renderer.camera.viewMatrix);
             }
             if (uniforms["_matP"]) {
-                pWrapper.uniformMatrix("_matP", matArg.camera.projectionMatrix);
+                pWrapper.uniformMatrix("_matP", matArg.renderStage.renderer.camera.projectionMatrix);
             }
             if (uniforms["_matVM"]) {
-                pWrapper.uniformMatrix("_matVM", _Matrix2.default.multiply(matArg.camera.viewMatrix, matArg.object.Transformer.LocalToGlobal));
+                pWrapper.uniformMatrix("_matVM", _Matrix2.default.multiply(matArg.renderStage.renderer.camera.viewMatrix, matArg.object.Transformer.localToGlobal));
             }
             if (uniforms["_matPV"]) {
-                pWrapper.uniformMatrix("_matPV", matArg.camera.viewProjectionMatrix);
+                pWrapper.uniformMatrix("_matPV", matArg.renderStage.renderer.camera.viewProjectionMatrix);
             }
             if (uniforms["_matPVM"]) {
-                pWrapper.uniformMatrix("_matPVM", matArg.object.Transformer.calculateMVPMatrix(matArg.renderStage.Renderer));
+                pWrapper.uniformMatrix("_matPVM", matArg.object.Transformer.calculateMVPMatrix(matArg.renderStage.renderer));
             }
             if (uniforms["_matIP"]) {
-                pWrapper.uniformMatrix("_matIP", matArg.camera.invProjectionMatrix);
+                pWrapper.uniformMatrix("_matIP", matArg.renderStage.renderer.camera.invProjectionMatrix);
             }
             if (uniforms["_eyePosition"]) {
-                pWrapper.uniformVector("_eyePosition", matArg.camera.Transformer.GlobalPosition);
+                pWrapper.uniformVector("_eyePosition", matArg.renderStage.renderer.camera.Transformer.GlobalPosition);
             }
             if (uniforms["_farClip"]) {
-                pWrapper.uniformFloat("_farClip", matArg.camera.Far);
+                pWrapper.uniformFloat("_farClip", matArg.renderStage.renderer.camera.Far);
             }
             if (uniforms["_nearClip"]) {
-                pWrapper.uniformFloat("_nearClip", matArg.camera.Near);
+                pWrapper.uniformFloat("_nearClip", matArg.renderStage.renderer.camera.Near);
             }
             if (uniforms["_resolution"]) {
-                var region = matArg.renderStage.Renderer.region;
+                var region = matArg.renderStage.renderer.region;
                 pWrapper.uniformVector("_resolution", new _Vector2.default(region.Width, region.Height));
             }
         }
@@ -4406,7 +4535,7 @@ var BasicRegisterer = function (_RegistererBase) {
 
 exports.default = BasicRegisterer;
 
-},{"../../../Math/Matrix":266,"../../../Math/Vector2":272,"./RegistererBase":63}],62:[function(require,module,exports){
+},{"../../../Math/Matrix":271,"../../../Math/Vector2":277,"./RegistererBase":65}],64:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4455,17 +4584,17 @@ var BufferRegitserer = function (_RegistererBase) {
                 }
                 if (uniform.variableAnnotation["type"] === "buffer") {
                     var bufferName = uniform.variableAnnotation["name"];
-                    if (!bufferName || !matArg.textureResource[bufferName]) {
+                    if (!bufferName || !matArg.renderStage.bufferTextures[bufferName]) {
                         continue;
                     }
                     var register = uniform.variableAnnotation["register"];
                     if (!register) {
                         register = 0;
                     }
-                    if (matArg.textureResource[bufferName] instanceof _RBO2.default) {
+                    if (matArg.renderStage.bufferTextures[bufferName] instanceof _RBO2.default) {
                         throw new Error("RBO can not be acceptable for shader argument");
                     }
-                    pWrapper.uniformSampler(variableName, matArg.textureResource[bufferName], register);
+                    pWrapper.uniformSampler(variableName, matArg.renderStage.bufferTextures[bufferName], register);
                 }
             }
         }
@@ -4476,7 +4605,7 @@ var BufferRegitserer = function (_RegistererBase) {
 
 exports.default = BufferRegitserer;
 
-},{"../../Resources/RBO/RBO":119,"./RegistererBase":63}],63:[function(require,module,exports){
+},{"../../Resources/RBO/RBO":122,"./RegistererBase":65}],65:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -4530,7 +4659,7 @@ exports.default = RegistererBase;
 
 }).call(this,require('_process'))
 
-},{"_process":316,"q":335}],64:[function(require,module,exports){
+},{"_process":319,"q":338}],66:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4588,7 +4717,7 @@ var StageDescriptionRegisterer = function (_RegistererBase) {
 
 exports.default = StageDescriptionRegisterer;
 
-},{"./RegistererBase":63}],65:[function(require,module,exports){
+},{"./RegistererBase":65}],67:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4674,7 +4803,7 @@ var TimeRegisterer = function (_RegistererBase) {
 
 exports.default = TimeRegisterer;
 
-},{"../../../ContextComponents":8,"../../../JThreeContext":262,"../../../Math/Vector4":274,"./RegistererBase":63}],66:[function(require,module,exports){
+},{"../../../ContextComponents":8,"../../../JThreeContext":267,"../../../Math/Vector4":279,"./RegistererBase":65}],68:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4701,17 +4830,15 @@ var XMLRenderConfigureUtility = function () {
 
         /**
          * Construct renderer configuration preferences from element containing render configuration tags as children.
-         * @param  {WebGLRenderingContext}       gl        [description]
          * @param  {Element}                     parent    [description]
-         * @param  {IRenderStageRenderConfigure} defConfig [description]
          * @return {IRenderStageRenderConfigure}           [description]
          */
-        value: function parseRenderConfig(parent, defConfig) {
+        value: function parseRenderConfig(parent) {
             var target = {};
-            XMLRenderConfigureUtility._parseCullConfigure(parent, defConfig, target);
-            XMLRenderConfigureUtility._parseBlendConfigure(parent, defConfig, target);
-            XMLRenderConfigureUtility._parseDepthConfigure(parent, defConfig, target);
-            XMLRenderConfigureUtility._parseMaskConfigure(parent, defConfig, target);
+            XMLRenderConfigureUtility._parseCullConfigure(parent, target);
+            XMLRenderConfigureUtility._parseBlendConfigure(parent, target);
+            XMLRenderConfigureUtility._parseDepthConfigure(parent, target);
+            XMLRenderConfigureUtility._parseMaskConfigure(parent, target);
             return target;
         }
     }, {
@@ -4721,6 +4848,19 @@ var XMLRenderConfigureUtility = function () {
             XMLRenderConfigureUtility._applyBlendFunConfigureToGL(gl, config.blendEnabled, config.blendSrcFactor, config.blendDstFactor);
             XMLRenderConfigureUtility._applyDepthTestConfigureToGL(gl, config.depthEnabled, config.depthMode);
             XMLRenderConfigureUtility._applyMaskConfigureToGL(gl, config.redMask, config.greenMask, config.blueMask, config.alphaMask, config.depthMask);
+        }
+    }, {
+        key: "mergeRenderConfigure",
+        value: function mergeRenderConfigure(config, base) {
+            var result = {};
+            for (var paramName in base) {
+                if (typeof config[paramName] === "undefined") {
+                    result[paramName] = base[paramName];
+                } else {
+                    result[paramName] = config[paramName];
+                }
+            }
+            return result;
         }
     }, {
         key: "_parseBoolean",
@@ -4735,37 +4875,29 @@ var XMLRenderConfigureUtility = function () {
         }
     }, {
         key: "_parseMaskConfigure",
-        value: function _parseMaskConfigure(elem, defConfig, target) {
+        value: function _parseMaskConfigure(elem, target) {
             var maskNode = elem.getElementsByTagName("mask").item(0);
-            if (!maskNode) {
-                target.redMask = defConfig.redMask;
-                target.greenMask = defConfig.greenMask;
-                target.blueMask = defConfig.blueMask;
-                target.alphaMask = defConfig.alphaMask;
-                target.depthMask = defConfig.depthMask;
-            } else {
+            if (maskNode) {
                 var redMaskStr = maskNode.getAttribute("red");
                 var greenMaskStr = maskNode.getAttribute("green");
                 var blueMaskStr = maskNode.getAttribute("blue");
                 var alphaMaskStr = maskNode.getAttribute("alpha");
                 var depthMaskStr = maskNode.getAttribute("depth");
-                target.redMask = XMLRenderConfigureUtility._parseBoolean(redMaskStr, defConfig.redMask);
-                target.greenMask = XMLRenderConfigureUtility._parseBoolean(greenMaskStr, defConfig.greenMask);
-                target.blueMask = XMLRenderConfigureUtility._parseBoolean(blueMaskStr, defConfig.blueMask);
-                target.alphaMask = XMLRenderConfigureUtility._parseBoolean(alphaMaskStr, defConfig.alphaMask);
-                target.depthMask = XMLRenderConfigureUtility._parseBoolean(depthMaskStr, defConfig.depthMask);
+                target.redMask = XMLRenderConfigureUtility._parseBoolean(redMaskStr, undefined);
+                target.greenMask = XMLRenderConfigureUtility._parseBoolean(greenMaskStr, undefined);
+                target.blueMask = XMLRenderConfigureUtility._parseBoolean(blueMaskStr, undefined);
+                target.alphaMask = XMLRenderConfigureUtility._parseBoolean(alphaMaskStr, undefined);
+                target.depthMask = XMLRenderConfigureUtility._parseBoolean(depthMaskStr, undefined);
             }
         }
     }, {
         key: "_parseCullConfigure",
-        value: function _parseCullConfigure(elem, defConfig, target) {
+        value: function _parseCullConfigure(elem, target) {
             var cullNode = elem.getElementsByTagName("cull").item(0);
-            if (!cullNode) {
-                target.cullOrientation = defConfig.cullOrientation;
-            } else {
+            if (cullNode) {
                 var mode = cullNode.getAttribute("mode");
                 if (!mode) {
-                    target.cullOrientation = defConfig.cullOrientation;
+                    target.cullOrientation = "BACK";
                 } else {
                     target.cullOrientation = mode;
                 }
@@ -4773,33 +4905,26 @@ var XMLRenderConfigureUtility = function () {
         }
     }, {
         key: "_parseBlendConfigure",
-        value: function _parseBlendConfigure(elem, defConfig, target) {
+        value: function _parseBlendConfigure(elem, target) {
             var blendNode = elem.getElementsByTagName("blend").item(0);
-            if (!blendNode) {
-                target.blendEnabled = defConfig.blendEnabled;
-                target.blendSrcFactor = defConfig.blendSrcFactor;
-                target.blendDstFactor = defConfig.blendDstFactor;
-            } else {
+            if (blendNode) {
                 var enabledStr = blendNode.getAttribute("enabled");
                 var srcFactorStr = blendNode.getAttribute("src");
                 var dstFactorStr = blendNode.getAttribute("dst");
-                target.blendEnabled = XMLRenderConfigureUtility._parseBoolean(enabledStr, defConfig.blendEnabled);
-                target.blendSrcFactor = srcFactorStr || defConfig.blendSrcFactor;
-                target.blendDstFactor = dstFactorStr || defConfig.blendDstFactor;
+                target.blendEnabled = XMLRenderConfigureUtility._parseBoolean(enabledStr, true);
+                target.blendSrcFactor = srcFactorStr || undefined;
+                target.blendDstFactor = dstFactorStr || undefined;
             }
         }
     }, {
         key: "_parseDepthConfigure",
-        value: function _parseDepthConfigure(elem, defConfig, target) {
+        value: function _parseDepthConfigure(elem, target) {
             var depthNode = elem.getElementsByTagName("depth").item(0);
-            if (!depthNode) {
-                target.depthMode = defConfig.depthMode;
-                target.depthEnabled = defConfig.depthEnabled;
-            } else {
+            if (depthNode) {
                 var enabledStr = depthNode.getAttribute("enabled");
                 var modeStr = depthNode.getAttribute("mode");
-                target.depthEnabled = XMLRenderConfigureUtility._parseBoolean(enabledStr, defConfig.depthEnabled);
-                target.depthMode = modeStr || defConfig.depthMode;
+                target.depthEnabled = XMLRenderConfigureUtility._parseBoolean(enabledStr, true);
+                target.depthMode = modeStr || undefined;
             }
         }
     }, {
@@ -4845,7 +4970,7 @@ var XMLRenderConfigureUtility = function () {
 
 exports.default = XMLRenderConfigureUtility;
 
-},{"../Canvas/GL/GLEnumParser":19}],67:[function(require,module,exports){
+},{"../Canvas/GL/GLEnumParser":19}],69:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -4989,7 +5114,7 @@ exports.default = ProgramTranspiler;
 
 }).call(this,require('_process'))
 
-},{"./Transformer/ImportTransformer":71,"./Transformer/PrecisionComplementTransformer":72,"./Transformer/PrecisionParser":73,"./Transformer/RemoveAttributeVariableTransformer":74,"./Transformer/RemoveCommentTransformer":75,"./Transformer/RemoveVariableAnnotationsTransformer":76,"./Transformer/SourceSeparateTransformer":77,"./Transformer/VariableParser":78,"_process":316}],68:[function(require,module,exports){
+},{"./Transformer/ImportTransformer":73,"./Transformer/PrecisionComplementTransformer":74,"./Transformer/PrecisionParser":75,"./Transformer/RemoveAttributeVariableTransformer":76,"./Transformer/RemoveCommentTransformer":77,"./Transformer/RemoveVariableAnnotationsTransformer":78,"./Transformer/SourceSeparateTransformer":79,"./Transformer/VariableParser":80,"_process":319}],70:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5030,7 +5155,7 @@ var DescriptionTransformer = function (_ProgramTransformer) {
 
 exports.default = DescriptionTransformer;
 
-},{"./ProgramTransformer":69}],69:[function(require,module,exports){
+},{"./ProgramTransformer":71}],71:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5060,7 +5185,7 @@ var ProgramTransformer = function () {
 
 exports.default = ProgramTransformer;
 
-},{}],70:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5100,7 +5225,7 @@ var SourceTransformer = function (_ProgramTransformer) {
 
 exports.default = SourceTransformer;
 
-},{"./ProgramTransformer":69}],71:[function(require,module,exports){
+},{"./ProgramTransformer":71}],73:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5198,7 +5323,7 @@ var ImportTransformer = function (_ProgramTransformer) {
 
 exports.default = ImportTransformer;
 
-},{"../../../ContextComponents":8,"../../../JThreeContext":262,"./Base/ProgramTransformer":69}],72:[function(require,module,exports){
+},{"../../../ContextComponents":8,"../../../JThreeContext":267,"./Base/ProgramTransformer":71}],74:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5255,7 +5380,7 @@ var PrecisionComplementTransformer = function (_DescriptionTransform) {
 
 exports.default = PrecisionComplementTransformer;
 
-},{"./Base/DescriptionTransformer":68}],73:[function(require,module,exports){
+},{"./Base/DescriptionTransformer":70}],75:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5316,7 +5441,7 @@ var PrecisionParser = function (_DescriptionTransform) {
 
 exports.default = PrecisionParser;
 
-},{"./Base/DescriptionTransformer":68}],74:[function(require,module,exports){
+},{"./Base/DescriptionTransformer":70}],76:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5376,7 +5501,7 @@ var RemoveAttributeVariableTransformer = function (_DescriptionTransform) {
 
 exports.default = RemoveAttributeVariableTransformer;
 
-},{"./Base/DescriptionTransformer":68}],75:[function(require,module,exports){
+},{"./Base/DescriptionTransformer":70}],77:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5450,7 +5575,7 @@ var RemoveCommentTransformer = function (_SourceTransformer) {
 
 exports.default = RemoveCommentTransformer;
 
-},{"./Base/SourceTransformer":70}],76:[function(require,module,exports){
+},{"./Base/SourceTransformer":72}],78:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5506,7 +5631,7 @@ var RemoveVariableAttributeTransformer = function (_DescriptionTransform) {
 
 exports.default = RemoveVariableAttributeTransformer;
 
-},{"./Base/DescriptionTransformer":68}],77:[function(require,module,exports){
+},{"./Base/DescriptionTransformer":70}],79:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5632,7 +5757,7 @@ var SourceSeparateTransformer = function (_DescriptionTransform) {
 
 exports.default = SourceSeparateTransformer;
 
-},{"./Base/DescriptionTransformer":68}],78:[function(require,module,exports){
+},{"./Base/DescriptionTransformer":70}],80:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5727,7 +5852,7 @@ var VariableParser = function (_DescriptionTransform) {
 
 exports.default = VariableParser;
 
-},{"./Base/DescriptionTransformer":68,"json5":327}],79:[function(require,module,exports){
+},{"./Base/DescriptionTransformer":70,"json5":330}],81:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5760,10 +5885,6 @@ var _ContextComponents = require("../../ContextComponents");
 
 var _ContextComponents2 = _interopRequireDefault(_ContextComponents);
 
-var _RenderPath = require("./RenderPath");
-
-var _RenderPath2 = _interopRequireDefault(_RenderPath);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5791,7 +5912,6 @@ var BasicRenderer = function (_RendererBase) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BasicRenderer).call(this, canvas));
 
-        _this.renderPath = new _RenderPath2.default(_this);
         configurator = configurator || new _BasicRendererConfigurator2.default();
         _this.region = viewportArea;
         _this.renderPath.fromPathTemplate(configurator.getStageChain(_this));
@@ -5873,13 +5993,10 @@ var BasicRenderer = function (_RendererBase) {
             var _this3 = this;
 
             this.renderPath.path.forEach(function (chain) {
-                var sampler = {};
                 chain.stage.bufferTextures.defaultRenderBuffer = _this3.defaultRenderBuffer;
                 for (var bufferName in chain.buffers) {
                     chain.stage.bufferTextures[bufferName] = _this3.bufferSet.getColorBuffer(chain.buffers[bufferName]);
-                    sampler[bufferName] = chain.stage.bufferTextures[bufferName] ? chain.stage.bufferTextures[bufferName].id : "undefined";
                 }
-                console.log(sampler);
             });
         }
     }]);
@@ -5889,7 +6006,7 @@ var BasicRenderer = function (_RendererBase) {
 
 exports.default = BasicRenderer;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"./BufferSet":80,"./RenderPath":81,"./RenderPathExecutor":82,"./RendererBase":99,"./RendererConfigurator/BasicRendererConfigurator":100}],80:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"./BufferSet":82,"./RenderPathExecutor":84,"./RendererBase":101,"./RendererConfigurator/BasicRendererConfigurator":102}],82:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5992,7 +6109,7 @@ var BufferSet = function (_JThreeObjectEE) {
 
 exports.default = BufferSet;
 
-},{"../../Base/JThreeObjectEE":4,"./TextureGenerater":104}],81:[function(require,module,exports){
+},{"../../Base/JThreeObjectEE":4,"./TextureGenerater":106}],83:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6093,7 +6210,7 @@ var RenderPath = function () {
 
 exports.default = RenderPath;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262}],82:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267}],84:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6134,39 +6251,35 @@ var RenderPathExecutor = function () {
         value: function processRender(renderer, scene) {
             var stageIndex = 0;
             renderer.renderPath.path.forEach(function (chain) {
-                try {
-                    var stage = chain.stage;
-                    var techniqueCount = stage.getTechniqueCount(scene);
-                    var targetObjects = undefined;
-                    stage.preStage(scene);
-                    for (var techniqueIndex = 0; techniqueIndex < techniqueCount; techniqueIndex++) {
-                        if (stage.getTarget(techniqueIndex) === "scene") {
-                            targetObjects = scene.children;
+                var stage = chain.stage;
+                var techniqueCount = stage.getTechniqueCount(scene);
+                var targetObjects = undefined;
+                stage.preStage(scene);
+                for (var techniqueIndex = 0; techniqueIndex < techniqueCount; techniqueIndex++) {
+                    if (stage.getTarget(techniqueIndex) === "scene") {
+                        targetObjects = scene.children;
+                    } else {
+                        var pr = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.PrimitiveRegistory);
+                        var geometry = pr.getPrimitive(stage.getTarget(techniqueIndex));
+                        if (!geometry) {
+                            console.error("Unknown primitive " + stage.getTarget(techniqueIndex) + " was specified!");
+                            continue;
                         } else {
-                            var pr = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.PrimitiveRegistory);
-                            var geometry = pr.getPrimitive(stage.getTarget(techniqueIndex));
-                            if (!geometry) {
-                                console.error("Unknown primitive " + stage.getTarget(techniqueIndex) + " was specified!");
-                                continue;
-                            } else {
-                                targetObjects = [new _Mesh2.default(geometry, null)];
-                            }
+                            targetObjects = [new _Mesh2.default(geometry, null)];
                         }
-                        stage.shaderVariables = chain.variables;
-                        stage.preTechnique(scene, techniqueIndex);
-                        RenderPathExecutor._renderObjects(renderer, targetObjects, stage, scene, techniqueCount, techniqueIndex, chain);
-                        stage.postTechnique(scene, techniqueIndex);
                     }
-                    stage.postStage(scene);
-                    renderer.emit("rendered-stage", {
-                        completedChain: chain,
-                        bufferTextures: stage.bufferTextures,
-                        index: stageIndex
-                    });
-                    stageIndex++;
-                } catch (e) {
-                    throw e;
+                    stage.shaderVariables = chain.variables;
+                    stage.preTechnique(scene, techniqueIndex);
+                    RenderPathExecutor._renderObjects(renderer, targetObjects, stage, scene, techniqueCount, techniqueIndex, chain);
+                    stage.postTechnique(scene, techniqueIndex);
                 }
+                stage.postStage(scene);
+                renderer.emit("rendered-stage", {
+                    completedChain: chain,
+                    bufferTextures: stage.bufferTextures,
+                    index: stageIndex
+                });
+                stageIndex++;
             });
             renderer.emit("rendered-path", {
                 owner: this,
@@ -6180,7 +6293,7 @@ var RenderPathExecutor = function () {
 
             targetObjects.forEach(function (v) {
                 v.callRecursive(function (_v) {
-                    if (_v.Geometry && stage.needRender(scene, _v, techniqueIndex)) {
+                    if (_v.Geometry) {
                         stage.render(scene, _v, techniqueCount, techniqueIndex);
                         renderer.emit("rendered-object", {
                             owner: _this,
@@ -6201,7 +6314,7 @@ var RenderPathExecutor = function () {
 
 exports.default = RenderPathExecutor;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../SceneObjects/Mesh":146}],83:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"../SceneObjects/Mesh":150}],85:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6288,7 +6401,7 @@ var RenderStageRegistory = function () {
 
 exports.default = RenderStageRegistory;
 
-},{"../../ContextComponents":8,"./RenderStages/Base/BasicRenderStage":84,"./RenderStages/BuiltIn/FXAA.rsml":87,"./RenderStages/BuiltIn/Fog.rsml":88,"./RenderStages/BuiltIn/FogExp2.rsml":89,"./RenderStages/BuiltIn/ForwardShading.rsml":90,"./RenderStages/BuiltIn/GBuffer.rsml":91,"./RenderStages/BuiltIn/Gaussian.rsml":92,"./RenderStages/BuiltIn/LightAccumulationStage.rsml":94,"./RenderStages/BuiltIn/Skybox.rsml":95,"./RenderStages/BuiltIn/Sobel.rsml":96,"./RenderStages/HitAreaRenderStage":97}],84:[function(require,module,exports){
+},{"../../ContextComponents":8,"./RenderStages/Base/BasicRenderStage":86,"./RenderStages/BuiltIn/FXAA.rsml":89,"./RenderStages/BuiltIn/Fog.rsml":90,"./RenderStages/BuiltIn/FogExp2.rsml":91,"./RenderStages/BuiltIn/ForwardShading.rsml":92,"./RenderStages/BuiltIn/GBuffer.rsml":93,"./RenderStages/BuiltIn/Gaussian.rsml":94,"./RenderStages/BuiltIn/LightAccumulationStage.rsml":96,"./RenderStages/BuiltIn/Skybox.rsml":97,"./RenderStages/BuiltIn/Sobel.rsml":98,"./RenderStages/HitAreaRenderStage":99}],86:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6296,8 +6409,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 var _BasicTechnique = require("./BasicTechnique");
 
@@ -6335,7 +6446,7 @@ var BasicRenderStage = function (_RenderStageBase) {
     }, {
         key: "getSuperRendererConfigure",
         value: function getSuperRendererConfigure() {
-            return _get(Object.getPrototypeOf(BasicRenderStage.prototype), "getDefaultRendererConfigure", this).call(this, 0);
+            return _RenderStageBase3.default.defaultRendererConfigure;
         }
     }, {
         key: "preTechnique",
@@ -6346,11 +6457,6 @@ var BasicRenderStage = function (_RenderStageBase) {
         key: "render",
         value: function render(scene, object, techniqueCount, techniqueIndex) {
             this.techniques[techniqueIndex].render(scene, object, techniqueCount, techniqueIndex);
-        }
-    }, {
-        key: "needRender",
-        value: function needRender(scene, object, techniqueIndex) {
-            return typeof object.Geometry !== "undefined" && object.Geometry != null;
         }
     }, {
         key: "getTechniqueCount",
@@ -6391,7 +6497,7 @@ var BasicRenderStage = function (_RenderStageBase) {
 
 exports.default = BasicRenderStage;
 
-},{"../RenderStageBase":98,"./BasicTechnique":85}],85:[function(require,module,exports){
+},{"../RenderStageBase":100,"./BasicTechnique":87}],87:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6399,6 +6505,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _MaterialDrawer = require("../../../Materials/MaterialDrawer");
+
+var _MaterialDrawer2 = _interopRequireDefault(_MaterialDrawer);
 
 var _RenderStageConfigUtility = require("./RenderStageConfigUtility");
 
@@ -6443,15 +6553,18 @@ var BasicTechnique = function (_JThreeObjectWithID) {
         _this.__fboInitialized = false;
         _this._wireFramed = false;
         _this.__renderStage = renderStage;
+        _this.__renderer = renderStage.renderer;
+        _this.gl = renderStage.gl;
         _this._techniqueDocument = technique;
         _this._techniqueIndex = techniqueIndex;
-        _this.defaultRenderConfigure = _XMLRenderConfigUtility2.default.parseRenderConfig(technique, _this.__renderStage.getSuperRendererConfigure());
+        var rc = _XMLRenderConfigUtility2.default.parseRenderConfig(technique);
+        _this.defaultRenderConfigure = _XMLRenderConfigUtility2.default.mergeRenderConfigure(rc, _this.__renderStage.getSuperRendererConfigure());
         _this._target = _this._techniqueDocument.getAttribute("target");
         _this._wireFramed = _this._techniqueDocument.getAttribute("wireframe") === "true";
         if (!_this._target) {
             _this._target = "scene";
         }
-        _this._fboBindingInfo = _RenderStageConfigUtility2.default.parseFBOConfiguration(_this._techniqueDocument.getElementsByTagName("fbo").item(0), renderStage.Renderer.canvas);
+        _this._fboBindingInfo = _RenderStageConfigUtility2.default.parseFBOConfiguration(_this._techniqueDocument.getElementsByTagName("fbo").item(0), renderStage.renderer.canvas);
         if (_this._target !== "scene") {
             _this.defaultMaterial = _this._getMaterial();
         }
@@ -6469,11 +6582,11 @@ var BasicTechnique = function (_JThreeObjectWithID) {
             switch (this.Target) {
                 case "scene":
                     var materialGroup = this._techniqueDocument.getAttribute("materialGroup");
-                    this.__renderStage.drawForMaterials(scene, object, techniqueCount, techniqueIndex, materialGroup, this._wireFramed);
+                    _MaterialDrawer2.default.drawForMaterials(scene, this.__renderStage, object, techniqueCount, techniqueIndex, materialGroup, this._wireFramed);
                     break;
                 default:
-                    _XMLRenderConfigUtility2.default.applyAll(this._gl, this.defaultRenderConfigure);
-                    this.__renderStage.drawForMaterial(scene, object, techniqueCount, techniqueIndex, this.defaultMaterial, this._wireFramed);
+                    _XMLRenderConfigUtility2.default.applyAll(this.gl, this.defaultRenderConfigure);
+                    _MaterialDrawer2.default.drawForMaterial(scene, this.__renderStage, object, techniqueCount, techniqueIndex, this.defaultMaterial, this._wireFramed);
             }
         }
     }, {
@@ -6482,7 +6595,7 @@ var BasicTechnique = function (_JThreeObjectWithID) {
             this.__fboInitialized = true;
             var rm = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.ResourceManager);
             this.__fbo = rm.createFBO("jthree.technique." + this.id);
-            var fboWrapper = this.__fbo.getForGL(this._gl);
+            var fboWrapper = this.__fbo.getForGL(this.gl);
             this._attachRBOConfigure(fboWrapper);
             this._attachTextureConfigure(fboWrapper);
         }
@@ -6564,7 +6677,7 @@ var BasicTechnique = function (_JThreeObjectWithID) {
             if (!this._fboBindingInfo || !this._fboBindingInfo[0]) {
                 // if there was no fbo configuration, use screen buffer as default
                 this._applyViewport(true);
-                this._gl.bindFramebuffer(this._gl.FRAMEBUFFER, null);
+                this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
                 return;
             } else {
                 // Check primary buffer was specified
@@ -6576,7 +6689,7 @@ var BasicTechnique = function (_JThreeObjectWithID) {
                 if (!this.__fboInitialized) {
                     this.__initializeFBO(texs);
                 }
-                this.__fbo.getForGL(this._gl).bind();
+                this.__fbo.getForGL(this.gl).bind();
                 this._clearBuffers();
             }
         }
@@ -6588,11 +6701,11 @@ var BasicTechnique = function (_JThreeObjectWithID) {
         key: "_onPrimaryBufferFail",
         value: function _onPrimaryBufferFail() {
             this._applyViewport(true);
-            this._gl.bindFramebuffer(this._gl.FRAMEBUFFER, null);
+            this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
             if (this._fboBindingInfo.rbo && this._fboBindingInfo.rbo.needClear) {
-                this._gl.depthMask(true);
-                this._gl.clearDepth(this._fboBindingInfo.rbo.clearDepth);
-                this._gl.clear(this._gl.DEPTH_BUFFER_BIT);
+                this.gl.depthMask(true);
+                this.gl.clearDepth(this._fboBindingInfo.rbo.clearDepth);
+                this.gl.clear(this.gl.DEPTH_BUFFER_BIT);
             }
         }
     }, {
@@ -6603,25 +6716,20 @@ var BasicTechnique = function (_JThreeObjectWithID) {
             if (this._fboBindingInfo[0] && this._fboBindingInfo[0].needClear) {
                 var buffer = this._fboBindingInfo[0];
                 var col = buffer.clearColor;
-                this._gl.colorMask(true, true, true, true);
-                this._gl.clearColor(col.X, col.Y, col.Z, col.W);
-                this._gl.clear(this._gl.COLOR_BUFFER_BIT);
+                this.gl.colorMask(true, true, true, true);
+                this.gl.clearColor(col.X, col.Y, col.Z, col.W);
+                this.gl.clear(this.gl.COLOR_BUFFER_BIT);
             }
             if (this._fboBindingInfo.rbo && this._fboBindingInfo.rbo.needClear) {
-                this._gl.depthMask(true);
-                this._gl.clearDepth(this._fboBindingInfo.rbo.clearDepth);
-                this._gl.clear(this._gl.DEPTH_BUFFER_BIT);
+                this.gl.depthMask(true);
+                this.gl.clearDepth(this._fboBindingInfo.rbo.clearDepth);
+                this.gl.clear(this.gl.DEPTH_BUFFER_BIT);
             }
         }
     }, {
         key: "_applyViewport",
         value: function _applyViewport(isDefault) {
-            this.__renderStage.Renderer.applyViewport(isDefault);
-        }
-    }, {
-        key: "_gl",
-        get: function get() {
-            return this.__renderStage.GL;
+            this.__renderStage.renderer.applyViewport(isDefault);
         }
     }, {
         key: "Target",
@@ -6635,7 +6743,7 @@ var BasicTechnique = function (_JThreeObjectWithID) {
 
 exports.default = BasicTechnique;
 
-},{"../../../../Base/JThreeObjectWithID":6,"../../../../ContextComponents":8,"../../../../JThreeContext":262,"../../../Materials/BasicMaterial":36,"../../../Pass/XMLRenderConfigUtility":66,"./RenderStageConfigUtility":86}],86:[function(require,module,exports){
+},{"../../../../Base/JThreeObjectWithID":6,"../../../../ContextComponents":8,"../../../../JThreeContext":267,"../../../Materials/BasicMaterial":36,"../../../Materials/MaterialDrawer":58,"../../../Pass/XMLRenderConfigUtility":68,"./RenderStageConfigUtility":88}],88:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6755,27 +6863,27 @@ var RenderStageConfigUtility = function () {
 
 exports.default = RenderStageConfigUtility;
 
-},{"../../../../Math/Vector4":274}],87:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <rsml>\n    <stage name=\"jthree.basic.fxaa\">\n      <technique target=\"quad\">\n        <fbo primary=\"OUT\">\n          <color name=\"OUT\" register=\"0\"/>\n        </fbo>\n        <material name=\"jthree.basic.fxaa\" group=\"jthree.materials.fxaa\" order=\"300\">\n          <uniform-register>\n            <register name=\"builtin.basic\" />\n            <register name=\"builtin.buffer\" />\n          </uniform-register>\n          <passes>\n            <pass>\n              <blend enabled=\"false\" />\n              <glsl>\n                <![CDATA[\n            attribute vec4 position;\n\n            varying vec2 vMUv;\n            varying vec2 vSWUv;\n            varying vec2 vSEUv;\n            varying vec2 vNWUv;\n            varying vec2 vNEUv;\n            varying vec2 vUv;\n\n            uniform mediump vec2 _resolution;\n\n            @vert{\n\n            void texcoords(vec2 fragCoord, vec2 resolution, out vec2 NW, out vec2 NE, out vec2 SW, out vec2 SE, out vec2 M) {\n      \t        vec2 inverseVP = 1.0 / resolution.xy;\n      \t        NW = (fragCoord + vec2(-1.0, -1.0)) * inverseVP;\n      \t        NE = (fragCoord + vec2(1.0, -1.0)) * inverseVP;\n      \t        SW = (fragCoord + vec2(-1.0, 1.0)) * inverseVP;\n      \t        SE = (fragCoord + vec2(1.0, 1.0)) * inverseVP;\n      \t        M = vec2(fragCoord * inverseVP);\n              }\n\n              void main(void)\n              {\n              \tgl_Position = position;\n                vUv = (position.xy + vec2(1.0,1.0)) * 0.5;\n                texcoords(vUv * _resolution,_resolution,vNWUv,vNEUv,vSWUv,vSEUv,vMUv);\n              }\n            }\n\n            @frag{\n\n              @{type:\"buffer\",name:\"INPUT\",register:0}\n              uniform sampler2D _inputBuffer;\n\n              @{default:0.0078125}\n              uniform float reduceMin;\n              @{default:0.125}\n              uniform float reduceMul;\n              @{default:8}\n              uniform float spanMax;\n\n              vec4 fxaa(sampler2D tex, vec2 fragCoord, vec2 resolution,vec2 v_rgbNW, vec2 v_rgbNE, vec2 v_rgbSW, vec2 v_rgbSE, vec2 v_rgbM) {\n                vec4 color;\n                mediump vec2 inverseVP = vec2(1.0 / resolution.x, 1.0 / resolution.y);\n                vec3 rgbNW = texture2D(tex, v_rgbNW).xyz;\n                vec3 rgbNE = texture2D(tex, v_rgbNE).xyz;\n                vec3 rgbSW = texture2D(tex, v_rgbSW).xyz;\n                vec3 rgbSE = texture2D(tex, v_rgbSE).xyz;\n                vec4 texColor = texture2D(tex, v_rgbM);\n                vec3 rgbM  = texColor.xyz;\n                vec3 luma = vec3(0.299, 0.587, 0.114);\n                float lumaNW = dot(rgbNW, luma);\n                float lumaNE = dot(rgbNE, luma);\n                float lumaSW = dot(rgbSW, luma);\n                float lumaSE = dot(rgbSE, luma);\n                float lumaM  = dot(rgbM,  luma);\n                float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));\n                float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));\n\n                mediump vec2 dir;\n                dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));\n                dir.y =  ((lumaNW + lumaSW) - (lumaNE + lumaSE));\n\n                float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * 0.25 * reduceMul, reduceMin);\n\n                float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);\n                dir = min(vec2(spanMax, spanMax), max(vec2(-spanMax, -spanMax), dir * rcpDirMin)) * inverseVP;\n\n                vec4 rgbA = 0.5 * (\n                texture2D(tex, fragCoord * inverseVP + dir * (1.0 / 3.0 - 0.5)) +\n                texture2D(tex, fragCoord * inverseVP + dir * (2.0 / 3.0 - 0.5)));\n                vec4 rgbB = rgbA * 0.5 + 0.25 * (\n                texture2D(tex, fragCoord * inverseVP + dir * -0.5) +\n                texture2D(tex, fragCoord * inverseVP + dir * 0.5));\n\n                float lumaB = dot(rgbB.rgb, luma);\n                if ((lumaB < lumaMin) || (lumaB > lumaMax))\n                color = rgbA;\n                else\n                color = rgbB;\n                return color;\n              }\n\n              void main(void){\n                gl_FragColor = fxaa(_inputBuffer,vUv * _resolution,_resolution, vNWUv,vNEUv,vSWUv,vSEUv,vMUv);\n              }\n            }\n\n            ]]>\n              </glsl>\n            </pass>\n          </passes>\n        </material>\n      </technique>\n    </stage>\n  </rsml>\n"
-},{}],88:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <rsml>\n    <stage name=\"jthree.basic.fog\">\n      <technique target=\"quad\">\n        <fbo primar=\"OUT\">\n          <color name=\"OUT\" register=\"0\" />\n        </fbo>\n        <material name=\"jthree.basic.fog\" group=\"jthree.materials.fog\" order=\"300\">\n          <uniform-register>\n            <register name=\"builtin.buffer\" />\n            <register name=\"builtin.basic\" />\n          </uniform-register>\n          <passes>\n            <pass>\n              <depth enabled=\"false\" />\n              <glsl>\n                <![CDATA[\n            attribute vec3 position;\n            varying vec4 vPosition;\n\n            @vert{\n              uniform mat4 _matV;\n\n              void main(void)\n              {\n              \tvPosition = vec4(position,1.0);\n                gl_Position = vec4(position,1.0);\n              }\n            }\n\n            @frag{\n              @import \"builtin.gbuffer-reader\"\n\n              @{register:0,type:\"buffer\",name:\"PRIMARY\"}\n              uniform mediump sampler2D _buffer;\n\n              @{register:1,type:\"buffer\",name:\"MAIN\"}\n              uniform sampler2D _mainBuffer;\n\n              uniform mat4 _matIP;\n\n              @{default:0.4}\n              uniform float fogStart;\n\n              @{default:1.0}\n              uniform float fogEnd;\n\n              @{default:[1,1,1]}\n              uniform vec3 fogColor;\n\n              uniform float _nearClip;\n\n              uniform float _farClip;\n\n              void main()\n              {\n                vec4 rawBuffer = readRawBuffer(_buffer,vPosition);\n                float depth = getDepth(rawBuffer);\n                vec3 pos = getPosition(depth,vPosition,_matIP);\n                vec2 uv = vPosition.xy /2. + vec2(0.5,0.5);\n              \tgl_FragColor=texture2D( _mainBuffer, uv);\n                float d = -pos.z / (_farClip - _nearClip);\n                float fogFactor;\n                if (d == 1.) {\n                  fogFactor = 0.0;\n                } else {\n                  if (fogEnd - fogStart <= 0.) {\n                    fogFactor = d >= fogEnd ? 1.0 : 0.0;\n                  } else {\n                    fogFactor = max(0.,min(1.,d / (fogEnd - fogStart) - fogStart / (fogEnd - fogStart)));\n                  }\n                }\n                gl_FragColor.rgb = mix(gl_FragColor.rgb,fogColor,fogFactor);\n              }\n            }\n\n            ]]>\n              </glsl>\n            </pass>\n          </passes>\n        </material>\n      </technique>\n    </stage>\n  </rsml>\n"
-},{}],89:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsml>\n  <stage name=\"jthree.basic.fogExp2\">\n    <technique target=\"quad\">\n      <fbo primary=\"OUT\">\n        <color name=\"OUT\" register=\"0\"/>\n      </fbo>\n      <material order=\"300\">\n        <uniform-register>\n          <register name=\"builtin.buffer\" />\n          <register name=\"builtin.basic\" />\n        </uniform-register>\n        <passes>\n          <pass>\n            <depth enabled=\"false\" />\n            <glsl>\n              <![CDATA[\n            attribute vec3 position;\n            varying vec4 vPosition;\n\n            @vert{\n              uniform mat4 _matV;\n\n              void main(void)\n              {\n                vPosition = vec4(position,1.0);\n                gl_Position = vec4(position,1.0);\n              }\n            }\n\n            @frag{\n              @import \"builtin.gbuffer-reader\"\n\n              @{register:0,type:\"buffer\",name:\"PRIMARY\"}\n              uniform mediump sampler2D _buffer;\n\n              @{register:1,type:\"buffer\",name:\"MAIN\"}\n              uniform sampler2D _mainBuffer;\n\n              uniform mat4 _matIP;\n\n              @{default:0.4}\n              uniform float density;\n\n              @{default:[1,1,1]}\n              uniform vec3 fogColor;\n\n              uniform float _nearClip;\n\n              uniform float _farClip;\n\n              float fogFactorExp2(const float dist) {\n                const float LOG2 = -1.442695;\n                float d = density * dist;\n                return 1.0 - clamp(exp2(d * d * LOG2), 0.0, 1.0);\n              }\n\n              void main()\n              {\n                vec4 rawBuffer = readRawBuffer(_buffer,vPosition);\n                float depth = getDepth(rawBuffer);\n                vec3 pos = getPosition(depth,vPosition,_matIP);\n                vec2 uv = vPosition.xy /2. + vec2(0.5,0.5);\n                gl_FragColor=texture2D( _mainBuffer, uv);\n                float d = -pos.z / (_farClip - _nearClip);\n                float fogFactor = fogFactorExp2(d);\n                gl_FragColor.rgb = mix(gl_FragColor.rgb,fogColor,fogFactor);\n              }\n            }\n\n            ]]>\n            </glsl>\n          </pass>\n        </passes>\n      </material>\n    </technique>\n  </stage>\n</rsml>\n"
+},{"../../../../Math/Vector4":279}],89:[function(require,module,exports){
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <rsml>\n    <stage name=\"jthree.basic.fxaa\">\n      <technique target=\"quad\">\n        <fbo primary=\"OUT\">\n          <color name=\"OUT\" register=\"0\"/>\n        </fbo>\n        <material name=\"jthree.basic.fxaa\" group=\"jthree.materials.fxaa\" order=\"300\">\n          <registers>\n            <register name=\"builtin.basic\" />\n            <register name=\"builtin.buffer\" />\n          </registers>\n          <passes>\n            <pass>\n              <blend enabled=\"false\" />\n              <glsl>\n                <![CDATA[\n            attribute vec4 position;\n\n            varying vec2 vMUv;\n            varying vec2 vSWUv;\n            varying vec2 vSEUv;\n            varying vec2 vNWUv;\n            varying vec2 vNEUv;\n            varying vec2 vUv;\n\n            uniform mediump vec2 _resolution;\n\n            @vert{\n\n            void texcoords(vec2 fragCoord, vec2 resolution, out vec2 NW, out vec2 NE, out vec2 SW, out vec2 SE, out vec2 M) {\n      \t        vec2 inverseVP = 1.0 / resolution.xy;\n      \t        NW = (fragCoord + vec2(-1.0, -1.0)) * inverseVP;\n      \t        NE = (fragCoord + vec2(1.0, -1.0)) * inverseVP;\n      \t        SW = (fragCoord + vec2(-1.0, 1.0)) * inverseVP;\n      \t        SE = (fragCoord + vec2(1.0, 1.0)) * inverseVP;\n      \t        M = vec2(fragCoord * inverseVP);\n              }\n\n              void main(void)\n              {\n              \tgl_Position = position;\n                vUv = (position.xy + vec2(1.0,1.0)) * 0.5;\n                texcoords(vUv * _resolution,_resolution,vNWUv,vNEUv,vSWUv,vSEUv,vMUv);\n              }\n            }\n\n            @frag{\n\n              @{type:\"buffer\",name:\"INPUT\",register:0}\n              uniform sampler2D _inputBuffer;\n\n              @{default:0.0078125}\n              uniform float reduceMin;\n              @{default:0.125}\n              uniform float reduceMul;\n              @{default:8}\n              uniform float spanMax;\n\n              vec4 fxaa(sampler2D tex, vec2 fragCoord, vec2 resolution,vec2 v_rgbNW, vec2 v_rgbNE, vec2 v_rgbSW, vec2 v_rgbSE, vec2 v_rgbM) {\n                vec4 color;\n                mediump vec2 inverseVP = vec2(1.0 / resolution.x, 1.0 / resolution.y);\n                vec3 rgbNW = texture2D(tex, v_rgbNW).xyz;\n                vec3 rgbNE = texture2D(tex, v_rgbNE).xyz;\n                vec3 rgbSW = texture2D(tex, v_rgbSW).xyz;\n                vec3 rgbSE = texture2D(tex, v_rgbSE).xyz;\n                vec4 texColor = texture2D(tex, v_rgbM);\n                vec3 rgbM  = texColor.xyz;\n                vec3 luma = vec3(0.299, 0.587, 0.114);\n                float lumaNW = dot(rgbNW, luma);\n                float lumaNE = dot(rgbNE, luma);\n                float lumaSW = dot(rgbSW, luma);\n                float lumaSE = dot(rgbSE, luma);\n                float lumaM  = dot(rgbM,  luma);\n                float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));\n                float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));\n\n                mediump vec2 dir;\n                dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));\n                dir.y =  ((lumaNW + lumaSW) - (lumaNE + lumaSE));\n\n                float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * 0.25 * reduceMul, reduceMin);\n\n                float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);\n                dir = min(vec2(spanMax, spanMax), max(vec2(-spanMax, -spanMax), dir * rcpDirMin)) * inverseVP;\n\n                vec4 rgbA = 0.5 * (\n                texture2D(tex, fragCoord * inverseVP + dir * (1.0 / 3.0 - 0.5)) +\n                texture2D(tex, fragCoord * inverseVP + dir * (2.0 / 3.0 - 0.5)));\n                vec4 rgbB = rgbA * 0.5 + 0.25 * (\n                texture2D(tex, fragCoord * inverseVP + dir * -0.5) +\n                texture2D(tex, fragCoord * inverseVP + dir * 0.5));\n\n                float lumaB = dot(rgbB.rgb, luma);\n                if ((lumaB < lumaMin) || (lumaB > lumaMax))\n                color = rgbA;\n                else\n                color = rgbB;\n                return color;\n              }\n\n              void main(void){\n                gl_FragColor = fxaa(_inputBuffer,vUv * _resolution,_resolution, vNWUv,vNEUv,vSWUv,vSEUv,vMUv);\n              }\n            }\n\n            ]]>\n              </glsl>\n            </pass>\n          </passes>\n        </material>\n      </technique>\n    </stage>\n  </rsml>\n"
 },{}],90:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsml>\n  <stage name=\"jthree.basic.foward\">\n    <technique target=\"scene\" materialGroup=\"builtin.forward\">\n      <fbo primary=\"OUT\">\n        <color name=\"OUT\" register=\"0\" clearColor=\"default\" clear=\"true\"/>\n        <rbo clear=\"true\" type=\"depth\"/>\n      </fbo>\n      <cull enabled=\"false\" mode=\"BACK\"/>\n    </technique>\n  </stage>\n</rsml>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <rsml>\n    <stage name=\"jthree.basic.fog\">\n      <technique target=\"quad\">\n        <fbo primar=\"OUT\">\n          <color name=\"OUT\" register=\"0\" />\n        </fbo>\n        <material name=\"jthree.basic.fog\" group=\"jthree.materials.fog\" order=\"300\">\n          <registers>\n            <register name=\"builtin.buffer\" />\n            <register name=\"builtin.basic\" />\n          </registers>\n          <passes>\n            <pass>\n              <depth enabled=\"false\" />\n              <glsl>\n                <![CDATA[\n            attribute vec3 position;\n            varying vec4 vPosition;\n\n            @vert{\n              uniform mat4 _matV;\n\n              void main(void)\n              {\n              \tvPosition = vec4(position,1.0);\n                gl_Position = vec4(position,1.0);\n              }\n            }\n\n            @frag{\n              @import \"builtin.gbuffer-reader\"\n\n              @{register:0,type:\"buffer\",name:\"PRIMARY\"}\n              uniform mediump sampler2D _buffer;\n\n              @{register:1,type:\"buffer\",name:\"MAIN\"}\n              uniform sampler2D _mainBuffer;\n\n              uniform mat4 _matIP;\n\n              @{default:0.4}\n              uniform float fogStart;\n\n              @{default:1.0}\n              uniform float fogEnd;\n\n              @{default:[1,1,1]}\n              uniform vec3 fogColor;\n\n              uniform float _nearClip;\n\n              uniform float _farClip;\n\n              void main()\n              {\n                vec4 rawBuffer = readRawBuffer(_buffer,vPosition);\n                float depth = getDepth(rawBuffer);\n                vec3 pos = getPosition(depth,vPosition,_matIP);\n                vec2 uv = vPosition.xy /2. + vec2(0.5,0.5);\n              \tgl_FragColor=texture2D( _mainBuffer, uv);\n                float d = -pos.z / (_farClip - _nearClip);\n                float fogFactor;\n                if (d == 1.) {\n                  fogFactor = 0.0;\n                } else {\n                  if (fogEnd - fogStart <= 0.) {\n                    fogFactor = d >= fogEnd ? 1.0 : 0.0;\n                  } else {\n                    fogFactor = max(0.,min(1.,d / (fogEnd - fogStart) - fogStart / (fogEnd - fogStart)));\n                  }\n                }\n                gl_FragColor.rgb = mix(gl_FragColor.rgb,fogColor,fogFactor);\n              }\n            }\n\n            ]]>\n              </glsl>\n            </pass>\n          </passes>\n        </material>\n      </technique>\n    </stage>\n  </rsml>\n"
 },{}],91:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsml>\n  <stage name=\"jthree.basic.gbuffer\">\n    <technique target=\"scene\" materialGroup=\"builtin.depth\">\n      <fbo>\n        <color name=\"DEPTH\" clearColor=\"0,0,0,0\" register=\"0\" />\n        <rbo type=\"depth\" clearDepth=\"1.0\" />\n      </fbo>\n      <cull enabled=\"true\" mode=\"BACK\" />\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ZERO\" />\n      <depth enabled=\"true\" mode=\"LESS\" />\n    </technique>\n    <technique target=\"scene\" materialGroup=\"jthree.basic.gbuffer.1\">\n      <fbo>\n        <color name=\"PRIMARY\" clearColor=\"0,0,0,0\" register=\"0\" />\n        <rbo type=\"depth\" clearDepth=\"1.0\" />\n      </fbo>\n      <cull enabled=\"true\" mode=\"BACK\" />\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ZERO\" />\n      <depth enabled=\"true\" mode=\"LESS\" />\n    </technique>\n    <!--\n    <technique target=\"scene\" materialGroup=\"jthree.basic.gbuffer.3\">\n      <cull enabled=\"true\" mode=\"BACK\"/>\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ZERO\"/>\n      <depth enabled=\"true\" mode=\"LESS\"/>\n    </technique> -->\n  </stage>\n</rsml>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsml>\n  <stage name=\"jthree.basic.fogExp2\">\n    <technique target=\"quad\">\n      <fbo primary=\"OUT\">\n        <color name=\"OUT\" register=\"0\"/>\n      </fbo>\n      <material order=\"300\">\n        <registers>\n          <register name=\"builtin.buffer\" />\n          <register name=\"builtin.basic\" />\n        </registers>\n        <passes>\n          <pass>\n            <depth enabled=\"false\" />\n            <glsl>\n              <![CDATA[\n            attribute vec3 position;\n            varying vec4 vPosition;\n\n            @vert{\n              uniform mat4 _matV;\n\n              void main(void)\n              {\n                vPosition = vec4(position,1.0);\n                gl_Position = vec4(position,1.0);\n              }\n            }\n\n            @frag{\n              @import \"builtin.gbuffer-reader\"\n\n              @{register:0,type:\"buffer\",name:\"PRIMARY\"}\n              uniform mediump sampler2D _buffer;\n\n              @{register:1,type:\"buffer\",name:\"MAIN\"}\n              uniform sampler2D _mainBuffer;\n\n              uniform mat4 _matIP;\n\n              @{default:0.4}\n              uniform float density;\n\n              @{default:[1,1,1]}\n              uniform vec3 fogColor;\n\n              uniform float _nearClip;\n\n              uniform float _farClip;\n\n              float fogFactorExp2(const float dist) {\n                const float LOG2 = -1.442695;\n                float d = density * dist;\n                return 1.0 - clamp(exp2(d * d * LOG2), 0.0, 1.0);\n              }\n\n              void main()\n              {\n                vec4 rawBuffer = readRawBuffer(_buffer,vPosition);\n                float depth = getDepth(rawBuffer);\n                vec3 pos = getPosition(depth,vPosition,_matIP);\n                vec2 uv = vPosition.xy /2. + vec2(0.5,0.5);\n                gl_FragColor=texture2D( _mainBuffer, uv);\n                float d = -pos.z / (_farClip - _nearClip);\n                float fogFactor = fogFactorExp2(d);\n                gl_FragColor.rgb = mix(gl_FragColor.rgb,fogColor,fogFactor);\n              }\n            }\n\n            ]]>\n            </glsl>\n          </pass>\n        </passes>\n      </material>\n    </technique>\n  </stage>\n</rsml>\n"
 },{}],92:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <rsml>\n    <stage name=\"jthree.basic.gaussian\">\n      <technique target=\"quad\">\n        <fbo>\n          <color name=\"BUF\" register=\"0\" />\n        </fbo>\n        <material name=\"jthree.basic.gaussian.1\" order=\"300\">\n          <uniform-register>\n            <register name=\"builtin.buffer\" />\n            <register name=\"builtin.basic\" />\n          </uniform-register>\n          <passes>\n            <pass>\n              <depth enabled=\"false\" />\n              <glsl><![CDATA[\n            attribute vec3 position;\n            varying vec4 vPosition;\n\n            @vert{\n              uniform mat4 _matV;\n\n              void main(void)\n              {\n              \tvPosition = vec4(position,1.0);\n                gl_Position = vec4(position,1.0);\n              }\n            }\n\n            @frag{\n\n              uniform vec2 _resolution;\n\n              uniform float weight[10];\n\n              @{type:\"buffer\",name:\"INPUT\",register:0}\n              uniform sampler2D _texture;\n              void main(void){\n                fc = gl_FragCoord.st;\n                destColor += texture2D(_texture, (fc + vec2(-9.0, 0.0)) * tFrag).rgb * weight[9];\n                destColor += texture2D(_texture, (fc + vec2(-8.0, 0.0)) * tFrag).rgb * weight[8];\n                destColor += texture2D(_texture, (fc + vec2(-7.0, 0.0)) * tFrag).rgb * weight[7];\n                destColor += texture2D(_texture, (fc + vec2(-6.0, 0.0)) * tFrag).rgb * weight[6];\n                destColor += texture2D(_texture, (fc + vec2(-5.0, 0.0)) * tFrag).rgb * weight[5];\n                destColor += texture2D(_texture, (fc + vec2(-4.0, 0.0)) * tFrag).rgb * weight[4];\n                destColor += texture2D(_texture, (fc + vec2(-3.0, 0.0)) * tFrag).rgb * weight[3];\n                destColor += texture2D(_texture, (fc + vec2(-2.0, 0.0)) * tFrag).rgb * weight[2];\n                destColor += texture2D(_texture, (fc + vec2(-1.0, 0.0)) * tFrag).rgb * weight[1];\n                destColor += texture2D(_texture, (fc + vec2( 0.0, 0.0)) * tFrag).rgb * weight[0];\n                destColor += texture2D(_texture, (fc + vec2( 1.0, 0.0)) * tFrag).rgb * weight[1];\n                destColor += texture2D(_texture, (fc + vec2( 2.0, 0.0)) * tFrag).rgb * weight[2];\n                destColor += texture2D(_texture, (fc + vec2( 3.0, 0.0)) * tFrag).rgb * weight[3];\n                destColor += texture2D(_texture, (fc + vec2( 4.0, 0.0)) * tFrag).rgb * weight[4];\n                destColor += texture2D(_texture, (fc + vec2( 5.0, 0.0)) * tFrag).rgb * weight[5];\n                destColor += texture2D(_texture, (fc + vec2( 6.0, 0.0)) * tFrag).rgb * weight[6];\n                destColor += texture2D(_texture, (fc + vec2( 7.0, 0.0)) * tFrag).rgb * weight[7];\n                destColor += texture2D(_texture, (fc + vec2( 8.0, 0.0)) * tFrag).rgb * weight[8];\n                destColor += texture2D(_texture, (fc + vec2( 9.0, 0.0)) * tFrag).rgb * weight[9];\n                gl_FragColor = vec4(destColor,1.0);\n              }\n            }\n            ]]>\n              </glsl>\n            </pass>\n          </passes>\n        </material>\n      </technique>\n    </stage>\n  </rsml>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsml>\n  <stage name=\"jthree.basic.foward\">\n    <technique target=\"scene\" materialGroup=\"builtin.forward\">\n      <fbo primary=\"OUT\">\n        <color name=\"OUT\" register=\"0\" clearColor=\"default\" clear=\"true\"/>\n        <rbo clear=\"true\" type=\"depth\"/>\n      </fbo>\n      <cull enabled=\"false\" mode=\"BACK\"/>\n    </technique>\n  </stage>\n</rsml>\n"
 },{}],93:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsml>\n  <stage name=\"jthree.basic.hitarea\">\n    <technique target=\"scene\" materialGroup=\"jthree.materials.hitarea\">\n      <fbo>\n        <rbo clearDepth=\"1.0\" type=\"depth\"/>\n        <color name=\"OUT\" clearColor=\"0,0,0,0\" register=\"0\"/>\n      </fbo>\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ZERO\"/>\n    </technique>\n  </stage>\n</rsml>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsml>\n  <stage name=\"jthree.basic.gbuffer\">\n    <technique target=\"scene\" materialGroup=\"builtin.depth\">\n      <fbo>\n        <color name=\"DEPTH\" clearColor=\"0,0,0,0\" register=\"0\" />\n        <rbo type=\"depth\" clearDepth=\"1.0\" />\n      </fbo>\n      <cull enabled=\"true\" mode=\"BACK\" />\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ZERO\" />\n      <depth enabled=\"true\" mode=\"LESS\" />\n    </technique>\n    <technique target=\"scene\" materialGroup=\"jthree.basic.gbuffer.1\">\n      <fbo>\n        <color name=\"PRIMARY\" clearColor=\"0,0,0,0\" register=\"0\" />\n        <rbo type=\"depth\" clearDepth=\"1.0\" />\n      </fbo>\n      <cull enabled=\"true\" mode=\"BACK\" />\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ZERO\" />\n      <depth enabled=\"true\" mode=\"LESS\" />\n    </technique>\n    <!--\n    <technique target=\"scene\" materialGroup=\"jthree.basic.gbuffer.3\">\n      <cull enabled=\"true\" mode=\"BACK\"/>\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ZERO\"/>\n      <depth enabled=\"true\" mode=\"LESS\"/>\n    </technique> -->\n  </stage>\n</rsml>\n"
 },{}],94:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsml>\n  <stage name=\"jthree.basic.light\">\n    <technique target=\"scene\" materialGroup=\"jthree.light.diffuse\">\n      <fbo>\n        <rbo clearDepth=\"1.0\" clear=\"false\"/>\n        <color name=\"DIFFUSE\" clearColor=\"0,0,0,0\" register=\"0\"/>\n      </fbo>\n      <cull enabled=\"true\" mode=\"BACK\"/>\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ONE\"/>\n      <depth enabled=\"true\" mode=\"LEQUAL\"/>\n      <mask depth=\"false\"/>\n    </technique>\n    <technique target=\"scene\" materialGroup=\"jthree.light.specular\">\n      <fbo>\n        <rbo clearDepth=\"1.0\" clear=\"false\"/>\n        <color name=\"SPECULAR\" clearColor=\"0,0,0,0\" register=\"0\"/>\n      </fbo>\n      <cull enabled=\"true\" mode=\"BACK\"/>\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ONE\"/>\n      <depth enabled=\"true\" mode=\"LEQUAL\"/>\n      <mask depth=\"false\"/>\n    </technique>\n  </stage>\n</rsml>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <rsml>\n    <stage name=\"jthree.basic.gaussian\">\n      <technique target=\"quad\">\n        <fbo>\n          <color name=\"BUF\" register=\"0\" />\n        </fbo>\n        <material name=\"jthree.basic.gaussian.1\" order=\"300\">\n          <registers>\n            <register name=\"builtin.buffer\" />\n            <register name=\"builtin.basic\" />\n          </registers>\n          <passes>\n            <pass>\n              <depth enabled=\"false\" />\n              <glsl><![CDATA[\n            attribute vec3 position;\n            varying vec4 vPosition;\n\n            @vert{\n              uniform mat4 _matV;\n\n              void main(void)\n              {\n              \tvPosition = vec4(position,1.0);\n                gl_Position = vec4(position,1.0);\n              }\n            }\n\n            @frag{\n\n              uniform vec2 _resolution;\n\n              uniform float weight[10];\n\n              @{type:\"buffer\",name:\"INPUT\",register:0}\n              uniform sampler2D _texture;\n              void main(void){\n                fc = gl_FragCoord.st;\n                destColor += texture2D(_texture, (fc + vec2(-9.0, 0.0)) * tFrag).rgb * weight[9];\n                destColor += texture2D(_texture, (fc + vec2(-8.0, 0.0)) * tFrag).rgb * weight[8];\n                destColor += texture2D(_texture, (fc + vec2(-7.0, 0.0)) * tFrag).rgb * weight[7];\n                destColor += texture2D(_texture, (fc + vec2(-6.0, 0.0)) * tFrag).rgb * weight[6];\n                destColor += texture2D(_texture, (fc + vec2(-5.0, 0.0)) * tFrag).rgb * weight[5];\n                destColor += texture2D(_texture, (fc + vec2(-4.0, 0.0)) * tFrag).rgb * weight[4];\n                destColor += texture2D(_texture, (fc + vec2(-3.0, 0.0)) * tFrag).rgb * weight[3];\n                destColor += texture2D(_texture, (fc + vec2(-2.0, 0.0)) * tFrag).rgb * weight[2];\n                destColor += texture2D(_texture, (fc + vec2(-1.0, 0.0)) * tFrag).rgb * weight[1];\n                destColor += texture2D(_texture, (fc + vec2( 0.0, 0.0)) * tFrag).rgb * weight[0];\n                destColor += texture2D(_texture, (fc + vec2( 1.0, 0.0)) * tFrag).rgb * weight[1];\n                destColor += texture2D(_texture, (fc + vec2( 2.0, 0.0)) * tFrag).rgb * weight[2];\n                destColor += texture2D(_texture, (fc + vec2( 3.0, 0.0)) * tFrag).rgb * weight[3];\n                destColor += texture2D(_texture, (fc + vec2( 4.0, 0.0)) * tFrag).rgb * weight[4];\n                destColor += texture2D(_texture, (fc + vec2( 5.0, 0.0)) * tFrag).rgb * weight[5];\n                destColor += texture2D(_texture, (fc + vec2( 6.0, 0.0)) * tFrag).rgb * weight[6];\n                destColor += texture2D(_texture, (fc + vec2( 7.0, 0.0)) * tFrag).rgb * weight[7];\n                destColor += texture2D(_texture, (fc + vec2( 8.0, 0.0)) * tFrag).rgb * weight[8];\n                destColor += texture2D(_texture, (fc + vec2( 9.0, 0.0)) * tFrag).rgb * weight[9];\n                gl_FragColor = vec4(destColor,1.0);\n              }\n            }\n            ]]>\n              </glsl>\n            </pass>\n          </passes>\n        </material>\n      </technique>\n    </stage>\n  </rsml>\n"
 },{}],95:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <rsml>\n    <stage name=\"jthree.basic.skybox\">\n      <technique target=\"cube\">\n        <cull enabled=\"true\" mode=\"FRONT\" />\n        <fbo primary=\"OUT\">\n          <color register=\"0\" name=\"OUT\" clearColor=\"0,0,0,1\"/>\n        </fbo>\n        <material>\n          <uniform-register>\n            <register name=\"builtin.basic\" />\n          </uniform-register>\n          <passes>\n            <pass>\n              <depth enabled=\"false\" />\n              <glsl>\n                <![CDATA[\n            attribute vec3 position;\n            varying vec3 vPosition;\n\n            @vert{\n              uniform mat4 _matV;\n\n              void main(void)\n              {\n              \tvPosition = (vec4(position,1.0) * _matV).xyz;\n                gl_Position = vec4(position,1.0);\n              }\n            }\n\n            @frag{\n              @{register:0}\n              uniform samplerCube skybox;\n\n              void main()\n              {\n              \t\tgl_FragColor=textureCube(skybox,vPosition);\n              }\n            }\n\n            ]]>\n              </glsl>\n            </pass>\n          </passes>\n        </material>\n      </technique>\n    </stage>\n  </rsml>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsml>\n  <stage name=\"jthree.basic.hitarea\">\n    <technique target=\"scene\" materialGroup=\"jthree.materials.hitarea\">\n      <fbo>\n        <rbo clearDepth=\"1.0\" type=\"depth\"/>\n        <color name=\"OUT\" clearColor=\"0,0,0,0\" register=\"0\"/>\n      </fbo>\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ZERO\"/>\n    </technique>\n  </stage>\n</rsml>\n"
 },{}],96:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <rsml>\n    <stage name=\"jthree.basic.sobel\">\n      <technique target=\"quad\">\n        <fbo primary=\"OUT\">\n          <color name=\"OUT\" register=\"0\" />\n        </fbo>\n        <material order=\"300\">\n          <uniform-register>\n            <register name=\"builtin.buffer\" />\n            <register name=\"builtin.basic\" />\n          </uniform-register>\n          <passes>\n            <pass>\n              <depth enabled=\"false\" />\n              <glsl><![CDATA[\n            attribute vec3 position;\n            varying vec4 vPosition;\n\n            @vert{\n              uniform mat4 _matV;\n\n              void main(void)\n              {\n              \tvPosition = vec4(position,1.0);\n                gl_Position = vec4(position,1.0);\n              }\n            }\n\n            @frag{\n\n              uniform vec2 _resolution;\n\n              @{default:[1.0,0.0,-1.0,2.0,0.0,-2.0,1.0,0.0,-1.0]}\n              uniform float xKernel[9];\n\n              @{default:[1.0,2.0,1.0,0.0,0.0,0.0,-1.0,-2.0,-1.0]}\n              uniform float yKernel[9];\n\n              @{type:\"buffer\",name:\"INPUT\",register:0}\n              uniform sampler2D _texture;\n\n              void main(void){\n                vec2 offset[9];\n                offset[0] = vec2(-1.0, -1.0);\n                offset[1] = vec2( 0.0, -1.0);\n                offset[2] = vec2( 1.0, -1.0);\n                offset[3] = vec2(-1.0,  0.0);\n                offset[4] = vec2( 0.0,  0.0);\n                offset[5] = vec2( 1.0,  0.0);\n                offset[6] = vec2(-1.0,  1.0);\n                offset[7] = vec2( 0.0,  1.0);\n                offset[8] = vec2( 1.0,  1.0);\n                float tFrag = 1.0 / _resolution.x;\n                vec2  fc = vec2(gl_FragCoord.s, gl_FragCoord.t);\n                vec3  horizonColor = vec3(0.0);\n                vec3  verticalColor = vec3(0.0);\n                horizonColor  += texture2D(_texture, (fc + offset[0]) * tFrag).rgb * xKernel[0];\n                horizonColor  += texture2D(_texture, (fc + offset[1]) * tFrag).rgb * xKernel[1];\n                horizonColor  += texture2D(_texture, (fc + offset[2]) * tFrag).rgb * xKernel[2];\n                horizonColor  += texture2D(_texture, (fc + offset[3]) * tFrag).rgb * xKernel[3];\n                horizonColor  += texture2D(_texture, (fc + offset[4]) * tFrag).rgb * xKernel[4];\n                horizonColor  += texture2D(_texture, (fc + offset[5]) * tFrag).rgb * xKernel[5];\n                horizonColor  += texture2D(_texture, (fc + offset[6]) * tFrag).rgb * xKernel[6];\n                horizonColor  += texture2D(_texture, (fc + offset[7]) * tFrag).rgb * xKernel[7];\n                horizonColor  += texture2D(_texture, (fc + offset[8]) * tFrag).rgb * xKernel[8];\n\n                verticalColor += texture2D(_texture, (fc + offset[0]) * tFrag).rgb * yKernel[0];\n                verticalColor += texture2D(_texture, (fc + offset[1]) * tFrag).rgb * yKernel[1];\n                verticalColor += texture2D(_texture, (fc + offset[2]) * tFrag).rgb * yKernel[2];\n                verticalColor += texture2D(_texture, (fc + offset[3]) * tFrag).rgb * yKernel[3];\n                verticalColor += texture2D(_texture, (fc + offset[4]) * tFrag).rgb * yKernel[4];\n                verticalColor += texture2D(_texture, (fc + offset[5]) * tFrag).rgb * yKernel[5];\n                verticalColor += texture2D(_texture, (fc + offset[6]) * tFrag).rgb * yKernel[6];\n                verticalColor += texture2D(_texture, (fc + offset[7]) * tFrag).rgb * yKernel[7];\n                verticalColor += texture2D(_texture, (fc + offset[8]) * tFrag).rgb * yKernel[8];\n\n                gl_FragColor = vec4(vec3(sqrt(horizonColor*horizonColor + verticalColor * verticalColor)),1.0);\n              }\n            }\n            ]]>\n              </glsl>\n            </pass>\n          </passes>\n        </material>\n      </technique>\n    </stage>\n  </rsml>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rsml>\n  <stage name=\"jthree.basic.light\">\n    <technique target=\"scene\" materialGroup=\"jthree.light.diffuse\">\n      <fbo>\n        <rbo clearDepth=\"1.0\" clear=\"false\"/>\n        <color name=\"DIFFUSE\" clearColor=\"0,0,0,0\" register=\"0\"/>\n      </fbo>\n      <cull enabled=\"true\" mode=\"BACK\"/>\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ONE\"/>\n      <depth enabled=\"true\" mode=\"LEQUAL\"/>\n      <mask depth=\"false\"/>\n    </technique>\n    <technique target=\"scene\" materialGroup=\"jthree.light.specular\">\n      <fbo>\n        <rbo clearDepth=\"1.0\" clear=\"false\"/>\n        <color name=\"SPECULAR\" clearColor=\"0,0,0,0\" register=\"0\"/>\n      </fbo>\n      <cull enabled=\"true\" mode=\"BACK\"/>\n      <blend enabled=\"true\" src=\"ONE\" dst=\"ONE\"/>\n      <depth enabled=\"true\" mode=\"LEQUAL\"/>\n      <mask depth=\"false\"/>\n    </technique>\n  </stage>\n</rsml>\n"
 },{}],97:[function(require,module,exports){
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <rsml>\n    <stage name=\"jthree.basic.skybox\">\n      <technique target=\"cube\">\n        <cull enabled=\"true\" mode=\"FRONT\" />\n        <fbo primary=\"OUT\">\n          <color register=\"0\" name=\"OUT\" clearColor=\"0,0,0,1\"/>\n        </fbo>\n        <material>\n          <registers>\n            <register name=\"builtin.basic\" />\n          </registers>\n          <passes>\n            <pass>\n              <depth enabled=\"false\" />\n              <glsl>\n                <![CDATA[\n            attribute vec3 position;\n            varying vec3 vPosition;\n\n            @vert{\n              uniform mat4 _matV;\n\n              void main(void)\n              {\n              \tvPosition = (vec4(position,1.0) * _matV).xyz;\n                gl_Position = vec4(position,1.0);\n              }\n            }\n\n            @frag{\n              @{register:0}\n              uniform samplerCube skybox;\n\n              void main()\n              {\n              \t\tgl_FragColor=textureCube(skybox,vPosition);\n              }\n            }\n\n            ]]>\n              </glsl>\n            </pass>\n          </passes>\n        </material>\n      </technique>\n    </stage>\n  </rsml>\n"
+},{}],98:[function(require,module,exports){
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <rsml>\n    <stage name=\"jthree.basic.sobel\">\n      <technique target=\"quad\">\n        <fbo primary=\"OUT\">\n          <color name=\"OUT\" register=\"0\" />\n        </fbo>\n        <material order=\"300\">\n          <registers>\n            <register name=\"builtin.buffer\" />\n            <register name=\"builtin.basic\" />\n          </registers>\n          <passes>\n            <pass>\n              <depth enabled=\"false\" />\n              <glsl><![CDATA[\n            attribute vec3 position;\n            varying vec4 vPosition;\n\n            @vert{\n              uniform mat4 _matV;\n\n              void main(void)\n              {\n              \tvPosition = vec4(position,1.0);\n                gl_Position = vec4(position,1.0);\n              }\n            }\n\n            @frag{\n\n              uniform vec2 _resolution;\n\n              @{default:[1.0,0.0,-1.0,2.0,0.0,-2.0,1.0,0.0,-1.0]}\n              uniform float xKernel[9];\n\n              @{default:[1.0,2.0,1.0,0.0,0.0,0.0,-1.0,-2.0,-1.0]}\n              uniform float yKernel[9];\n\n              @{type:\"buffer\",name:\"INPUT\",register:0}\n              uniform sampler2D _texture;\n\n              void main(void){\n                vec2 offset[9];\n                offset[0] = vec2(-1.0, -1.0);\n                offset[1] = vec2( 0.0, -1.0);\n                offset[2] = vec2( 1.0, -1.0);\n                offset[3] = vec2(-1.0,  0.0);\n                offset[4] = vec2( 0.0,  0.0);\n                offset[5] = vec2( 1.0,  0.0);\n                offset[6] = vec2(-1.0,  1.0);\n                offset[7] = vec2( 0.0,  1.0);\n                offset[8] = vec2( 1.0,  1.0);\n                float tFrag = 1.0 / _resolution.x;\n                vec2  fc = vec2(gl_FragCoord.s, gl_FragCoord.t);\n                vec3  horizonColor = vec3(0.0);\n                vec3  verticalColor = vec3(0.0);\n                horizonColor  += texture2D(_texture, (fc + offset[0]) * tFrag).rgb * xKernel[0];\n                horizonColor  += texture2D(_texture, (fc + offset[1]) * tFrag).rgb * xKernel[1];\n                horizonColor  += texture2D(_texture, (fc + offset[2]) * tFrag).rgb * xKernel[2];\n                horizonColor  += texture2D(_texture, (fc + offset[3]) * tFrag).rgb * xKernel[3];\n                horizonColor  += texture2D(_texture, (fc + offset[4]) * tFrag).rgb * xKernel[4];\n                horizonColor  += texture2D(_texture, (fc + offset[5]) * tFrag).rgb * xKernel[5];\n                horizonColor  += texture2D(_texture, (fc + offset[6]) * tFrag).rgb * xKernel[6];\n                horizonColor  += texture2D(_texture, (fc + offset[7]) * tFrag).rgb * xKernel[7];\n                horizonColor  += texture2D(_texture, (fc + offset[8]) * tFrag).rgb * xKernel[8];\n\n                verticalColor += texture2D(_texture, (fc + offset[0]) * tFrag).rgb * yKernel[0];\n                verticalColor += texture2D(_texture, (fc + offset[1]) * tFrag).rgb * yKernel[1];\n                verticalColor += texture2D(_texture, (fc + offset[2]) * tFrag).rgb * yKernel[2];\n                verticalColor += texture2D(_texture, (fc + offset[3]) * tFrag).rgb * yKernel[3];\n                verticalColor += texture2D(_texture, (fc + offset[4]) * tFrag).rgb * yKernel[4];\n                verticalColor += texture2D(_texture, (fc + offset[5]) * tFrag).rgb * yKernel[5];\n                verticalColor += texture2D(_texture, (fc + offset[6]) * tFrag).rgb * yKernel[6];\n                verticalColor += texture2D(_texture, (fc + offset[7]) * tFrag).rgb * yKernel[7];\n                verticalColor += texture2D(_texture, (fc + offset[8]) * tFrag).rgb * yKernel[8];\n\n                gl_FragColor = vec4(vec3(sqrt(horizonColor*horizonColor + verticalColor * verticalColor)),1.0);\n              }\n            }\n            ]]>\n              </glsl>\n            </pass>\n          </passes>\n        </material>\n      </technique>\n    </stage>\n  </rsml>\n"
+},{}],99:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6823,11 +6931,6 @@ var HitAreaRenderStage = function (_BasicRenderStage) {
         _this.objectIndex = 1;
         _this.indexObjectPair = {};
         _this.hitTestQueries = [];
-        // this.Renderer.on("mouse-move", (e) => {
-        //   this.queryHitTest(e.mouseX, e.mouseY).then((object) => {
-        //     console.log(object);
-        //   });
-        // });
         return _this;
     }
 
@@ -6853,7 +6956,7 @@ var HitAreaRenderStage = function (_BasicRenderStage) {
                 }
                 for (var i = 0; i < this.hitTestQueries.length; i++) {
                     var query = this.hitTestQueries[i];
-                    var fetchedPixel = this.bufferTextures["OUT"].getForGL(this.GL).getPixel(query.x, this.Renderer.region.Height - query.y);
+                    var fetchedPixel = this.bufferTextures["OUT"].getForGL(this.gl).getPixel(query.x, this.renderer.region.Height - query.y);
                     var object = this._fetchRelatedObject(fetchedPixel);
                     query.deferred.resolve(object);
                 }
@@ -6884,7 +6987,7 @@ var HitAreaRenderStage = function (_BasicRenderStage) {
 
 exports.default = HitAreaRenderStage;
 
-},{"../../Resources/Texture/TextureBase":130,"./Base/BasicRenderStage":84,"./BuiltIn/HitAreaRenderingStage.rsml":93,"q":335}],98:[function(require,module,exports){
+},{"../../Resources/Texture/TextureBase":134,"./Base/BasicRenderStage":86,"./BuiltIn/HitAreaRenderingStage.rsml":95,"q":338}],100:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6913,34 +7016,14 @@ var RenderStageBase = function (_JThreeObjectWithID) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RenderStageBase).call(this));
 
+        _this.renderer = renderer;
         _this.shaderVariables = {};
         _this.bufferTextures = { defaultRenderBuffer: null };
-        _this._renderer = renderer;
+        _this.gl = renderer.gl;
         return _this;
     }
 
     _createClass(RenderStageBase, [{
-        key: "getDefaultRendererConfigure",
-        value: function getDefaultRendererConfigure(techniqueIndex) {
-            return {
-                cullOrientation: "BACK",
-                depthEnabled: true,
-                depthMode: "LESS",
-                depthMask: true,
-                blendEnabled: true,
-                blendSrcFactor: "SRC_ALPHA",
-                blendDstFactor: "ONE_MINUS_SRC_ALPHA",
-                redMask: true,
-                greenMask: true,
-                blueMask: true,
-                alphaMask: true
-            };
-        }
-        /**
-         * Getter for renderer having this renderstage
-         */
-
-    }, {
         key: "preStage",
         value: function preStage(scene) {
             return;
@@ -6966,79 +7049,29 @@ var RenderStageBase = function (_JThreeObjectWithID) {
     }, {
         key: "postTechnique",
         value: function postTechnique(scene, techniqueIndex) {
-            this.Renderer.gl.flush();
-        }
-    }, {
-        key: "needRender",
-        value: function needRender(scene, object, techniqueIndex) {
-            return false;
-        }
-    }, {
-        key: "getTechniqueCount",
-        value: function getTechniqueCount(scene) {
-            return 1;
-        }
-    }, {
-        key: "getTarget",
-        value: function getTarget(techniqueIndex) {
-            return "scene";
-        }
-    }, {
-        key: "drawForMaterials",
-        value: function drawForMaterials(scene, object, techniqueCount, techniqueIndex, materialGroup, isWireframed) {
-            if (!object.isVisible) {
-                return;
-            }
-            var materials = object.getMaterials(materialGroup);
-            for (var i = 0; i < materials.length; i++) {
-                this.drawForMaterial(scene, object, techniqueCount, techniqueIndex, materials[i], isWireframed);
-            }
-        }
-    }, {
-        key: "drawForMaterial",
-        value: function drawForMaterial(scene, object, techniqueCount, techniqueIndex, material, isWireframed) {
-            if (!material || !material.Initialized || !material.Enabled || !object.isVisible) {
-                return;
-            }
-            var passCount = material.getPassCount(techniqueIndex);
-            for (var pass = 0; pass < passCount; pass++) {
-                material.apply({
-                    scene: scene,
-                    renderStage: this,
-                    renderer: this.Renderer,
-                    object: object,
-                    textureResource: this.bufferTextures,
-                    techniqueIndex: techniqueIndex,
-                    techniqueCount: techniqueCount,
-                    passIndex: pass,
-                    passCount: passCount,
-                    camera: this.Renderer.camera
-                });
-                if (isWireframed) {
-                    object.Geometry.drawWireframe(this.Renderer.canvas, material);
-                    return;
-                }
-                object.Geometry.drawElements(this.Renderer.canvas, material);
-            }
-        }
-    }, {
-        key: "Renderer",
-        get: function get() {
-            return this._renderer;
-        }
-    }, {
-        key: "GL",
-        get: function get() {
-            return this.Renderer.gl;
+            return;
         }
     }]);
 
     return RenderStageBase;
 }(_JThreeObjectWithID3.default);
 
+RenderStageBase.defaultRendererConfigure = {
+    cullOrientation: "BACK",
+    depthEnabled: true,
+    depthMode: "LESS",
+    depthMask: true,
+    blendEnabled: true,
+    blendSrcFactor: "SRC_ALPHA",
+    blendDstFactor: "ONE_MINUS_SRC_ALPHA",
+    redMask: true,
+    greenMask: true,
+    blueMask: true,
+    alphaMask: true
+};
 exports.default = RenderStageBase;
 
-},{"../../../Base/JThreeObjectWithID":6}],99:[function(require,module,exports){
+},{"../../../Base/JThreeObjectWithID":6}],101:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7054,6 +7087,10 @@ var _Rectangle2 = _interopRequireDefault(_Rectangle);
 var _CanvasRegion2 = require("../Canvas/CanvasRegion");
 
 var _CanvasRegion3 = _interopRequireDefault(_CanvasRegion2);
+
+var _RenderPath = require("./RenderPath");
+
+var _RenderPath2 = _interopRequireDefault(_RenderPath);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7072,12 +7109,22 @@ var RendererBase = function (_CanvasRegion) {
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RendererBase).call(this, canvas.canvasElement));
 
         _this.canvas = canvas;
+        _this.renderPath = new _RenderPath2.default(_this);
         _this._region = new _Rectangle2.default(0, 0, 512, 512);
         _this.gl = canvas.gl;
         return _this;
     }
 
     _createClass(RendererBase, [{
+        key: "setCamera",
+        value: function setCamera(cam) {
+            if (this.camera) {
+                this.camera.ParentScene.removeRenderer(this);
+            }
+            cam.ParentScene.addRenderer(this);
+            this.camera = cam;
+        }
+    }, {
         key: "region",
         get: function get() {
             return this._region;
@@ -7103,7 +7150,7 @@ var RendererBase = function (_CanvasRegion) {
 
 exports.default = RendererBase;
 
-},{"../../Math/Rectangle":271,"../Canvas/CanvasRegion":12}],100:[function(require,module,exports){
+},{"../../Math/Rectangle":276,"../Canvas/CanvasRegion":12,"./RenderPath":83}],102:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7247,7 +7294,7 @@ var BasicRendererConfigurator = function (_ConfiguratorBase) {
 
 exports.default = BasicRendererConfigurator;
 
-},{"./RendererConfiguratorBase":101}],101:[function(require,module,exports){
+},{"./RendererConfiguratorBase":103}],103:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7280,7 +7327,7 @@ var RendererConfiguratorBase = function () {
 
 exports.default = RendererConfiguratorBase;
 
-},{}],102:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7334,7 +7381,7 @@ var BasicRendererConfigurator = function (_ConfiguratorBase) {
 
 exports.default = BasicRendererConfigurator;
 
-},{"./RendererConfiguratorBase":101}],103:[function(require,module,exports){
+},{"./RendererConfiguratorBase":103}],105:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7383,7 +7430,7 @@ RendererFactory.rendererConfigurations = {
 };
 exports.default = RendererFactory;
 
-},{"./BasicRenderer":79,"./RendererConfigurator/BasicRendererConfigurator":100,"./RendererConfigurator/SpriteRendererConfigurator":102}],104:[function(require,module,exports){
+},{"./BasicRenderer":81,"./RendererConfigurator/BasicRendererConfigurator":102,"./RendererConfigurator/SpriteRendererConfigurator":104}],106:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7456,7 +7503,7 @@ var TextureGenerater = function () {
 TextureGenerater._generaters = {};
 exports.default = TextureGenerater;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"./TextureGeneraters/GeneraterList":106}],105:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"./TextureGeneraters/GeneraterList":108}],107:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7478,7 +7525,7 @@ var GeneraterBase = function GeneraterBase(parent) {
 
 exports.default = GeneraterBase;
 
-},{}],106:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7495,7 +7542,7 @@ exports.default = {
     "rendererfit": _RendererFit2.default
 };
 
-},{"./RendererFit":107}],107:[function(require,module,exports){
+},{"./RendererFit":109}],109:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7571,7 +7618,7 @@ var RendererFit = function (_GeneraterBase) {
 
 exports.default = RendererFit;
 
-},{"../../../ContextComponents":8,"../../../JThreeContext":262,"../../Canvas/GL/GLEnumParser":19,"./GeneraterBase":105}],108:[function(require,module,exports){
+},{"../../../ContextComponents":8,"../../../JThreeContext":267,"../../Canvas/GL/GLEnumParser":19,"./GeneraterBase":107}],110:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7685,7 +7732,7 @@ var ResourceLoader = function () {
 
 exports.default = ResourceLoader;
 
-},{"../ContextComponents":8,"q":335}],109:[function(require,module,exports){
+},{"../ContextComponents":8,"q":338}],111:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -7695,9 +7742,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AsyncLoader = require("./Resources/AsyncLoader");
+var _ResourceResolver = require("./Resources/ResourceResolver");
 
-var _AsyncLoader2 = _interopRequireDefault(_AsyncLoader);
+var _ResourceResolver2 = _interopRequireDefault(_ResourceResolver);
 
 var _ImageLoader = require("./Resources/ImageLoader");
 
@@ -7820,7 +7867,7 @@ var ResourceManager = function (_jThreeObject) {
             var id = "";
             var absPaths = [,,,,,];
             for (var i = 0; i < 6; i++) {
-                absPaths[i] = _AsyncLoader2.default.getAbsolutePath(srcs[i]);
+                absPaths[i] = _ResourceResolver2.default.getAbsolutePath(srcs[i]);
                 id += absPaths[i];
             }
             if (this.getTexture(id)) {
@@ -7963,109 +8010,49 @@ exports.default = ResourceManager;
 
 }).call(this,require('_process'))
 
-},{"../Base/JThreeObject":3,"../ContextComponents":8,"./Resources/AsyncLoader":110,"./Resources/Buffer/Buffer":111,"./Resources/FBO/FBO":114,"./Resources/ImageLoader":116,"./Resources/Program/Program":117,"./Resources/RBO/RBO":119,"./Resources/ResourceArray":121,"./Resources/Shader/Shader":123,"./Resources/Texture/BufferTexture":125,"./Resources/Texture/CubeTexture":127,"./Resources/Texture/Texture":129,"_process":316,"q":335}],110:[function(require,module,exports){
-(function (process){
+},{"../Base/JThreeObject":3,"../ContextComponents":8,"./Resources/Buffer/Buffer":113,"./Resources/FBO/FBO":117,"./Resources/ImageLoader":119,"./Resources/Program/Program":120,"./Resources/RBO/RBO":122,"./Resources/ResourceArray":124,"./Resources/ResourceResolver":125,"./Resources/Shader/Shader":127,"./Resources/Texture/BufferTexture":129,"./Resources/Texture/CubeTexture":131,"./Resources/Texture/Texture":133,"_process":319,"q":338}],112:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ContextComponents = require("../../ContextComponents");
+var _CacheResolver2 = require("./CacheResolver");
 
-var _ContextComponents2 = _interopRequireDefault(_ContextComponents);
-
-var _JThreeContext = require("../../JThreeContext");
-
-var _JThreeContext2 = _interopRequireDefault(_JThreeContext);
+var _CacheResolver3 = _interopRequireDefault(_CacheResolver2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var AsyncLoader = function () {
-    function AsyncLoader() {
-        _classCallCheck(this, AsyncLoader);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-        this._isLoading = {};
-        this._loadedResource = {};
-        this._loadingPromise = {};
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BasicCacheResolver = function (_CacheResolver) {
+    _inherits(BasicCacheResolver, _CacheResolver);
+
+    function BasicCacheResolver() {
+        _classCallCheck(this, BasicCacheResolver);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(BasicCacheResolver).apply(this, arguments));
     }
 
-    _createClass(AsyncLoader, [{
-        key: "pushLoaded",
-        value: function pushLoaded(url, content) {
-            var path = AsyncLoader.getAbsolutePath(url);
-            this._loadedResource[path] = content;
-            this._isLoading[path] = false;
-        }
-    }, {
-        key: "fromCache",
-        value: function fromCache(url) {
-            var path = AsyncLoader.getAbsolutePath(url);
-            if (this._isLoading[path] === false) {
-                return this._loadedResource[AsyncLoader.getAbsolutePath(url)];
-            } else {
-                throw new Error("The resource " + url + " is not loaded yet.");
-            }
-        }
-    }, {
-        key: "fetch",
-        value: function fetch(src, request) {
-            var _this = this;
-
-            var absPath = AsyncLoader.getAbsolutePath(src);
-            if (this._isLoading[absPath] === true) {
-                return this._loadingPromise[absPath];
-            } else {
-                var _ret = function () {
-                    var loader = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.ResourceLoader);
-                    var deferred = loader.getResourceLoadingDeffered();
-                    if (_this._isLoading[absPath] === false) {
-                        process.nextTick(function () {
-                            deferred.resolve(_this._loadedResource[absPath]);
-                        });
-                    } else {
-                        request(absPath).then(function (result) {
-                            _this._loadedResource[absPath] = result;
-                            _this._isLoading[absPath] = false;
-                            deferred.resolve(result);
-                        }, function (err) {
-                            _this._isLoading[absPath] = false;
-                            deferred.reject(err);
-                        });
-                        _this._loadingPromise[absPath] = deferred.promise;
-                        _this._isLoading[absPath] = true;
-                    }
-                    return {
-                        v: deferred.promise
-                    };
-                }();
-
-                if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
-            }
-        }
-    }], [{
-        key: "getAbsolutePath",
-        value: function getAbsolutePath(relative) {
-            var aElem = document.createElement("a");
-            aElem.href = relative;
-            return aElem.href;
+    _createClass(BasicCacheResolver, [{
+        key: "getIdentityName",
+        value: function getIdentityName(name) {
+            return name;
         }
     }]);
 
-    return AsyncLoader;
-}();
+    return BasicCacheResolver;
+}(_CacheResolver3.default);
 
-exports.default = AsyncLoader;
+exports.default = BasicCacheResolver;
 
-}).call(this,require('_process'))
-
-},{"../../ContextComponents":8,"../../JThreeContext":262,"_process":316}],111:[function(require,module,exports){
+},{"./CacheResolver":115}],113:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8229,7 +8216,7 @@ var Buffer = function (_ContextSafeResourceC) {
 
 exports.default = Buffer;
 
-},{"../ContextSafeResourceContainer":113,"./BufferWrapper":112}],112:[function(require,module,exports){
+},{"../ContextSafeResourceContainer":116,"./BufferWrapper":114}],114:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8351,7 +8338,102 @@ var BufferWrapper = function (_ResourceWrapper) {
 
 exports.default = BufferWrapper;
 
-},{"../ResourceWrapper":122}],113:[function(require,module,exports){
+},{"../ResourceWrapper":126}],115:[function(require,module,exports){
+(function (process){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _ContextComponents = require("../../ContextComponents");
+
+var _ContextComponents2 = _interopRequireDefault(_ContextComponents);
+
+var _JThreeContext = require("../../JThreeContext");
+
+var _JThreeContext2 = _interopRequireDefault(_JThreeContext);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var CacheResolver = function () {
+    function CacheResolver() {
+        _classCallCheck(this, CacheResolver);
+
+        this._isLoading = {};
+        this._loadedResource = {};
+        this._loadingPromise = {};
+    }
+
+    _createClass(CacheResolver, [{
+        key: "pushLoaded",
+        value: function pushLoaded(identity, content) {
+            var path = this.getIdentityName(identity);
+            this._loadedResource[path] = content;
+            this._isLoading[path] = false;
+        }
+    }, {
+        key: "fromCache",
+        value: function fromCache(name) {
+            var path = this.getIdentityName(name);
+            if (this._isLoading[path] === false) {
+                return this._loadedResource[this.getIdentityName(name)];
+            } else {
+                throw new Error("The resource " + name + " is not loaded yet.");
+            }
+        }
+    }, {
+        key: "fetch",
+        value: function fetch(name, request) {
+            var _this = this;
+
+            var identity = this.getIdentityName(name);
+            if (this._isLoading[identity] === true) {
+                return this._loadingPromise[identity];
+            } else {
+                var _ret = function () {
+                    var loader = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.ResourceLoader);
+                    var deferred = loader.getResourceLoadingDeffered();
+                    if (_this._isLoading[identity] === false) {
+                        process.nextTick(function () {
+                            deferred.resolve(_this._loadedResource[identity]);
+                        });
+                    } else {
+                        request(identity).then(function (result) {
+                            _this._loadedResource[identity] = result;
+                            _this._isLoading[identity] = false;
+                            deferred.resolve(result);
+                        }, function (err) {
+                            _this._isLoading[identity] = false;
+                            deferred.reject(err);
+                        });
+                        _this._loadingPromise[identity] = deferred.promise;
+                        _this._isLoading[identity] = true;
+                    }
+                    return {
+                        v: deferred.promise
+                    };
+                }();
+
+                if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
+            }
+        }
+    }]);
+
+    return CacheResolver;
+}();
+
+exports.default = CacheResolver;
+
+}).call(this,require('_process'))
+
+},{"../../ContextComponents":8,"../../JThreeContext":267,"_process":319}],116:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8476,7 +8558,7 @@ var ContextSafeResourceContainer = function (_JThreeObjectEEWithID) {
 
 exports.default = ContextSafeResourceContainer;
 
-},{"../../Base/JThreeObjectEEWithID":5,"../../ContextComponents":8,"../../Exceptions":154,"../../JThreeContext":262}],114:[function(require,module,exports){
+},{"../../Base/JThreeObjectEEWithID":5,"../../ContextComponents":8,"../../Exceptions":159,"../../JThreeContext":267}],117:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8525,7 +8607,7 @@ var FBO = function (_ContextSafeResourceC) {
 
 exports.default = FBO;
 
-},{"./../ContextSafeResourceContainer":113,"./FBOWrapper":115}],115:[function(require,module,exports){
+},{"./../ContextSafeResourceContainer":116,"./FBOWrapper":118}],118:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8643,7 +8725,7 @@ var FBOWrapper = function (_ResourceWrapper) {
 
 exports.default = FBOWrapper;
 
-},{"../ResourceWrapper":122}],116:[function(require,module,exports){
+},{"../ResourceWrapper":126}],119:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8652,9 +8734,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AsyncLoader = require("./AsyncLoader");
+var _ResourceResolver = require("./ResourceResolver");
 
-var _AsyncLoader2 = _interopRequireDefault(_AsyncLoader);
+var _ResourceResolver2 = _interopRequireDefault(_ResourceResolver);
 
 var _q = require("q");
 
@@ -8690,10 +8772,10 @@ var ImageLoader = function () {
     return ImageLoader;
 }();
 
-ImageLoader._loader = new _AsyncLoader2.default();
+ImageLoader._loader = new _ResourceResolver2.default();
 exports.default = ImageLoader;
 
-},{"./AsyncLoader":110,"q":335}],117:[function(require,module,exports){
+},{"./ResourceResolver":125,"q":338}],120:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8780,7 +8862,7 @@ var Program = function (_ContextSafeContainer) {
 
 exports.default = Program;
 
-},{"../ContextSafeResourceContainer":113,"./ProgramWrapper":118}],118:[function(require,module,exports){
+},{"../ContextSafeResourceContainer":116,"./ProgramWrapper":121}],121:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9052,7 +9134,7 @@ var ProgramWrapper = function (_ResourceWrapper) {
 
 exports.default = ProgramWrapper;
 
-},{"../ResourceWrapper":122}],119:[function(require,module,exports){
+},{"../ResourceWrapper":126}],122:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9132,7 +9214,7 @@ var RBO = function (_ContextSafeResourceC) {
 
 exports.default = RBO;
 
-},{"./../ContextSafeResourceContainer":113,"./RBOWrapper":120}],120:[function(require,module,exports){
+},{"./../ContextSafeResourceContainer":116,"./RBOWrapper":123}],123:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9215,7 +9297,7 @@ var RBOWrapper = function (_ResourceWrapper) {
 
 exports.default = RBOWrapper;
 
-},{"../ResourceWrapper":122}],121:[function(require,module,exports){
+},{"../ResourceWrapper":126}],124:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9304,7 +9386,56 @@ var ResourceArray = function (_JThreeObject) {
 
 exports.default = ResourceArray;
 
-},{"../../Base/JThreeObject":3}],122:[function(require,module,exports){
+},{"../../Base/JThreeObject":3}],125:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _CacheResolver = require("./CacheResolver");
+
+var _CacheResolver2 = _interopRequireDefault(_CacheResolver);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ResourceResolver = function (_CacheResovler) {
+    _inherits(ResourceResolver, _CacheResovler);
+
+    function ResourceResolver() {
+        _classCallCheck(this, ResourceResolver);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(ResourceResolver).apply(this, arguments));
+    }
+
+    _createClass(ResourceResolver, [{
+        key: "getIdentityName",
+        value: function getIdentityName(name) {
+            return ResourceResolver.getAbsolutePath(name);
+        }
+    }], [{
+        key: "getAbsolutePath",
+        value: function getAbsolutePath(name) {
+            var aElem = document.createElement("a");
+            aElem.href = name;
+            return aElem.href;
+        }
+    }]);
+
+    return ResourceResolver;
+}(_CacheResolver2.default);
+
+exports.default = ResourceResolver;
+
+},{"./CacheResolver":115}],126:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9398,7 +9529,7 @@ var ResourceWrapper = function (_JThreeObjectEE) {
 
 exports.default = ResourceWrapper;
 
-},{"../../Base/JThreeObjectEE":4}],123:[function(require,module,exports){
+},{"../../Base/JThreeObjectEE":4}],127:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9508,7 +9639,7 @@ var Shader = function (_ContextSafeContainer) {
 
 exports.default = Shader;
 
-},{"../ContextSafeResourceContainer":113,"./ShaderWrapper":124}],124:[function(require,module,exports){
+},{"../ContextSafeResourceContainer":116,"./ShaderWrapper":128}],128:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9601,7 +9732,7 @@ var ShaderWrapper = function (_ResourceWrapper) {
 
 exports.default = ShaderWrapper;
 
-},{"../../../Base/JThreeLogger":2,"../ResourceWrapper":122}],125:[function(require,module,exports){
+},{"../../../Base/JThreeLogger":2,"../ResourceWrapper":126}],129:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9689,7 +9820,7 @@ var BufferTexture = function (_TextureBase) {
 
 exports.default = BufferTexture;
 
-},{"./BufferTextureWrapper":126,"./TextureBase":130}],126:[function(require,module,exports){
+},{"./BufferTextureWrapper":130,"./TextureBase":134}],130:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9771,7 +9902,7 @@ var BufferTextureWrapper = function (_TextureWrapperBase) {
 
 exports.default = BufferTextureWrapper;
 
-},{"./TextureWrapperBase":132}],127:[function(require,module,exports){
+},{"./TextureWrapperBase":136}],131:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9834,7 +9965,7 @@ var CubeTexture = function (_TextureBase) {
 
 exports.default = CubeTexture;
 
-},{"./CubeTextureWrapper":128,"./TextureBase":130}],128:[function(require,module,exports){
+},{"./CubeTextureWrapper":132,"./TextureBase":134}],132:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9897,7 +10028,7 @@ var CubeTextureWrapper = function (_TextureWrapperBase) {
 
 exports.default = CubeTextureWrapper;
 
-},{"./TextureWrapperBase":132}],129:[function(require,module,exports){
+},{"./TextureWrapperBase":136}],133:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9960,7 +10091,7 @@ var Texture = function (_TextureBase) {
 
 exports.default = Texture;
 
-},{"./TextureBase":130,"./TextureWrapper":131}],130:[function(require,module,exports){
+},{"./TextureBase":134,"./TextureWrapper":135}],134:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10114,7 +10245,7 @@ var TextureBase = function (_ContextSafeResourceC) {
 
 exports.default = TextureBase;
 
-},{"../ContextSafeResourceContainer":113}],131:[function(require,module,exports){
+},{"../ContextSafeResourceContainer":116}],135:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10176,7 +10307,7 @@ var TextureWrapper = function (_TextureWrapperBase) {
 
 exports.default = TextureWrapper;
 
-},{"./TextureWrapperBase":132}],132:[function(require,module,exports){
+},{"./TextureWrapperBase":136}],136:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10406,7 +10537,7 @@ var TextureWrapperBase = function (_ResourceWrapper) {
 TextureWrapperBase.__altTextureBuffer = new Uint8Array([255, 0, 255, 255]);
 exports.default = TextureWrapperBase;
 
-},{"../ResourceWrapper":122}],133:[function(require,module,exports){
+},{"../ResourceWrapper":126}],137:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10449,7 +10580,6 @@ var Scene = function (_jThreeObjectEEWithID) {
          */
         _this.sceneAmbient = new _Color2.default(1.0, 1.0, 1.0);
         _this._renderers = [];
-        _this._cameras = {};
         _this.enabled = true;
         return _this;
     }
@@ -10554,24 +10684,6 @@ var Scene = function (_jThreeObjectEEWithID) {
                 });
             }
         }
-        /**
-         * Append the camera to this scene as managed
-         */
-
-    }, {
-        key: "addCamera",
-        value: function addCamera(camera) {
-            this._cameras[camera.id] = camera;
-        }
-        /**
-         * Get the camera managed in this scene.
-         */
-
-    }, {
-        key: "getCamera",
-        value: function getCamera(id) {
-            return this._cameras[id];
-        }
     }, {
         key: "notifySceneObjectChanged",
         value: function notifySceneObjectChanged(eventArg) {
@@ -10589,7 +10701,7 @@ var Scene = function (_jThreeObjectEEWithID) {
 
 exports.default = Scene;
 
-},{"../Base/JThreeObjectEEWithID":5,"../Math/Color3":264}],134:[function(require,module,exports){
+},{"../Base/JThreeObjectEEWithID":5,"../Math/Color3":269}],138:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10714,7 +10826,7 @@ var SceneManager = function (_jThreeObjectEE) {
 
 exports.default = SceneManager;
 
-},{"../Base/JThreeObjectEE":4,"../ContextComponents":8,"../JThreeContext":262}],135:[function(require,module,exports){
+},{"../Base/JThreeObjectEE":4,"../ContextComponents":8,"../JThreeContext":267}],139:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10754,7 +10866,7 @@ var BasicMeshObject = function (_Mesh) {
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BasicMeshObject).call(this, geometry, mat));
 
         _this.addMaterial(new _PrimaryBufferMaterial2.default());
-        _this.addMaterial(new _BasicMaterial2.default(require("../Materials/BuiltIn/GBuffer/Depth.xmml")));
+        _this.addMaterial(new _BasicMaterial2.default(require("../Materials/BuiltIn/GBuffer/Depth.xmml"), "builtin.depth"));
         _this.addMaterial(new _HitAreaMaterial2.default());
         return _this;
     }
@@ -10764,7 +10876,7 @@ var BasicMeshObject = function (_Mesh) {
 
 exports.default = BasicMeshObject;
 
-},{"../Materials/BasicMaterial":36,"../Materials/Buffering/HitAreaMaterial":37,"../Materials/Buffering/PrimaryBufferMaterial":38,"../Materials/BuiltIn/GBuffer/Depth.xmml":40,"./Mesh":146}],136:[function(require,module,exports){
+},{"../Materials/BasicMaterial":36,"../Materials/Buffering/HitAreaMaterial":37,"../Materials/Buffering/PrimaryBufferMaterial":38,"../Materials/BuiltIn/GBuffer/Depth.xmml":40,"./Mesh":150}],140:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10841,11 +10953,6 @@ var Camera = function (_SceneObject) {
             _get(Object.getPrototypeOf(Camera.prototype), "update", this).call(this);
         }
     }, {
-        key: "onParentSceneChanged",
-        value: function onParentSceneChanged() {
-            this.ParentScene.addCamera(this);
-        }
-    }, {
         key: "Far",
         get: function get() {
             return 0;
@@ -10862,7 +10969,7 @@ var Camera = function (_SceneObject) {
 
 exports.default = Camera;
 
-},{"../../../Math/Matrix":266,"../../../Math/PointList":269,"../SceneObject":147,"gl-matrix":317}],137:[function(require,module,exports){
+},{"../../../Math/Matrix":271,"../../../Math/PointList":274,"../SceneObject":151,"gl-matrix":320}],141:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10965,7 +11072,7 @@ var OrthoCamera = function (_ViewCamera) {
 
 exports.default = OrthoCamera;
 
-},{"./ViewCameraBase":139,"gl-matrix":317}],138:[function(require,module,exports){
+},{"./ViewCameraBase":143,"gl-matrix":320}],142:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11059,7 +11166,7 @@ var PerspectiveCamera = function (_ViewCamera) {
 
 exports.default = PerspectiveCamera;
 
-},{"./ViewCameraBase":139,"gl-matrix":317}],139:[function(require,module,exports){
+},{"./ViewCameraBase":143,"gl-matrix":320}],143:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11142,7 +11249,7 @@ var ViewCameraBase = function (_Camera) {
 
 exports.default = ViewCameraBase;
 
-},{"../../../Math/Vector3":273,"./Camera":136,"gl-matrix":317}],140:[function(require,module,exports){
+},{"../../../Math/Vector3":278,"./Camera":140,"gl-matrix":320}],144:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11191,11 +11298,11 @@ var AreaLight = function (_LightBase) {
 
         _this.intensity = 1.0;
         _this.Geometry = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.PrimitiveRegistory).getPrimitive("cube");
-        var material = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Diffuse/AreaLight.xmml"));
+        var material = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Diffuse/AreaLight.xmml"), "builtin.light.area");
         material.on("apply", function (matArg) {
             material.shaderVariables = {
                 lightColor: _this.Color.toVector().multiplyWith(_this.intensity),
-                areaMatrix: _Matrix2.default.inverse(_Matrix2.default.multiply(matArg.camera.viewMatrix, matArg.object.Transformer.LocalToGlobal))
+                areaMatrix: _Matrix2.default.inverse(_Matrix2.default.multiply(matArg.renderStage.renderer.camera.viewMatrix, matArg.object.Transformer.localToGlobal))
             };
         });
         _this.addMaterial(material);
@@ -11207,7 +11314,7 @@ var AreaLight = function (_LightBase) {
 
 exports.default = AreaLight;
 
-},{"../../../../ContextComponents":8,"../../../../JThreeContext":262,"../../../../Math/Matrix":266,"../../../Materials/BasicMaterial":36,"../../../Materials/BuiltIn/Light/Diffuse/AreaLight.xmml":45,"./../LightBase":145}],141:[function(require,module,exports){
+},{"../../../../ContextComponents":8,"../../../../JThreeContext":267,"../../../../Math/Matrix":271,"../../../Materials/BasicMaterial":36,"../../../Materials/BuiltIn/Light/Diffuse/AreaLight.xmml":45,"./../LightBase":149}],145:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11260,18 +11367,18 @@ var DirectionalLight = function (_LightBase) {
 
         _this.bias = 0.2;
         _this.Geometry = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.PrimitiveRegistory).getPrimitive("quad");
-        var diffuseMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Diffuse/DirectionalLight.xmml"));
+        var diffuseMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Diffuse/DirectionalLight.xmml"), "builtin.light.directional.diffuse");
         diffuseMaterial.on("apply", function (matArg) {
             diffuseMaterial.shaderVariables = {
                 lightColor: _this.Color.toVector().multiplyWith(_this.intensity),
-                lightDirection: _Vector2.default.normalize(_Matrix2.default.transformNormal(matArg.camera.viewMatrix, _this.__transformer.forward))
+                lightDirection: _Vector2.default.normalize(_Matrix2.default.transformNormal(matArg.renderStage.renderer.camera.viewMatrix, _this.__transformer.forward))
             };
         });
-        var specularMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Specular/DirectionalLight.xmml"));
+        var specularMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Specular/DirectionalLight.xmml"), "builtin.light.directional.specular");
         specularMaterial.on("apply", function (matArg) {
             specularMaterial.shaderVariables = {
                 lightColor: _this.Color.toVector().multiplyWith(_this.intensity),
-                lightDirection: _Vector2.default.normalize(_Matrix2.default.transformNormal(matArg.camera.viewMatrix, _this.__transformer.forward))
+                lightDirection: _Vector2.default.normalize(_Matrix2.default.transformNormal(matArg.renderStage.renderer.camera.viewMatrix, _this.__transformer.forward))
             };
         });
         _this.addMaterial(diffuseMaterial);
@@ -11284,7 +11391,7 @@ var DirectionalLight = function (_LightBase) {
 
 exports.default = DirectionalLight;
 
-},{"../../../../ContextComponents":8,"../../../../JThreeContext":262,"../../../../Math/Matrix":266,"../../../../Math/Vector3":273,"../../../Materials/BasicMaterial":36,"../../../Materials/BuiltIn/Light/Diffuse/DirectionalLight.xmml":46,"../../../Materials/BuiltIn/Light/Specular/DirectionalLight.xmml":50,"../LightBase":145}],142:[function(require,module,exports){
+},{"../../../../ContextComponents":8,"../../../../JThreeContext":267,"../../../../Math/Matrix":271,"../../../../Math/Vector3":278,"../../../Materials/BasicMaterial":36,"../../../Materials/BuiltIn/Light/Diffuse/DirectionalLight.xmml":46,"../../../Materials/BuiltIn/Light/Specular/DirectionalLight.xmml":50,"../LightBase":149}],146:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11339,24 +11446,24 @@ var PointLight = function (_LightBase) {
         _this.intensity = 1.0;
         _this.decay = 1;
         _this.Geometry = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.PrimitiveRegistory).getPrimitive("sphere");
-        var diffuseMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Diffuse/PointLight.xmml"));
+        var diffuseMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Diffuse/PointLight.xmml"), "builtin.light.point.diffuse");
         diffuseMaterial.on("apply", function (matArg) {
             _this.Transformer.Scale = new _Vector2.default(_this.distance, _this.distance, _this.distance);
             diffuseMaterial.shaderVariables = {
                 lightColor: _this.Color.toVector().multiplyWith(_this.intensity),
                 decay: _this.decay,
                 dist: _this.distance,
-                lightPosition: _Matrix2.default.transformPoint(matArg.camera.viewMatrix, _this.Position)
+                lightPosition: _Matrix2.default.transformPoint(matArg.renderStage.renderer.camera.viewMatrix, _this.Position)
             };
         });
-        var specularMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Specular/PointLight.xmml"));
+        var specularMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Specular/PointLight.xmml"), "builtin.light.point.specular");
         specularMaterial.on("apply", function (matArg) {
             _this.Transformer.Scale = new _Vector2.default(_this.distance, _this.distance, _this.distance);
             specularMaterial.shaderVariables = {
                 lightColor: _this.Color.toVector().multiplyWith(_this.intensity),
                 decay: _this.decay,
                 dist: _this.distance,
-                lightPosition: _Matrix2.default.transformPoint(matArg.camera.viewMatrix, _this.Position)
+                lightPosition: _Matrix2.default.transformPoint(matArg.renderStage.renderer.camera.viewMatrix, _this.Position)
             };
         });
         _this.addMaterial(diffuseMaterial);
@@ -11369,7 +11476,7 @@ var PointLight = function (_LightBase) {
 
 exports.default = PointLight;
 
-},{"../../../../ContextComponents":8,"../../../../JThreeContext":262,"../../../../Math/Matrix":266,"../../../../Math/Vector3":273,"../../../Materials/BasicMaterial":36,"../../../Materials/BuiltIn/Light/Diffuse/PointLight.xmml":47,"../../../Materials/BuiltIn/Light/Specular/PointLight.xmml":51,"./../LightBase":145}],143:[function(require,module,exports){
+},{"../../../../ContextComponents":8,"../../../../JThreeContext":267,"../../../../Math/Matrix":271,"../../../../Math/Vector3":278,"../../../Materials/BasicMaterial":36,"../../../Materials/BuiltIn/Light/Diffuse/PointLight.xmml":47,"../../../Materials/BuiltIn/Light/Specular/PointLight.xmml":51,"./../LightBase":149}],147:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11416,7 +11523,7 @@ var SceneLight = function (_LightBase) {
 
         _this.intensity = 1.0;
         _this.Geometry = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.PrimitiveRegistory).getPrimitive("quad");
-        var material = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Diffuse/SceneLight.xmml"));
+        var material = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Diffuse/SceneLight.xmml"), "builtin.light.scene");
         material.on("apply", function (matArg) {
             material.shaderVariables = {
                 lightColor: _this.Color.toVector().multiplyWith(_this.intensity)
@@ -11431,7 +11538,7 @@ var SceneLight = function (_LightBase) {
 
 exports.default = SceneLight;
 
-},{"../../../../ContextComponents":8,"../../../../JThreeContext":262,"../../../Materials/BasicMaterial":36,"../../../Materials/BuiltIn/Light/Diffuse/SceneLight.xmml":48,"./../LightBase":145}],144:[function(require,module,exports){
+},{"../../../../ContextComponents":8,"../../../../JThreeContext":267,"../../../Materials/BasicMaterial":36,"../../../Materials/BuiltIn/Light/Diffuse/SceneLight.xmml":48,"./../LightBase":149}],148:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11490,7 +11597,7 @@ var SpotLight = function (_LightBase) {
         _this.angleDecay = 1.0;
         _this.distanceDecay = 1.0;
         _this.Geometry = _JThreeContext2.default.getContextComponent(_ContextComponents2.default.PrimitiveRegistory).getPrimitive("cone");
-        var diffuseMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Diffuse/SpotLight.xmml"));
+        var diffuseMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Diffuse/SpotLight.xmml"), "builtin.light.spot.diffuse");
         diffuseMaterial.on("apply", function (matArg) {
             var tan = Math.tan(_this.outerAngle);
             _this.Transformer.Scale = new _Vector2.default(tan * _this.outerDistance, _this.outerDistance / 2, tan * _this.outerDistance);
@@ -11502,11 +11609,11 @@ var SpotLight = function (_LightBase) {
                 outerDistance: _this.outerDistance,
                 angleDecay: _this.angleDecay,
                 distanceDecay: _this.distanceDecay,
-                lightPosition: _Matrix2.default.transformPoint(matArg.camera.viewMatrix, _this.Position),
-                lightDirection: _Matrix2.default.transformNormal(_Matrix2.default.multiply(matArg.camera.viewMatrix, _this.Transformer.LocalToGlobal), new _Vector2.default(0, -1, 0)).normalizeThis()
+                lightPosition: _Matrix2.default.transformPoint(matArg.renderStage.renderer.camera.viewMatrix, _this.Position),
+                lightDirection: _Matrix2.default.transformNormal(_Matrix2.default.multiply(matArg.renderStage.renderer.camera.viewMatrix, _this.Transformer.localToGlobal), new _Vector2.default(0, -1, 0)).normalizeThis()
             };
         });
-        var specularMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Specular/SpotLight.xmml"));
+        var specularMaterial = new _BasicMaterial2.default(require("../../../Materials/BuiltIn/Light/Specular/SpotLight.xmml"), "builtin.light.spot.specular");
         specularMaterial.on("apply", function (matArg) {
             var tan = Math.tan(_this.outerAngle);
             _this.Transformer.Scale = new _Vector2.default(tan * _this.outerDistance, _this.outerDistance / 2, tan * _this.outerDistance);
@@ -11515,8 +11622,8 @@ var SpotLight = function (_LightBase) {
                 angle: _this.outerAngle,
                 dist: _this.outerDistance,
                 decay: _this.distanceDecay,
-                lightDirection: _Matrix2.default.transformNormal(_Matrix2.default.multiply(matArg.camera.viewMatrix, _this.Transformer.LocalToGlobal), new _Vector2.default(0, -1, 0)).normalizeThis(),
-                lightPosition: _Matrix2.default.transformPoint(matArg.camera.viewMatrix, _this.Position)
+                lightDirection: _Matrix2.default.transformNormal(_Matrix2.default.multiply(matArg.renderStage.renderer.camera.viewMatrix, _this.Transformer.localToGlobal), new _Vector2.default(0, -1, 0)).normalizeThis(),
+                lightPosition: _Matrix2.default.transformPoint(matArg.renderStage.renderer.camera.viewMatrix, _this.Position)
             };
         });
         _this.addMaterial(diffuseMaterial);
@@ -11529,7 +11636,7 @@ var SpotLight = function (_LightBase) {
 
 exports.default = SpotLight;
 
-},{"../../../../ContextComponents":8,"../../../../JThreeContext":262,"../../../../Math/Matrix":266,"../../../../Math/Vector3":273,"../../../Materials/BasicMaterial":36,"../../../Materials/BuiltIn/Light/Diffuse/SpotLight.xmml":49,"../../../Materials/BuiltIn/Light/Specular/SpotLight.xmml":52,"./../LightBase":145}],145:[function(require,module,exports){
+},{"../../../../ContextComponents":8,"../../../../JThreeContext":267,"../../../../Math/Matrix":271,"../../../../Math/Vector3":278,"../../../Materials/BasicMaterial":36,"../../../Materials/BuiltIn/Light/Diffuse/SpotLight.xmml":49,"../../../Materials/BuiltIn/Light/Specular/SpotLight.xmml":52,"./../LightBase":149}],149:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11591,7 +11698,7 @@ var LightBase = function (_SceneObject) {
     }, {
         key: "Position",
         get: function get() {
-            return _Matrix2.default.transformPoint(this.Transformer.LocalToGlobal, new _Vector2.default(0, 0, 0));
+            return _Matrix2.default.transformPoint(this.Transformer.localToGlobal, new _Vector2.default(0, 0, 0));
         }
     }]);
 
@@ -11600,7 +11707,7 @@ var LightBase = function (_SceneObject) {
 
 exports.default = LightBase;
 
-},{"../../../Math/Color3":264,"../../../Math/Matrix":266,"../../../Math/Vector3":273,"../SceneObject":147}],146:[function(require,module,exports){
+},{"../../../Math/Color3":269,"../../../Math/Matrix":271,"../../../Math/Vector3":278,"../SceneObject":151}],150:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11641,7 +11748,7 @@ var Mesh = function (_SceneObject) {
 
 exports.default = Mesh;
 
-},{"../SceneObjects/SceneObject":147}],147:[function(require,module,exports){
+},{"../SceneObjects/SceneObject":151}],151:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11780,10 +11887,21 @@ var SceneObject = function (_JThreeObjectEEWithID) {
     }, {
         key: "addMaterial",
         value: function addMaterial(mat) {
-            if (!this._materials[mat.MaterialGroup]) {
-                this._materials[mat.MaterialGroup] = {};
+            var _this2 = this;
+
+            if (mat.Initialized) {
+                if (!this._materials[mat.MaterialGroup]) {
+                    this._materials[mat.MaterialGroup] = {};
+                }
+                this._materials[mat.MaterialGroup][mat.id] = mat;
+            } else {
+                mat.once("ready", function () {
+                    if (!_this2._materials[mat.MaterialGroup]) {
+                        _this2._materials[mat.MaterialGroup] = {};
+                    }
+                    _this2._materials[mat.MaterialGroup][mat.id] = mat;
+                });
             }
-            this._materials[mat.MaterialGroup][mat.id] = mat;
         }
     }, {
         key: "getMaterial",
@@ -11908,7 +12026,7 @@ var SceneObject = function (_JThreeObjectEEWithID) {
 
 exports.default = SceneObject;
 
-},{"../../Base/JThreeObjectEEWithID":5,"../Transform/Transformer":149}],148:[function(require,module,exports){
+},{"../../Base/JThreeObjectEEWithID":5,"../Transform/Transformer":153}],152:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11977,7 +12095,7 @@ var Timer = function (_JThreeObject) {
 
 exports.default = Timer;
 
-},{"../Base/JThreeObject":3,"../ContextComponents":8,"../JThreeContext":262}],149:[function(require,module,exports){
+},{"../Base/JThreeObject":3,"../ContextComponents":8,"../JThreeContext":267}],153:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11985,6 +12103,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _TransformerBase2 = require("./TransformerBase");
+
+var _TransformerBase3 = _interopRequireDefault(_TransformerBase2);
 
 var _Quaternion = require("../../Math/Quaternion");
 
@@ -11997,10 +12119,6 @@ var _Vector2 = _interopRequireDefault(_Vector);
 var _Matrix = require("../../Math/Matrix");
 
 var _Matrix2 = _interopRequireDefault(_Matrix);
-
-var _JThreeObjectEE2 = require("../../Base/JThreeObjectEE");
-
-var _JThreeObjectEE3 = _interopRequireDefault(_JThreeObjectEE2);
 
 var _glMatrix = require("gl-matrix");
 
@@ -12018,8 +12136,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Every Transformer can have a parent, each parent Transformer affect children's Transformer hierachically.
  */
 
-var Transformer = function (_JThreeObjectEE) {
-    _inherits(Transformer, _JThreeObjectEE);
+var Transformer = function (_TransformerBase) {
+    _inherits(Transformer, _TransformerBase);
 
     /**
      * Constructor of Transformer
@@ -12029,7 +12147,7 @@ var Transformer = function (_JThreeObjectEE) {
     function Transformer(sceneObj) {
         _classCallCheck(this, Transformer);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Transformer).call(this));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Transformer).call(this, sceneObj));
 
         _this.hasChanged = false;
         /**
@@ -12044,15 +12162,8 @@ var Transformer = function (_JThreeObjectEE) {
         * right direction of transform in world space
         */
         _this.right = _Vector2.default.XUnit;
-        /**
-         * calculation cache
-         */
-        _this._localTransformMatrix = _Matrix2.default.identity();
-        _this._localToGlobalMatrix = _Matrix2.default.identity();
         _this._modelViewProjectionCaluculationCache = _glMatrix.mat4.create();
-        _this._globalToLocalCache = _Matrix2.default.identity();
         _this._g2lupdated = false;
-        _this.linkedObject = sceneObj;
         _this._position = _Vector2.default.Zero;
         _this._rotation = _Quaternion2.default.Identity;
         _this._scale = new _Vector2.default(1, 1, 1);
@@ -12060,20 +12171,20 @@ var Transformer = function (_JThreeObjectEE) {
         _this.updateTransform();
         return _this;
     }
+    /**
+     * update all transform
+     * You no need to call this method manually if you access all of properties in this transformer by accessor.
+     */
+
 
     _createClass(Transformer, [{
         key: "updateTransform",
-
-        /**
-         * update all transform
-         * You no need to call this method manually if you access all of properties in this transformer by accessor.
-         */
         value: function updateTransform() {
             this.hasChanged = true;
             this.__updateTransformMatricies();
             // notify update to childrens
-            if (this.linkedObject.Children && this.NeedUpdateChildren) {
-                this.linkedObject.Children.forEach(function (v) {
+            if (this.object.Children) {
+                this.object.Children.forEach(function (v) {
                     v.Transformer.updateTransform();
                 });
             }
@@ -12088,62 +12199,32 @@ var Transformer = function (_JThreeObjectEE) {
          * Calculate Projection-View-Model matrix with renderer camera.
          */
         value: function calculateMVPMatrix(renderer) {
-            _glMatrix.mat4.mul(this._modelViewProjectionCaluculationCache, renderer.camera.viewMatrix.rawElements, this.LocalToGlobal.rawElements);
+            _glMatrix.mat4.mul(this._modelViewProjectionCaluculationCache, renderer.camera.viewMatrix.rawElements, this.localToGlobal.rawElements);
             _glMatrix.mat4.mul(this._modelViewProjectionCaluculationCache, renderer.camera.projectionMatrix.rawElements, this._modelViewProjectionCaluculationCache);
             return new _Matrix2.default(this._modelViewProjectionCaluculationCache);
         }
     }, {
-        key: "transformDirection",
-        value: function transformDirection(direction) {
-            return _Matrix2.default.transformNormal(this.LocalToGlobal, direction);
-        }
-    }, {
-        key: "transformPoint",
-        value: function transformPoint(point) {
-            return _Matrix2.default.transformPoint(this._localToGlobalMatrix, point);
-        }
-    }, {
-        key: "transformVector",
-        value: function transformVector(vector) {
-            return _Matrix2.default.transform(this._localToGlobalMatrix, vector);
-        }
-    }, {
-        key: "inverseTransformDirection",
-        value: function inverseTransformDirection(direction) {
-            return _Matrix2.default.transformNormal(this.globalToLocal, direction);
-        }
-    }, {
-        key: "inverseTransformPoint",
-        value: function inverseTransformPoint(point) {
-            return _Matrix2.default.transformPoint(this.globalToLocal, point);
-        }
-    }, {
-        key: "inverseTransformVector",
-        value: function inverseTransformVector(vector) {
-            return _Matrix2.default.transform(this.globalToLocal, vector);
-        }
+        key: "__updateTransformMatricies",
+
         /**
         * Update transform matricies
         * @return {[type]} [description]
         */
-
-    }, {
-        key: "__updateTransformMatricies",
         value: function __updateTransformMatricies() {
             // initialize localTransformCache & localToGlobalMatrix.rawElements
-            _glMatrix.mat4.identity(this._localTransformMatrix.rawElements);
-            _glMatrix.mat4.identity(this._localToGlobalMatrix.rawElements);
+            _glMatrix.mat4.identity(this.localTransform.rawElements);
+            _glMatrix.mat4.identity(this.localToGlobal.rawElements);
             // generate local transofrm matrix
-            _glMatrix.mat4.fromRotationTranslationScaleOrigin(this._localTransformMatrix.rawElements, this._rotation.rawElements, this._position.rawElements, this._scale.rawElements, this._localOrigin.rawElements); // substitute Rotation*Translation*Scale matrix (around local origin) for localTransformMatrix.rawElements
-            if (this.linkedObject != null && this.linkedObject.Parent != null) {
-                // Use LocalToGlobal matrix of parents to multiply with localTransformCache
-                _glMatrix.mat4.copy(this._localToGlobalMatrix.rawElements, this.linkedObject.Parent.Transformer.LocalToGlobal.rawElements);
+            _glMatrix.mat4.fromRotationTranslationScaleOrigin(this.localTransform.rawElements, this._rotation.rawElements, this._position.rawElements, this._scale.rawElements, this._localOrigin.rawElements); // substitute Rotation*Translation*Scale matrix (around local origin) for localTransformMatrix.rawElements
+            if (this.object != null && this.object.Parent != null) {
+                // Use localToGlobal matrix of parents to multiply with localTransformCache
+                _glMatrix.mat4.copy(this.localToGlobal.rawElements, this.object.Parent.Transformer.localToGlobal.rawElements);
             } else {
                 // If this transformer have no parent transformer,localToGlobalMatrix.rawElements,GlobalTransform will be same as localTransformCache
-                _glMatrix.mat4.identity(this._localToGlobalMatrix.rawElements);
+                _glMatrix.mat4.identity(this.localToGlobal.rawElements);
             }
             // Multiply parent transform
-            _glMatrix.mat4.multiply(this._localToGlobalMatrix.rawElements, this._localToGlobalMatrix.rawElements, this._localTransformMatrix.rawElements);
+            _glMatrix.mat4.multiply(this.localToGlobal.rawElements, this.localToGlobal.rawElements, this.localTransform.rawElements);
             this.__updateDirections();
         }
         /**
@@ -12161,56 +12242,28 @@ var Transformer = function (_JThreeObjectEE) {
     }, {
         key: "_updateDirection",
         value: function _updateDirection(rawElements, sourceVector4) {
-            _glMatrix.vec4.transformMat4(rawElements.rawElements, sourceVector4, this._localToGlobalMatrix.rawElements);
+            _glMatrix.vec4.transformMat4(rawElements.rawElements, sourceVector4, this.localToGlobal.rawElements);
             _glMatrix.vec3.normalize(rawElements.rawElements, rawElements.rawElements);
-        }
-    }, {
-        key: "NeedUpdateChildren",
-        get: function get() {
-            return true;
-        }
-    }, {
-        key: "globalToLocal",
-        get: function get() {
-            if (this._g2lupdated) {
-                return this._globalToLocalCache;
-            }
-            _glMatrix.mat4.invert(this._localTransformMatrix.rawElements, this._localToGlobalMatrix.rawElements);
-            this._g2lupdated = true;
         }
     }, {
         key: "hasParent",
         get: function get() {
-            return !!this.linkedObject.Parent;
+            return !!this.object.Parent;
         }
     }, {
         key: "parent",
         get: function get() {
-            return this.hasParent ? this.linkedObject.Parent.Transformer : null;
+            return this.hasParent ? this.object.Parent.Transformer : null;
         }
     }, {
         key: "childrenCount",
         get: function get() {
-            return this.linkedObject.Children.length;
+            return this.object.Children.length;
         }
     }, {
         key: "GlobalPosition",
         get: function get() {
-            return _Matrix2.default.transformPoint(this._localToGlobalMatrix, _Vector2.default.Zero);
-        }
-        /**
-         * Get accessor for the matrix providing the transform Local space into Global space.
-         */
-
-    }, {
-        key: "LocalToGlobal",
-        get: function get() {
-            return this._localToGlobalMatrix;
-        }
-    }, {
-        key: "LocalTransform",
-        get: function get() {
-            return this._localTransformMatrix;
+            return _Matrix2.default.transformPoint(this.localToGlobal, _Vector2.default.Zero);
         }
         /**
          * Get accessor for model rotation.
@@ -12275,11 +12328,76 @@ var Transformer = function (_JThreeObjectEE) {
     }]);
 
     return Transformer;
-}(_JThreeObjectEE3.default);
+}(_TransformerBase3.default);
 
 exports.default = Transformer;
 
-},{"../../Base/JThreeObjectEE":4,"../../Math/Matrix":266,"../../Math/Quaternion":270,"../../Math/Vector3":273,"gl-matrix":317}],150:[function(require,module,exports){
+},{"../../Math/Matrix":271,"../../Math/Quaternion":275,"../../Math/Vector3":278,"./TransformerBase":154,"gl-matrix":320}],154:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Matrix = require("../../Math/Matrix");
+
+var _Matrix2 = _interopRequireDefault(_Matrix);
+
+var _JThreeObjectEE2 = require("../../Base/JThreeObjectEE");
+
+var _JThreeObjectEE3 = _interopRequireDefault(_JThreeObjectEE2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BaseTransformer = function (_JThreeObjectEE) {
+    _inherits(BaseTransformer, _JThreeObjectEE);
+
+    function BaseTransformer(sceneObject) {
+        _classCallCheck(this, BaseTransformer);
+
+        /**
+         * calculation cache
+         */
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BaseTransformer).call(this));
+
+        _this.localTransform = _Matrix2.default.identity();
+        _this.localToGlobal = _Matrix2.default.identity();
+        _this.object = sceneObject;
+        return _this;
+    }
+
+    _createClass(BaseTransformer, [{
+        key: "transformDirection",
+        value: function transformDirection(direction) {
+            return _Matrix2.default.transformNormal(this.localToGlobal, direction);
+        }
+    }, {
+        key: "transformPoint",
+        value: function transformPoint(point) {
+            return _Matrix2.default.transformPoint(this.localToGlobal, point);
+        }
+    }, {
+        key: "transformVector",
+        value: function transformVector(vector) {
+            return _Matrix2.default.transform(this.localToGlobal, vector);
+        }
+    }]);
+
+    return BaseTransformer;
+}(_JThreeObjectEE3.default);
+
+exports.default = BaseTransformer;
+
+},{"../../Base/JThreeObjectEE":4,"../../Math/Matrix":271}],155:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12358,7 +12476,7 @@ var Debugger = function () {
 
 exports.default = Debugger;
 
-},{"../ContextComponents":8,"./Modules/RendererDebugger":152,"./Modules/SceneStructureDebugger":153}],151:[function(require,module,exports){
+},{"../ContextComponents":8,"./Modules/RendererDebugger":157,"./Modules/SceneStructureDebugger":158}],156:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12386,7 +12504,7 @@ var DebuggerModuleBase = function () {
 
 exports.default = DebuggerModuleBase;
 
-},{}],152:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12394,6 +12512,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _BasicRenderer = require("../../Core/Renderers/BasicRenderer");
+
+var _BasicRenderer2 = _interopRequireDefault(_BasicRenderer);
 
 var _DebuggerModuleBase2 = require("./DebuggerModuleBase");
 
@@ -12521,7 +12643,7 @@ var RendererDebugger = function (_DebuggerModuleBase) {
             debug.debuggerAPI.renderers.addRenderer(renderer, this);
             renderer.on("rendered-stage", function (v) {
                 if (_this4._bufferTextureRequest && v.completedChain.stage.id === _this4._bufferTextureRequest.stageID) {
-                    if (v.bufferTextures[_this4._bufferTextureRequest.bufferTextureID] == null) {
+                    if (v.bufferTextures[_this4._bufferTextureRequest.bufferTextureID] == null && renderer instanceof _BasicRenderer2.default) {
                         _this4._bufferTextureRequest.deffered.resolve(_this4._canvasToimg(renderer));
                         _this4._bufferTextureRequest = null;
                         return;
@@ -12551,7 +12673,9 @@ var RendererDebugger = function (_DebuggerModuleBase) {
                     renderer.gl.flush();
                     if (v.bufferTextures[_this4._bufferTextureProgressRequest.bufferTextureID] == null) {
                         // for default buffer
-                        img = _this4._canvasToimg(renderer);
+                        if (renderer instanceof _BasicRenderer2.default) {
+                            img = _this4._canvasToimg(renderer);
+                        }
                     } else {
                         img = v.bufferTextures[_this4._bufferTextureProgressRequest.bufferTextureID].wrappers[0].generateHtmlImage(_this4._bufferTextureProgressRequest.generator);
                     }
@@ -12582,7 +12706,7 @@ var RendererDebugger = function (_DebuggerModuleBase) {
 
 exports.default = RendererDebugger;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"./DebuggerModuleBase":151,"q":335}],153:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../Core/Renderers/BasicRenderer":81,"../../JThreeContext":267,"./DebuggerModuleBase":156,"q":338}],158:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12639,7 +12763,7 @@ var SceneStructureDebugger = function (_DebuggerModuleBase) {
 
 exports.default = SceneStructureDebugger;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"./DebuggerModuleBase":151}],154:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"./DebuggerModuleBase":156}],159:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12750,7 +12874,7 @@ var WebGLNotSupportedException = exports.WebGLNotSupportedException = function (
     return WebGLNotSupportedException;
 }(JThreeException);
 
-},{"./Base/JThreeObject":3}],155:[function(require,module,exports){
+},{"./Base/JThreeObject":3}],160:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12966,7 +13090,7 @@ var AttributeDictionary = function (_JThreeObject) {
 
 exports.default = AttributeDictionary;
 
-},{"../Base/JThreeObject":3,"./GomlAttribute":170,"lodash.isundefined":333}],156:[function(require,module,exports){
+},{"../Base/JThreeObject":3,"./GomlAttribute":175,"lodash.isundefined":336}],161:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13092,7 +13216,7 @@ var AttributeParser = function (_jThreeObject) {
 
 exports.default = AttributeParser;
 
-},{"../Base/JThreeObject":3,"../Math/Quaternion":270,"../Math/Vector3":273}],157:[function(require,module,exports){
+},{"../Base/JThreeObject":3,"../Math/Quaternion":275,"../Math/Vector3":278}],162:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13225,7 +13349,7 @@ var AttributePromiseRegistry = function (_jThreeObject) {
 
 exports.default = AttributePromiseRegistry;
 
-},{"../Base/JThreeObject":3}],158:[function(require,module,exports){
+},{"../Base/JThreeObject":3}],163:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13289,7 +13413,7 @@ var AngleAttributeConverter = function (_AttributeConverterBa) {
 
 exports.default = AngleAttributeConverter;
 
-},{"../AttributeParser":156,"./AttributeConverterBase":159,"lodash.isnumber":330}],159:[function(require,module,exports){
+},{"../AttributeParser":161,"./AttributeConverterBase":164,"lodash.isnumber":333}],164:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13331,7 +13455,7 @@ var AttributeConverterBase = function (_JThreeObject) {
 
 exports.default = AttributeConverterBase;
 
-},{"../../Base/JThreeObject":3}],160:[function(require,module,exports){
+},{"../../Base/JThreeObject":3}],165:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13387,7 +13511,7 @@ var BooleanAttributeConverter = function (_AttributeConverterBa) {
 
 exports.default = BooleanAttributeConverter;
 
-},{"./AttributeConverterBase":159}],161:[function(require,module,exports){
+},{"./AttributeConverterBase":164}],166:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13447,7 +13571,7 @@ var Color3AttributeConverter = function (_AttributeConverterBa) {
 
 exports.default = Color3AttributeConverter;
 
-},{"../../Math/Color3":264,"./AttributeConverterBase":159}],162:[function(require,module,exports){
+},{"../../Math/Color3":269,"./AttributeConverterBase":164}],167:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13507,7 +13631,7 @@ var Color4AttributeConverter = function (_AttributeConverterBa) {
 
 exports.default = Color4AttributeConverter;
 
-},{"../../Math/Color4":265,"./AttributeConverterBase":159}],163:[function(require,module,exports){
+},{"../../Math/Color4":270,"./AttributeConverterBase":164}],168:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13567,7 +13691,7 @@ var FunctionAttributeConverter = function (_AttributeConverterBa) {
 
 exports.default = FunctionAttributeConverter;
 
-},{"./AttributeConverterBase":159,"lodash.isfunction":329}],164:[function(require,module,exports){
+},{"./AttributeConverterBase":164,"lodash.isfunction":332}],169:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13623,7 +13747,7 @@ var IntegerAttributeConverter = function (_AttributeConverterBa) {
 
 exports.default = IntegerAttributeConverter;
 
-},{"./AttributeConverterBase":159}],165:[function(require,module,exports){
+},{"./AttributeConverterBase":164}],170:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13679,7 +13803,7 @@ var NumberAttributeConverter = function (_AttributeConverterBa) {
 
 exports.default = NumberAttributeConverter;
 
-},{"./AttributeConverterBase":159}],166:[function(require,module,exports){
+},{"./AttributeConverterBase":164}],171:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13743,7 +13867,7 @@ var RotationAttributeConverter = function (_JThreeObject) {
 
 exports.default = RotationAttributeConverter;
 
-},{"../../Base/JThreeObject":3,"../../Math/Quaternion":270,"../AttributeParser":156}],167:[function(require,module,exports){
+},{"../../Base/JThreeObject":3,"../../Math/Quaternion":275,"../AttributeParser":161}],172:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13790,7 +13914,7 @@ var StringAttributeConverter = function (_AttributeConverterBa) {
 
 exports.default = StringAttributeConverter;
 
-},{"./AttributeConverterBase":159}],168:[function(require,module,exports){
+},{"./AttributeConverterBase":164}],173:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13841,7 +13965,7 @@ var Vector3AttributeConverter = function (_AttributeConverterBa) {
 
 exports.default = Vector3AttributeConverter;
 
-},{"../../Math/Vector3":273,"./AttributeConverterBase":159}],169:[function(require,module,exports){
+},{"../../Math/Vector3":278,"./AttributeConverterBase":164}],174:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13878,7 +14002,7 @@ var CoreRelatedNodeBase = function (_GomlTreeNodeBase) {
 
 exports.default = CoreRelatedNodeBase;
 
-},{"./GomlTreeNodeBase":178}],170:[function(require,module,exports){
+},{"./GomlTreeNodeBase":183}],175:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14088,7 +14212,7 @@ var GomlAttribute = function (_JThreeObjectEEWithID) {
 
 exports.default = GomlAttribute;
 
-},{"../Base/JThreeObjectEEWithID":5,"../ContextComponents":8,"../JThreeContext":262,"./Converter/StringAttributeConverter":167,"q":335}],171:[function(require,module,exports){
+},{"../Base/JThreeObjectEEWithID":5,"../ContextComponents":8,"../JThreeContext":267,"./Converter/StringAttributeConverter":172,"q":338}],176:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14209,7 +14333,7 @@ var GomlConfigurator = function (_JThreeObject) {
 
 exports.default = GomlConfigurator;
 
-},{"../Base/JThreeObject":3,"./GomlConverterList":172,"./GomlNodeList":175}],172:[function(require,module,exports){
+},{"../Base/JThreeObject":3,"./GomlConverterList":177,"./GomlNodeList":180}],177:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14277,7 +14401,7 @@ var converterList = {
 };
 exports.default = converterList;
 
-},{"./Converter/AngleAttributeConverter":158,"./Converter/BooleanAttributeConverter":160,"./Converter/Color3AttributeConverter":161,"./Converter/Color4AttributeConverter":162,"./Converter/FunctionAttributeConverter":163,"./Converter/IntegerAttributeConverter":164,"./Converter/NumberAttributeConverter":165,"./Converter/RotationAttributeConverter":166,"./Converter/StringAttributeConverter":167,"./Converter/Vector3AttributeConverter":168}],173:[function(require,module,exports){
+},{"./Converter/AngleAttributeConverter":163,"./Converter/BooleanAttributeConverter":165,"./Converter/Color3AttributeConverter":166,"./Converter/Color4AttributeConverter":167,"./Converter/FunctionAttributeConverter":168,"./Converter/IntegerAttributeConverter":169,"./Converter/NumberAttributeConverter":170,"./Converter/RotationAttributeConverter":171,"./Converter/StringAttributeConverter":172,"./Converter/Vector3AttributeConverter":173}],178:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14442,7 +14566,7 @@ var GomlLoader = function (_jThreeObject) {
 
 exports.default = GomlLoader;
 
-},{"../Base/JThreeLogger":2,"../Base/JThreeObject":3,"../ContextComponents":8,"../JThreeContext":262}],174:[function(require,module,exports){
+},{"../Base/JThreeLogger":2,"../Base/JThreeObject":3,"../ContextComponents":8,"../JThreeContext":267}],179:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14590,7 +14714,7 @@ var GomlNodeDictionary = function (_jThreeObject) {
 
 exports.default = GomlNodeDictionary;
 
-},{"../Base/JThreeObject":3}],175:[function(require,module,exports){
+},{"../Base/JThreeObject":3}],180:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14808,7 +14932,7 @@ new _GomlNodeListElement2.default("jthree.pmx.contents", {
 })];
 exports.default = gomlList;
 
-},{"../PMX/Goml/PMXNode":294,"../VMD/Goml/VMDNode":301,"../X/Goml/XNode":308,"./GomlNodeListElement":176,"./Nodes/Canvases/CanvasNode":181,"./Nodes/Geometries/CircleGeometryNode":182,"./Nodes/Geometries/ConeGeometryNode":183,"./Nodes/Geometries/CubeGeometryNode":184,"./Nodes/Geometries/CylinderGeometryNode":185,"./Nodes/Geometries/GridGeometryNode":187,"./Nodes/Geometries/QuadGeometryNode":188,"./Nodes/Geometries/SphereGeometryNode":189,"./Nodes/Geometries/TriangleGeometryNode":190,"./Nodes/Imports/ImportNode":191,"./Nodes/Loaders/LoaderNode":192,"./Nodes/Materials/MaterialNode":193,"./Nodes/Renderers/ViewPortNode":195,"./Nodes/SceneNode":196,"./Nodes/SceneObjects/Cameras/CameraNode":197,"./Nodes/SceneObjects/Cameras/OrthoCameraNode":199,"./Nodes/SceneObjects/Lights/AreaLightNode":200,"./Nodes/SceneObjects/Lights/DirectionalLightNode":201,"./Nodes/SceneObjects/Lights/PointLightNode":203,"./Nodes/SceneObjects/Lights/SceneLightNode":204,"./Nodes/SceneObjects/Lights/SpotLightNode":205,"./Nodes/SceneObjects/MeshNode":206,"./Nodes/SceneObjects/ObjectNode":207,"./Nodes/Templates/TemplateNode":209,"./Nodes/Texture/CubeTextureNode":210,"./Nodes/Texture/TextureNode":211,"./Nodes/TopLevel/CanvasesNode":213,"./Nodes/TopLevel/GomlNode":214,"./Nodes/TopLevel/ImportsNode":215,"./Nodes/TopLevel/LoadersNode":216,"./Nodes/TopLevel/ResourcesNode":218,"./Nodes/TopLevel/ScenesNode":219,"./Nodes/TopLevel/TemplatesNode":220}],176:[function(require,module,exports){
+},{"../PMX/Goml/PMXNode":298,"../VMD/Goml/VMDNode":304,"../X/Goml/XNode":311,"./GomlNodeListElement":181,"./Nodes/Canvases/CanvasNode":186,"./Nodes/Geometries/CircleGeometryNode":187,"./Nodes/Geometries/ConeGeometryNode":188,"./Nodes/Geometries/CubeGeometryNode":189,"./Nodes/Geometries/CylinderGeometryNode":190,"./Nodes/Geometries/GridGeometryNode":192,"./Nodes/Geometries/QuadGeometryNode":193,"./Nodes/Geometries/SphereGeometryNode":194,"./Nodes/Geometries/TriangleGeometryNode":195,"./Nodes/Imports/ImportNode":196,"./Nodes/Loaders/LoaderNode":197,"./Nodes/Materials/MaterialNode":198,"./Nodes/Renderers/ViewPortNode":200,"./Nodes/SceneNode":201,"./Nodes/SceneObjects/Cameras/CameraNode":202,"./Nodes/SceneObjects/Cameras/OrthoCameraNode":204,"./Nodes/SceneObjects/Lights/AreaLightNode":205,"./Nodes/SceneObjects/Lights/DirectionalLightNode":206,"./Nodes/SceneObjects/Lights/PointLightNode":208,"./Nodes/SceneObjects/Lights/SceneLightNode":209,"./Nodes/SceneObjects/Lights/SpotLightNode":210,"./Nodes/SceneObjects/MeshNode":211,"./Nodes/SceneObjects/ObjectNode":212,"./Nodes/Templates/TemplateNode":214,"./Nodes/Texture/CubeTextureNode":215,"./Nodes/Texture/TextureNode":216,"./Nodes/TopLevel/CanvasesNode":218,"./Nodes/TopLevel/GomlNode":219,"./Nodes/TopLevel/ImportsNode":220,"./Nodes/TopLevel/LoadersNode":221,"./Nodes/TopLevel/ResourcesNode":223,"./Nodes/TopLevel/ScenesNode":224,"./Nodes/TopLevel/TemplatesNode":225}],181:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14870,7 +14994,7 @@ var GomlNodeListElement = function (_JThreeObject) {
 
 exports.default = GomlNodeListElement;
 
-},{"../Base/JThreeObject":3}],177:[function(require,module,exports){
+},{"../Base/JThreeObject":3}],182:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14998,7 +15122,7 @@ var GomlParser = function () {
 
 exports.default = GomlParser;
 
-},{}],178:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15145,7 +15269,7 @@ var GomlTreeNodeBase = function (_TreeNodeBase) {
 
 exports.default = GomlTreeNodeBase;
 
-},{"../ContextComponents":8,"../JThreeContext":262,"./AttributeDictionary":155,"./NodeProps":180,"./TreeNodeBase":221}],179:[function(require,module,exports){
+},{"../ContextComponents":8,"../JThreeContext":267,"./AttributeDictionary":160,"./NodeProps":185,"./TreeNodeBase":226}],184:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15422,7 +15546,7 @@ var NodeManager = function (_JThreeObject) {
 
 exports.default = NodeManager;
 
-},{"../Base/JThreeObject":3,"../ContextComponents":8,"../Goml/GomlNodeDictionary":174,"../JThreeContext":262,"./AttributePromiseRegistry":157,"./GomlConfigurator":171,"./GomlParser":177}],180:[function(require,module,exports){
+},{"../Base/JThreeObject":3,"../ContextComponents":8,"../Goml/GomlNodeDictionary":179,"../JThreeContext":267,"./AttributePromiseRegistry":162,"./GomlConfigurator":176,"./GomlParser":182}],185:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15506,7 +15630,7 @@ var NodeProps = function (_EventEmitter) {
 
 exports.default = NodeProps;
 
-},{"events":315}],181:[function(require,module,exports){
+},{"events":318}],186:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15661,7 +15785,7 @@ var CanvasNode = function (_CoreRelatedNodeBase) {
 
 exports.default = CanvasNode;
 
-},{"../../../ContextComponents":8,"../../../Core/Canvas/Canvas":9,"../../../Core/Canvas/CanvasElementBuilder":10,"../../../JThreeContext":262,"../../../static/defaultLoader.html":314,"../../CoreRelatedNodeBase":169}],182:[function(require,module,exports){
+},{"../../../ContextComponents":8,"../../../Core/Canvas/Canvas":9,"../../../Core/Canvas/CanvasElementBuilder":10,"../../../JThreeContext":267,"../../../static/defaultLoader.html":317,"../../CoreRelatedNodeBase":174}],187:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15729,7 +15853,7 @@ var CircleGeometryNode = function (_GeometryNodeBase) {
 
 exports.default = CircleGeometryNode;
 
-},{"../../../Core/Geometries/CircleGeometry":26,"./GeometryNodeBase":186}],183:[function(require,module,exports){
+},{"../../../Core/Geometries/CircleGeometry":26,"./GeometryNodeBase":191}],188:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15782,7 +15906,7 @@ var ConeGeometryNode = function (_GeometryNodeBase) {
 
 exports.default = ConeGeometryNode;
 
-},{"../../../Core/Geometries/ConeGeometry":27,"./GeometryNodeBase":186}],184:[function(require,module,exports){
+},{"../../../Core/Geometries/ConeGeometry":27,"./GeometryNodeBase":191}],189:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15835,7 +15959,7 @@ var CubeGeometryNode = function (_GeometryNodeBase) {
 
 exports.default = CubeGeometryNode;
 
-},{"../../../Core/Geometries/CubeGeometry":28,"./GeometryNodeBase":186}],185:[function(require,module,exports){
+},{"../../../Core/Geometries/CubeGeometry":28,"./GeometryNodeBase":191}],190:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15903,7 +16027,7 @@ var CylinderGeometryNode = function (_GeometryNodeBase) {
 
 exports.default = CylinderGeometryNode;
 
-},{"../../../Core/Geometries/CylinderGeometry":29,"./GeometryNodeBase":186}],186:[function(require,module,exports){
+},{"../../../Core/Geometries/CylinderGeometry":29,"./GeometryNodeBase":191}],191:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15991,7 +16115,7 @@ var GeometryNodeBase = function (_CoreRelatedNodeBase) {
 
 exports.default = GeometryNodeBase;
 
-},{"../../../ContextComponents":8,"../../../JThreeContext":262,"../../CoreRelatedNodeBase":169}],187:[function(require,module,exports){
+},{"../../../ContextComponents":8,"../../../JThreeContext":267,"../../CoreRelatedNodeBase":174}],192:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16070,7 +16194,7 @@ var GridGeometryNode = function (_GeometryNodeBase) {
 
 exports.default = GridGeometryNode;
 
-},{"../../../Core/Geometries/GridGeometry":30,"./GeometryNodeBase":186}],188:[function(require,module,exports){
+},{"../../../Core/Geometries/GridGeometry":30,"./GeometryNodeBase":191}],193:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16147,7 +16271,7 @@ var QuadGeometryNode = function (_GeometryNodeBase) {
 
 exports.default = QuadGeometryNode;
 
-},{"../../../Core/Geometries/QuadGeometry":31,"./GeometryNodeBase":186}],189:[function(require,module,exports){
+},{"../../../Core/Geometries/QuadGeometry":31,"./GeometryNodeBase":191}],194:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16224,7 +16348,7 @@ var CubeGeometryNode = function (_GeometryNodeBase) {
 
 exports.default = CubeGeometryNode;
 
-},{"../../../Core/Geometries/SphereGeometry":32,"./GeometryNodeBase":186}],190:[function(require,module,exports){
+},{"../../../Core/Geometries/SphereGeometry":32,"./GeometryNodeBase":191}],195:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16318,7 +16442,7 @@ var GomlTreeTriNode = function (_GeometryNodeBase) {
 
 exports.default = GomlTreeTriNode;
 
-},{"../../../Core/Geometries/TriangleGeometry":33,"../../../Math/Vector3":273,"./GeometryNodeBase":186}],191:[function(require,module,exports){
+},{"../../../Core/Geometries/TriangleGeometry":33,"../../../Math/Vector3":278,"./GeometryNodeBase":191}],196:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16438,7 +16562,7 @@ var ImportNode = function (_GomlTreeNodeBase) {
 
 exports.default = ImportNode;
 
-},{"../../../ContextComponents":8,"../../../JThreeContext":262,"../../GomlTreeNodeBase":178}],192:[function(require,module,exports){
+},{"../../../ContextComponents":8,"../../../JThreeContext":267,"../../GomlTreeNodeBase":183}],197:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16493,7 +16617,7 @@ var LoaderNode = function (_GomlTreeNodeBase) {
 
 exports.default = LoaderNode;
 
-},{"../../GomlTreeNodeBase":178}],193:[function(require,module,exports){
+},{"../../GomlTreeNodeBase":183}],198:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16567,7 +16691,7 @@ var MaterialNode = function (_MaterialNodeBase) {
 
 exports.default = MaterialNode;
 
-},{"./MaterialNodeBase":194}],194:[function(require,module,exports){
+},{"./MaterialNodeBase":199}],199:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16679,7 +16803,7 @@ var MaterialNodeBase = function (_CoreRelatedNodeBase) {
                 var passVariables = {};
                 for (var i = 0; i < passes.length; i++) {
                     var pass = passes[i];
-                    var uniforms = pass.programDescription.uniforms;
+                    var uniforms = pass.passDescription.programDescription.uniforms;
                     for (var variableName in uniforms) {
                         if (variableName[0] === "_") {
                             continue; // Ignore system variables
@@ -16787,7 +16911,7 @@ var MaterialNodeBase = function (_CoreRelatedNodeBase) {
 
 exports.default = MaterialNodeBase;
 
-},{"../../../ContextComponents":8,"../../../JThreeContext":262,"../../../Math/Color4":265,"../../../Math/Vector2":272,"../../../Math/Vector3":273,"../../CoreRelatedNodeBase":169}],195:[function(require,module,exports){
+},{"../../../ContextComponents":8,"../../../JThreeContext":267,"../../../Math/Color4":270,"../../../Math/Vector2":277,"../../../Math/Vector3":278,"../../CoreRelatedNodeBase":174}],200:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16995,14 +17119,9 @@ var ViewPortNode = function (_CoreRelatedNodeBase) {
             var _this3 = this;
 
             this.nodeImport("jthree.scene.camera", cam, function (cameraNode) {
-                //
-                // remove camera here
-                //
                 if (cameraNode) {
                     if (cameraNode.ContainedSceneNode != null) {
-                        _this3.target.camera = cameraNode.target;
-                        var scene = cameraNode.ContainedSceneNode.target;
-                        scene.addRenderer(_this3.target);
+                        _this3.target.setCamera(cameraNode.target);
                         _this3._updateViewportArea();
                     } else {
                         console.error("cant retrieve scene!");
@@ -17018,7 +17137,7 @@ var ViewPortNode = function (_CoreRelatedNodeBase) {
 
 exports.default = ViewPortNode;
 
-},{"../../../Core/Renderers/RendererFactory":103,"../../../Interface/Events/EventBroadcaster":241,"../../../Math/Rectangle":271,"../../CoreRelatedNodeBase":169}],196:[function(require,module,exports){
+},{"../../../Core/Renderers/RendererFactory":105,"../../../Interface/Events/EventBroadcaster":246,"../../../Math/Rectangle":276,"../../CoreRelatedNodeBase":174}],201:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17113,7 +17232,7 @@ var SceneNode = function (_CoreRelatedNodeBase) {
 
 exports.default = SceneNode;
 
-},{"../../ContextComponents":8,"../../Core/Scene":133,"../../JThreeContext":262,"../CoreRelatedNodeBase":169}],197:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../Core/Scene":137,"../../JThreeContext":267,"../CoreRelatedNodeBase":174}],202:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17248,7 +17367,7 @@ var CameraNode = function (_CameraNodeBase) {
 
 exports.default = CameraNode;
 
-},{"../../../../Core/SceneObjects/Camera/PerspectiveCamera":138,"./CameraNodeBase":198}],198:[function(require,module,exports){
+},{"../../../../Core/SceneObjects/Camera/PerspectiveCamera":142,"./CameraNodeBase":203}],203:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17327,7 +17446,7 @@ var CameraNodeBase = function (_SceneObjectNodeBase) {
 
 exports.default = CameraNodeBase;
 
-},{"../SceneObjectNodeBase":208}],199:[function(require,module,exports){
+},{"../SceneObjectNodeBase":213}],204:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17463,7 +17582,7 @@ var OrthoCameraNode = function (_CameraNodeBase) {
 
 exports.default = OrthoCameraNode;
 
-},{"../../../../Core/SceneObjects/Camera/OrthoCamera":137,"./CameraNodeBase":198}],200:[function(require,module,exports){
+},{"../../../../Core/SceneObjects/Camera/OrthoCamera":141,"./CameraNodeBase":203}],205:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17529,7 +17648,7 @@ var AreaLightNode = function (_LightNodeBase) {
 
 exports.default = AreaLightNode;
 
-},{"../../../../Core/SceneObjects/Light/Impl/AreaLight":140,"./LightNodeBase":202}],201:[function(require,module,exports){
+},{"../../../../Core/SceneObjects/Light/Impl/AreaLight":144,"./LightNodeBase":207}],206:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17609,7 +17728,7 @@ var DirectionalLightNode = function (_LightNodeBase) {
 
 exports.default = DirectionalLightNode;
 
-},{"../../../../Core/SceneObjects/Light/Impl/DirectionalLight":141,"./LightNodeBase":202}],202:[function(require,module,exports){
+},{"../../../../Core/SceneObjects/Light/Impl/DirectionalLight":145,"./LightNodeBase":207}],207:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17684,7 +17803,7 @@ var LightNodeBase = function (_SceneObjectNodeBase) {
 
 exports.default = LightNodeBase;
 
-},{"../SceneObjectNodeBase":208}],203:[function(require,module,exports){
+},{"../SceneObjectNodeBase":213}],208:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17778,7 +17897,7 @@ var PointLightNode = function (_LightNodeBase) {
 
 exports.default = PointLightNode;
 
-},{"../../../../Core/SceneObjects/Light/Impl/PointLight":142,"./LightNodeBase":202}],204:[function(require,module,exports){
+},{"../../../../Core/SceneObjects/Light/Impl/PointLight":146,"./LightNodeBase":207}],209:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17844,7 +17963,7 @@ var SceneLightNode = function (_LightNodeBase) {
 
 exports.default = SceneLightNode;
 
-},{"../../../../Core/SceneObjects/Light/Impl/SceneLight":143,"./LightNodeBase":202}],205:[function(require,module,exports){
+},{"../../../../Core/SceneObjects/Light/Impl/SceneLight":147,"./LightNodeBase":207}],210:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17994,7 +18113,7 @@ var SpotLightNode = function (_LightNodeBase) {
 
 exports.default = SpotLightNode;
 
-},{"../../../../Core/SceneObjects/Light/Impl/SpotLight":144,"./LightNodeBase":202}],206:[function(require,module,exports){
+},{"../../../../Core/SceneObjects/Light/Impl/SpotLight":148,"./LightNodeBase":207}],211:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18141,7 +18260,7 @@ var MeshNode = function (_SceneObjectNodeBase) {
 
 exports.default = MeshNode;
 
-},{"../../../ContextComponents":8,"../../../Core/SceneObjects/BasicMeshObject":135,"../../../JThreeContext":262,"./SceneObjectNodeBase":208}],207:[function(require,module,exports){
+},{"../../../ContextComponents":8,"../../../Core/SceneObjects/BasicMeshObject":139,"../../../JThreeContext":267,"./SceneObjectNodeBase":213}],212:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18201,7 +18320,7 @@ var ObjectNode = function (_SceneObjectNodeBase) {
 
 exports.default = ObjectNode;
 
-},{"../../../Core/SceneObjects/SceneObject":147,"./SceneObjectNodeBase":208}],208:[function(require,module,exports){
+},{"../../../Core/SceneObjects/SceneObject":151,"./SceneObjectNodeBase":213}],213:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18414,7 +18533,7 @@ var SceneObjectNodeBase = function (_CoreRelatedNodeBase) {
 
 exports.default = SceneObjectNodeBase;
 
-},{"../../../Math/Quaternion":270,"../../../Math/Vector3":273,"../../CoreRelatedNodeBase":169}],209:[function(require,module,exports){
+},{"../../../Math/Quaternion":275,"../../../Math/Vector3":278,"../../CoreRelatedNodeBase":174}],214:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18499,7 +18618,7 @@ var TemplateNode = function (_GomlTreeNodeBase) {
 
 exports.default = TemplateNode;
 
-},{"../../GomlTreeNodeBase":178}],210:[function(require,module,exports){
+},{"../../GomlTreeNodeBase":183}],215:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -18577,7 +18696,7 @@ exports.default = CubeTextureNode;
 
 }).call(this,require('_process'))
 
-},{"./TextureNodeBase":212,"_process":316,"q":335}],211:[function(require,module,exports){
+},{"./TextureNodeBase":217,"_process":319,"q":338}],216:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -18669,7 +18788,7 @@ exports.default = TextureNode;
 
 }).call(this,require('_process'))
 
-},{"../../../Core/Resources/ImageLoader":116,"./TextureNodeBase":212,"_process":316,"q":335}],212:[function(require,module,exports){
+},{"../../../Core/Resources/ImageLoader":119,"./TextureNodeBase":217,"_process":319,"q":338}],217:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18825,7 +18944,7 @@ var TextureNodeBase = function (_CoreRelatedNodeBase) {
 
 exports.default = TextureNodeBase;
 
-},{"../../../ContextComponents":8,"../../../Core/Canvas/GL/GLEnumParser":19,"../../../JThreeContext":262,"../../CoreRelatedNodeBase":169}],213:[function(require,module,exports){
+},{"../../../ContextComponents":8,"../../../Core/Canvas/GL/GLEnumParser":19,"../../../JThreeContext":267,"../../CoreRelatedNodeBase":174}],218:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18867,7 +18986,7 @@ var CanvasesNode = function (_OrderedTopLevelNodeB) {
 
 exports.default = CanvasesNode;
 
-},{"./OrderedTopLevelNodeBase":217}],214:[function(require,module,exports){
+},{"./OrderedTopLevelNodeBase":222}],219:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18918,7 +19037,7 @@ var GomlNode = function (_GomlTreeNodeBase) {
 
 exports.default = GomlNode;
 
-},{"../../GomlTreeNodeBase":178}],215:[function(require,module,exports){
+},{"../../GomlTreeNodeBase":183}],220:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18963,7 +19082,7 @@ var CanvasesNode = function (_OrderedTopLevelNodeB) {
 
 exports.default = CanvasesNode;
 
-},{"./OrderedTopLevelNodeBase":217}],216:[function(require,module,exports){
+},{"./OrderedTopLevelNodeBase":222}],221:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19005,7 +19124,7 @@ var LoadersNode = function (_OrderedTopLevelNodeB) {
 
 exports.default = LoadersNode;
 
-},{"./OrderedTopLevelNodeBase":217}],217:[function(require,module,exports){
+},{"./OrderedTopLevelNodeBase":222}],222:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19047,7 +19166,7 @@ var OrderedTopLevelNodeBase = function (_GomlTreeNodeBase) {
 
 exports.default = OrderedTopLevelNodeBase;
 
-},{"../../GomlTreeNodeBase":178}],218:[function(require,module,exports){
+},{"../../GomlTreeNodeBase":183}],223:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19092,7 +19211,7 @@ var ResourcesNode = function (_OrderedTopLevelNodeB) {
 
 exports.default = ResourcesNode;
 
-},{"./OrderedTopLevelNodeBase":217}],219:[function(require,module,exports){
+},{"./OrderedTopLevelNodeBase":222}],224:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19137,7 +19256,7 @@ var ScenesNode = function (_OrderedTopLevelNodeB) {
 
 exports.default = ScenesNode;
 
-},{"./OrderedTopLevelNodeBase":217}],220:[function(require,module,exports){
+},{"./OrderedTopLevelNodeBase":222}],225:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19179,7 +19298,7 @@ var TemplatesNode = function (_OrderedTopLevelNodeB) {
 
 exports.default = TemplatesNode;
 
-},{"./OrderedTopLevelNodeBase":217}],221:[function(require,module,exports){
+},{"./OrderedTopLevelNodeBase":222}],226:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19470,7 +19589,7 @@ var TreeNodeBase = function (_JThreeObjectEEWithID) {
 
 exports.default = TreeNodeBase;
 
-},{"../Base/JThreeObjectEEWithID":5,"lodash.isnumber":330}],222:[function(require,module,exports){
+},{"../Base/JThreeObjectEEWithID":5,"lodash.isnumber":333}],227:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19608,7 +19727,7 @@ var XMLParserError = exports.XMLParserError = function () {
 
 exports.default = XMLParser;
 
-},{}],223:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19845,7 +19964,7 @@ var JThreeInit = function () {
 
 exports.default = JThreeInit;
 
-},{"./ContextComponents":8,"./Core/Canvas/CanvasManager":11,"./Core/Geometries/Base/PrimitiveRegistory":25,"./Core/LoopManager":34,"./Core/Materials/MaterialManager":58,"./Core/Renderers/RenderStageRegistory":83,"./Core/ResourceLoader":108,"./Core/ResourceManager":109,"./Core/SceneManager":134,"./Core/Timer":148,"./Debug/Debugger":150,"./Goml/GomlLoader":173,"./Goml/GomlTreeNodeBase":178,"./Goml/NodeManager":179,"./Interface/J3Object":245,"./Interface/J3ObjectMixins":247,"./JThreeContext":262,"./Math/Quaternion":270,"./Math/Vector2":272,"./Math/Vector3":273,"./Math/Vector4":274,"./Module/ModuleManager":279,"lodash.isarray":328}],224:[function(require,module,exports){
+},{"./ContextComponents":8,"./Core/Canvas/CanvasManager":11,"./Core/Geometries/Base/PrimitiveRegistory":25,"./Core/LoopManager":34,"./Core/Materials/MaterialManager":59,"./Core/Renderers/RenderStageRegistory":85,"./Core/ResourceLoader":110,"./Core/ResourceManager":111,"./Core/SceneManager":138,"./Core/Timer":152,"./Debug/Debugger":155,"./Goml/GomlLoader":178,"./Goml/GomlTreeNodeBase":183,"./Goml/NodeManager":184,"./Interface/J3Object":250,"./Interface/J3ObjectMixins":252,"./JThreeContext":267,"./Math/Quaternion":275,"./Math/Vector2":277,"./Math/Vector3":278,"./Math/Vector4":279,"./Module/ModuleManager":284,"lodash.isarray":331}],229:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19918,7 +20037,7 @@ var Basic = function (_J3ObjectBase) {
 
 exports.default = Basic;
 
-},{"../J3ObjectBase":246,"../Static/SceneUtilities":257,"lodash.isundefined":333}],225:[function(require,module,exports){
+},{"../J3ObjectBase":251,"../Static/SceneUtilities":262,"lodash.isundefined":336}],230:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19990,7 +20109,7 @@ var Custom = function (_J3ObjectBase) {
 
 exports.default = Custom;
 
-},{"../J3ObjectBase":246,"./EffectExecutor":230,"./EffectUtilities":232,"lodash.isplainobject":331}],226:[function(require,module,exports){
+},{"../J3ObjectBase":251,"./EffectExecutor":235,"./EffectUtilities":237,"lodash.isplainobject":334}],231:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20032,7 +20151,7 @@ var EasingFunctionBase = function (_JThreeObject) {
 
 exports.default = EasingFunctionBase;
 
-},{"../../../Base/JThreeObject":3}],227:[function(require,module,exports){
+},{"../../../Base/JThreeObject":3}],232:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20061,7 +20180,7 @@ var easingFunction = {
 };
 exports.default = easingFunction;
 
-},{"./LinearEasingFunction":228,"./SwingEasingFunction":229}],228:[function(require,module,exports){
+},{"./LinearEasingFunction":233,"./SwingEasingFunction":234}],233:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20103,7 +20222,7 @@ var LinearEasingFunction = function (_EasingFunctionBase) {
 
 exports.default = LinearEasingFunction;
 
-},{"./EasingFunctionBase":226}],229:[function(require,module,exports){
+},{"./EasingFunctionBase":231}],234:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20145,7 +20264,7 @@ var SwingEasingFunction = function (_EasingFunctionBase) {
 
 exports.default = SwingEasingFunction;
 
-},{"./EasingFunctionBase":226}],230:[function(require,module,exports){
+},{"./EasingFunctionBase":231}],235:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20263,7 +20382,7 @@ var EffectExecutor = function () {
 
 exports.default = EffectExecutor;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"./EffectModule":231}],231:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"./EffectModule":236}],236:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20347,7 +20466,7 @@ var EffectModule = function (_Module) {
 
 exports.default = EffectModule;
 
-},{"../../Module/Module":277,"./Easing/EasingFunctionList":227,"./Effecter/EffecterList":236}],232:[function(require,module,exports){
+},{"../../Module/Module":282,"./Easing/EasingFunctionList":232,"./Effecter/EffecterList":241}],237:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20494,7 +20613,7 @@ var EffectUtilities = function () {
 
 exports.default = EffectUtilities;
 
-},{"lodash.isfunction":329,"lodash.isnumber":330,"lodash.isplainobject":331,"lodash.isstring":332,"lodash.isundefined":333,"object-assign":334}],233:[function(require,module,exports){
+},{"lodash.isfunction":332,"lodash.isnumber":333,"lodash.isplainobject":334,"lodash.isstring":335,"lodash.isundefined":336,"object-assign":337}],238:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20543,7 +20662,7 @@ var Color3Effecter = function (_EffecterBase) {
 
 exports.default = Color3Effecter;
 
-},{"../../../Math/Color3":264,"./EffecterBase":235}],234:[function(require,module,exports){
+},{"../../../Math/Color3":269,"./EffecterBase":240}],239:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20592,7 +20711,7 @@ var Color4Effecter = function (_EffecterBase) {
 
 exports.default = Color4Effecter;
 
-},{"../../../Math/Color4":265,"./EffecterBase":235}],235:[function(require,module,exports){
+},{"../../../Math/Color4":270,"./EffecterBase":240}],240:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20677,7 +20796,7 @@ var EffecterBase = function (_JThreeObjectWithID) {
 
 exports.default = EffecterBase;
 
-},{"../../../Base/JThreeObjectWithID":6}],236:[function(require,module,exports){
+},{"../../../Base/JThreeObjectWithID":6}],241:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20721,7 +20840,7 @@ var effecter = {
 };
 exports.default = effecter;
 
-},{"./Color3Effecter":233,"./Color4Effecter":234,"./IntegerEffecter":237,"./NumberEffecter":238,"./RotationEffecter":239,"./Vector3Effecter":240}],237:[function(require,module,exports){
+},{"./Color3Effecter":238,"./Color4Effecter":239,"./IntegerEffecter":242,"./NumberEffecter":243,"./RotationEffecter":244,"./Vector3Effecter":245}],242:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20769,7 +20888,7 @@ var IntegerEffecter = function (_EffecterBase) {
 
 exports.default = IntegerEffecter;
 
-},{"./EffecterBase":235}],238:[function(require,module,exports){
+},{"./EffecterBase":240}],243:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20811,7 +20930,7 @@ var NumberEffecter = function (_EffecterBase) {
 
 exports.default = NumberEffecter;
 
-},{"./EffecterBase":235}],239:[function(require,module,exports){
+},{"./EffecterBase":240}],244:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20860,7 +20979,7 @@ var RotationEffecter = function (_EffecterBase) {
 
 exports.default = RotationEffecter;
 
-},{"../../../Math/Quaternion":270,"./EffecterBase":235}],240:[function(require,module,exports){
+},{"../../../Math/Quaternion":275,"./EffecterBase":240}],245:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20910,7 +21029,7 @@ var Vector3Effecter = function (_EffecterBase) {
 
 exports.default = Vector3Effecter;
 
-},{"../../../Math/Vector3":273,"./EffecterBase":235}],241:[function(require,module,exports){
+},{"../../../Math/Vector3":278,"./EffecterBase":240}],246:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21070,7 +21189,7 @@ var EventBroadcaster = function () {
 
 exports.default = EventBroadcaster;
 
-},{"../../Core/Renderers/RenderStages/HitAreaRenderStage":97,"./J3Event":244,"object-assign":334}],242:[function(require,module,exports){
+},{"../../Core/Renderers/RenderStages/HitAreaRenderStage":99,"./J3Event":249,"object-assign":337}],247:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21226,7 +21345,7 @@ var EventHandlerAttachment = function (_J3ObjectBase) {
 
 exports.default = EventHandlerAttachment;
 
-},{"../J3ObjectBase":246,"./EventOrgnizer":243,"lodash.isarray":328,"lodash.isfunction":329,"lodash.isplainobject":331,"lodash.isstring":332,"lodash.isundefined":333}],243:[function(require,module,exports){
+},{"../J3ObjectBase":251,"./EventOrgnizer":248,"lodash.isarray":331,"lodash.isfunction":332,"lodash.isplainobject":334,"lodash.isstring":335,"lodash.isundefined":336}],248:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21327,7 +21446,7 @@ var EventOrganizer = function (_EventEmitter) {
 
 exports.default = EventOrganizer;
 
-},{"events":315,"lodash.isarray":328}],244:[function(require,module,exports){
+},{"events":318,"lodash.isarray":331}],249:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21407,7 +21526,7 @@ var J3Event = function () {
 
 exports.default = J3Event;
 
-},{}],245:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21511,7 +21630,7 @@ var J3Object = function (_J3ObjectBase) {
 
 exports.default = J3Object;
 
-},{"../ContextComponents":8,"../Goml/GomlParser":177,"../Goml/GomlTreeNodeBase":178,"../Goml/XMLParser":222,"../JThreeContext":262,"./J3ObjectBase":246,"lodash.isarray":328,"lodash.isstring":332}],246:[function(require,module,exports){
+},{"../ContextComponents":8,"../Goml/GomlParser":182,"../Goml/GomlTreeNodeBase":183,"../Goml/XMLParser":227,"../JThreeContext":267,"./J3ObjectBase":251,"lodash.isarray":331,"lodash.isstring":335}],251:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21549,7 +21668,7 @@ var J3ObjectBase = function () {
 
 exports.default = J3ObjectBase;
 
-},{}],247:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21652,7 +21771,7 @@ function J3ObjectMixins() {
 }
 exports.default = J3ObjectMixins;
 
-},{"./Effects/Basic":224,"./Effects/Custom":225,"./Events/EventHandlerAttachment":242,"./J3Object":245,"./Manipulation/CollectionManipulation":248,"./Manipulation/GeneralAttributes":249,"./Manipulation/NodeInsertionInside":250,"./Manipulation/NodeRemoval":251,"./Miscellaneous/GomlNodeMethods":252,"./Modules/Module":253,"./Static/Find":255,"./Static/Utilities":259,"./Traversing/Filtering":260,"./Traversing/TreeTraversal":261}],248:[function(require,module,exports){
+},{"./Effects/Basic":229,"./Effects/Custom":230,"./Events/EventHandlerAttachment":247,"./J3Object":250,"./Manipulation/CollectionManipulation":253,"./Manipulation/GeneralAttributes":254,"./Manipulation/NodeInsertionInside":255,"./Manipulation/NodeRemoval":256,"./Miscellaneous/GomlNodeMethods":257,"./Modules/Module":258,"./Static/Find":260,"./Static/Utilities":264,"./Traversing/Filtering":265,"./Traversing/TreeTraversal":266}],253:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21708,7 +21827,7 @@ var CollectionManipulation = function (_J3ObjectBase) {
 
 exports.default = CollectionManipulation;
 
-},{"../J3ObjectBase":246}],249:[function(require,module,exports){
+},{"../J3ObjectBase":251}],254:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21830,7 +21949,7 @@ var GeneralAttribute = function (_J3ObjectBase) {
 
 exports.default = GeneralAttribute;
 
-},{"../J3ObjectBase":246,"lodash.isfunction":329,"lodash.isplainobject":331,"lodash.isstring":332,"lodash.isundefined":333}],250:[function(require,module,exports){
+},{"../J3ObjectBase":251,"lodash.isfunction":332,"lodash.isplainobject":334,"lodash.isstring":335,"lodash.isundefined":336}],255:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21913,7 +22032,7 @@ var NodeInsertionInside = function (_J3ObjectBase) {
 
 exports.default = NodeInsertionInside;
 
-},{"../J3ObjectBase":246,"../Static/NodeOperation":256,"../Static/SomeToNodes":258,"lodash.isfunction":329}],251:[function(require,module,exports){
+},{"../J3ObjectBase":251,"../Static/NodeOperation":261,"../Static/SomeToNodes":263,"lodash.isfunction":332}],256:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21966,7 +22085,7 @@ var NodeRemoval = function (_J3ObjectBase) {
 
 exports.default = NodeRemoval;
 
-},{"../J3ObjectBase":246,"../Static/Filter":254,"../Static/NodeOperation":256}],252:[function(require,module,exports){
+},{"../J3ObjectBase":251,"../Static/Filter":259,"../Static/NodeOperation":261}],257:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22084,7 +22203,7 @@ var GomlNodeMethods = function (_J3ObjectBase) {
 
 exports.default = GomlNodeMethods;
 
-},{"../../Goml/CoreRelatedNodeBase":169,"../../Goml/GomlTreeNodeBase":178,"../J3Object":245,"../J3ObjectBase":246,"lodash.isnumber":330,"lodash.isstring":332,"lodash.isundefined":333}],253:[function(require,module,exports){
+},{"../../Goml/CoreRelatedNodeBase":174,"../../Goml/GomlTreeNodeBase":183,"../J3Object":250,"../J3ObjectBase":251,"lodash.isnumber":333,"lodash.isstring":335,"lodash.isundefined":336}],258:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22161,7 +22280,7 @@ var Module = function (_J3ObjectBase) {
 
 exports.default = Module;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../J3ObjectBase":246,"lodash.isfunction":329,"lodash.isplainobject":331,"lodash.isundefined":333}],254:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"../J3ObjectBase":251,"lodash.isfunction":332,"lodash.isplainobject":334,"lodash.isundefined":336}],259:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22199,7 +22318,7 @@ var Filter = function () {
 
 exports.default = Filter;
 
-},{"./SomeToNodes":258}],255:[function(require,module,exports){
+},{"./SomeToNodes":263}],260:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22244,7 +22363,7 @@ var Find = function () {
 
 exports.default = Find;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262}],256:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267}],261:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22299,7 +22418,7 @@ var NodeOperation = function () {
 
 exports.default = NodeOperation;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262}],257:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267}],262:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22335,7 +22454,7 @@ var SceneUtilities = function () {
 
 exports.default = SceneUtilities;
 
-},{"../../Goml/Nodes/SceneObjects/SceneObjectNodeBase":208}],258:[function(require,module,exports){
+},{"../../Goml/Nodes/SceneObjects/SceneObjectNodeBase":213}],263:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22456,7 +22575,7 @@ var SomeToNode = function () {
 
 exports.default = SomeToNode;
 
-},{"../../ContextComponents":8,"../../Goml/GomlParser":177,"../../Goml/GomlTreeNodeBase":178,"../../Goml/XMLParser":222,"../../JThreeContext":262,"../J3Object":245,"lodash.isarray":328,"lodash.isstring":332}],259:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../Goml/GomlParser":182,"../../Goml/GomlTreeNodeBase":183,"../../Goml/XMLParser":227,"../../JThreeContext":267,"../J3Object":250,"lodash.isarray":331,"lodash.isstring":335}],264:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22518,7 +22637,7 @@ var Utilities = function () {
 
 exports.default = Utilities;
 
-},{"../J3Object":245,"lodash.isarray":328}],260:[function(require,module,exports){
+},{"../J3Object":250,"lodash.isarray":331}],265:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22600,7 +22719,7 @@ var Filtering = function (_J3ObjectBase) {
 
 exports.default = Filtering;
 
-},{"../../Goml/GomlTreeNodeBase":178,"../J3Object":245,"../J3ObjectBase":246,"../Static/Filter":254,"lodash.isarray":328,"lodash.isfunction":329,"lodash.isstring":332}],261:[function(require,module,exports){
+},{"../../Goml/GomlTreeNodeBase":183,"../J3Object":250,"../J3ObjectBase":251,"../Static/Filter":259,"lodash.isarray":331,"lodash.isfunction":332,"lodash.isstring":335}],266:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22691,7 +22810,7 @@ var TreeTraversal = function (_J3ObjectBase) {
 
 exports.default = TreeTraversal;
 
-},{"../../Goml/GomlTreeNodeBase":178,"../J3Object":245,"../J3ObjectBase":246,"../Static/Filter":254,"lodash.isstring":332,"lodash.isundefined":333}],262:[function(require,module,exports){
+},{"../../Goml/GomlTreeNodeBase":183,"../J3Object":250,"../J3ObjectBase":251,"../Static/Filter":259,"lodash.isstring":335,"lodash.isundefined":336}],267:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22764,7 +22883,7 @@ var JThreeContext = function () {
 
 exports.default = JThreeContext;
 
-},{}],263:[function(require,module,exports){
+},{}],268:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22855,7 +22974,7 @@ var AABB = function () {
 
 exports.default = AABB;
 
-},{"./Vector3":273}],264:[function(require,module,exports){
+},{"./Vector3":278}],269:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -23008,7 +23127,7 @@ var Color3 = function (_VectorBase) {
 Color3.colorTable = require("../static/color.json");
 exports.default = Color3;
 
-},{"../Math/VectorBase":276,"../static/color.json":313,"./Color4":265,"./Vector3":273,"./Vector4":274}],265:[function(require,module,exports){
+},{"../Math/VectorBase":281,"../static/color.json":316,"./Color4":270,"./Vector3":278,"./Vector4":279}],270:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -23167,7 +23286,7 @@ var Color4 = function (_VectorBase) {
 Color4.colorTable = require("../static/color.json");
 exports.default = Color4;
 
-},{"../static/color.json":313,"./Vector4":274,"./VectorBase":276}],266:[function(require,module,exports){
+},{"../static/color.json":316,"./Vector4":279,"./VectorBase":281}],271:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -23488,7 +23607,7 @@ var Matrix = function (_MatrixBase) {
 
 exports.default = Matrix;
 
-},{"./MatrixBase":268,"./Vector3":273,"./Vector4":274,"gl-matrix":317}],267:[function(require,module,exports){
+},{"./MatrixBase":273,"./Vector3":278,"./Vector4":279,"gl-matrix":320}],272:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -23545,7 +23664,7 @@ var MatrixArray = function () {
 
 exports.default = MatrixArray;
 
-},{"./Matrix":266}],268:[function(require,module,exports){
+},{"./Matrix":271}],273:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -23602,7 +23721,7 @@ var MatrixBase = function () {
 
 exports.default = MatrixBase;
 
-},{}],269:[function(require,module,exports){
+},{}],274:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -23714,7 +23833,7 @@ var PointList = function () {
 
 exports.default = PointList;
 
-},{"../Base/JThreeLogger":2,"./AABB":263,"./Vector3":273,"gl-matrix":317}],270:[function(require,module,exports){
+},{"../Base/JThreeLogger":2,"./AABB":268,"./Vector3":278,"gl-matrix":320}],275:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24043,7 +24162,7 @@ var Quaternion = function (_JThreeObject) {
 
 exports.default = Quaternion;
 
-},{"../Base/JThreeObject":3,"./Matrix":266,"./Vector3":273,"gl-matrix":317}],271:[function(require,module,exports){
+},{"../Base/JThreeObject":3,"./Matrix":271,"./Vector3":278,"gl-matrix":320}],276:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24161,7 +24280,7 @@ var Rectangle = function (_jThreeObject) {
 
 exports.default = Rectangle;
 
-},{"../Base/JThreeObject":3,"./Vector2":272}],272:[function(require,module,exports){
+},{"../Base/JThreeObject":3,"./Vector2":277}],277:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24401,7 +24520,7 @@ var Vector2 = function (_VectorBase) {
 
 exports.default = Vector2;
 
-},{"./VectorBase":276,"gl-matrix":317}],273:[function(require,module,exports){
+},{"./VectorBase":281,"gl-matrix":320}],278:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24665,7 +24784,7 @@ var Vector3 = function (_VectorBase) {
 
 exports.default = Vector3;
 
-},{"./VectorBase":276,"gl-matrix":317}],274:[function(require,module,exports){
+},{"./VectorBase":281,"gl-matrix":320}],279:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24931,7 +25050,7 @@ var Vector4 = function (_VectorBase) {
 
 exports.default = Vector4;
 
-},{"./VectorBase":276,"gl-matrix":317}],275:[function(require,module,exports){
+},{"./VectorBase":281,"gl-matrix":320}],280:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25107,7 +25226,7 @@ var VectorArray = function () {
 
 exports.default = VectorArray;
 
-},{"./Vector2":272,"./Vector3":273,"./Vector4":274}],276:[function(require,module,exports){
+},{"./Vector2":277,"./Vector3":278,"./Vector4":279}],281:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25235,7 +25354,7 @@ var VectorBase = function () {
 
 exports.default = VectorBase;
 
-},{"../Exceptions":154}],277:[function(require,module,exports){
+},{"../Exceptions":159}],282:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25287,7 +25406,7 @@ var Module = function () {
 
 exports.default = Module;
 
-},{}],278:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25464,7 +25583,7 @@ function applyMixins(derivedCtor, baseCtors) {
 }
 exports.default = ModuleInstanceRegistry;
 
-},{"lodash.isfunction":329,"lodash.isplainobject":331,"lodash.isundefined":333}],279:[function(require,module,exports){
+},{"lodash.isfunction":332,"lodash.isplainobject":334,"lodash.isundefined":336}],284:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25553,7 +25672,7 @@ var ModuleManager = function (_JThreeObject) {
 
 exports.default = ModuleManager;
 
-},{"../Base/JThreeObject":3,"../ContextComponents":8,"../JThreeContext":262,"./ModuleInstanceRegistry":278}],280:[function(require,module,exports){
+},{"../Base/JThreeObject":3,"../ContextComponents":8,"../JThreeContext":267,"./ModuleInstanceRegistry":283}],285:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25590,7 +25709,7 @@ var PMXHitAreaMaterial = function (_BasicMaterial) {
     function PMXHitAreaMaterial(material) {
         _classCallCheck(this, PMXHitAreaMaterial);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PMXHitAreaMaterial).call(this, require("../../Materials/HitAreaTest.xmml")));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PMXHitAreaMaterial).call(this, require("../../Materials/HitAreaTest.xmml"), "pmx.hitarea"));
 
         _this.__associatedMaterial = material;
         return _this;
@@ -25645,7 +25764,7 @@ var PMXHitAreaMaterial = function (_BasicMaterial) {
 
 exports.default = PMXHitAreaMaterial;
 
-},{"../../../Core/Materials/BasicMaterial":36,"../../../Math/Vector4":274,"../../Materials/HitAreaTest.xmml":296}],281:[function(require,module,exports){
+},{"../../../Core/Materials/BasicMaterial":36,"../../../Math/Vector4":279,"../../Materials/HitAreaTest.xmml":300}],286:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25728,7 +25847,7 @@ var PMXMaterial = function (_Material) {
         _this._specular = new _Vector2.default(materialData.specular);
         _this._edgeSize = materialData.edgeSize;
         _this._sphereMode = materialData.sphereMode;
-        _this.__innerMaterial = new _BasicMaterial2.default(require("../../Materials/Forward.xmml"));
+        _this.__innerMaterial = new _BasicMaterial2.default(require("../../Materials/Forward.xmml"), "pmx.forward");
         var tm = _this._parentModel.pmxTextureManager;
         tm.loadTexture(materialData.sphereTextureIndex).then(function (texture) {
             _this._sphere = texture;
@@ -25888,7 +26007,7 @@ var PMXMaterial = function (_Material) {
 
 exports.default = PMXMaterial;
 
-},{"../../../ContextComponents":8,"../../../Core/Materials/BasicMaterial":36,"../../../Core/Materials/Material":57,"../../../JThreeContext":262,"../../../Math/Color3":264,"../../../Math/Color4":265,"../../../Math/Vector4":274,"../../Materials/Forward.xmml":295,"./../PMXMaterialMorphParamContainer":288}],282:[function(require,module,exports){
+},{"../../../ContextComponents":8,"../../../Core/Materials/BasicMaterial":36,"../../../Core/Materials/Material":57,"../../../JThreeContext":267,"../../../Math/Color3":269,"../../../Math/Color4":270,"../../../Math/Vector4":279,"../../Materials/Forward.xmml":299,"./../PMXMaterialMorphParamContainer":292}],287:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25917,7 +26036,7 @@ var PMXPrimaryBufferMaterial = function (_BasicMaterial) {
     function PMXPrimaryBufferMaterial(material) {
         _classCallCheck(this, PMXPrimaryBufferMaterial);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PMXPrimaryBufferMaterial).call(this, require("../../Materials/PrimaryBuffer.xmml")));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PMXPrimaryBufferMaterial).call(this, require("../../Materials/PrimaryBuffer.xmml"), "pmx.gbuffer.0"));
 
         _this._associatedMaterial = material;
         return _this;
@@ -25972,102 +26091,7 @@ var PMXPrimaryBufferMaterial = function (_BasicMaterial) {
 
 exports.default = PMXPrimaryBufferMaterial;
 
-},{"../../../Core/Materials/BasicMaterial":36,"../../Materials/PrimaryBuffer.xmml":297}],283:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _BasicMaterial2 = require("../../../Core/Materials/BasicMaterial");
-
-var _BasicMaterial3 = _interopRequireDefault(_BasicMaterial2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * the materials for PMX.
- */
-
-var PMXShadowMapMaterial = function (_BasicMaterial) {
-    _inherits(PMXShadowMapMaterial, _BasicMaterial);
-
-    function PMXShadowMapMaterial(material) {
-        _classCallCheck(this, PMXShadowMapMaterial);
-
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PMXShadowMapMaterial).call(this, require("../../Materials/ShadowMap.xmml")));
-
-        _this.__associatedMaterial = material;
-        _this.__setLoaded();
-        return _this;
-    }
-    /**
-     * Count of verticies
-     */
-
-
-    _createClass(PMXShadowMapMaterial, [{
-        key: "apply",
-        value: function apply(matArg) {
-            if (this.__associatedMaterial.Diffuse.A < 1.0E-3) {
-                return;
-            }
-            // var light = matArg.scene.LightRegister.shadowDroppableLights[matArg.techniqueIndex];
-            // const skeleton = this.associatedMaterial.ParentModel.skeleton;
-            // this.shaderVariables = {
-            //    matL:light.matLightViewProjection,
-            //    boneMatriciesTexture:skeleton.MatrixTexture,
-            //    boneCount:skeleton.BoneCount
-            // };
-            _get(Object.getPrototypeOf(PMXShadowMapMaterial.prototype), "apply", this).call(this, matArg);
-        }
-    }, {
-        key: "getDrawGeometryLength",
-        value: function getDrawGeometryLength(geo) {
-            return this.__associatedMaterial.Diffuse.A > 0 ? this.VerticiesCount : 0;
-        }
-    }, {
-        key: "getDrawGeometryOffset",
-        value: function getDrawGeometryOffset(geo) {
-            return this.VerticiesOffset * 4;
-        }
-    }, {
-        key: "VerticiesCount",
-        get: function get() {
-            return this.__associatedMaterial.VerticiesCount;
-        }
-        /**
-         * Offset of verticies in index buffer
-         */
-
-    }, {
-        key: "VerticiesOffset",
-        get: function get() {
-            return this.__associatedMaterial.VerticiesOffset;
-        }
-    }, {
-        key: "Priorty",
-        get: function get() {
-            return 100;
-        }
-    }]);
-
-    return PMXShadowMapMaterial;
-}(_BasicMaterial3.default);
-
-exports.default = PMXShadowMapMaterial;
-
-},{"../../../Core/Materials/BasicMaterial":36,"../../Materials/ShadowMap.xmml":298}],284:[function(require,module,exports){
+},{"../../../Core/Materials/BasicMaterial":36,"../../Materials/PrimaryBuffer.xmml":301}],288:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26165,7 +26189,7 @@ var PMXBone = function (_SceneObject) {
         value: function applyMatrixToBuffer(buffer) {
             // if (!(<PMXBoneTransformer>this.Transformer).transformUpdated) return;
             for (var i = 0; i < 16; i++) {
-                buffer[16 * this.boneIndex + i] = this.Transformer.LocalToGlobal.rawElements[i];
+                buffer[16 * this.boneIndex + i] = this.Transformer.localToGlobal.rawElements[i];
             }
             // (<PMXBoneTransformer>this.Transformer).transformUpdated = false;
         }
@@ -26197,7 +26221,7 @@ var PMXBone = function (_SceneObject) {
 
 exports.default = PMXBone;
 
-},{"../../Core/SceneObjects/SceneObject":147,"../../Math/Vector3":273,"./PMXBoneTransformer":285}],285:[function(require,module,exports){
+},{"../../Core/SceneObjects/SceneObject":151,"../../Math/Vector3":278,"./PMXBoneTransformer":289}],289:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26382,8 +26406,8 @@ var PMXBoneTransformer = function (_Transformer) {
         key: "_cCDIKOperation",
         value: function _cCDIKOperation(it) {
             var effectorTransformer = this._pmx.skeleton.getBoneByIndex(this.BoneData.ikTargetBoneIndex).Transformer;
-            var TargetGlobalPos = _Matrix2.default.transformPoint(this.LocalToGlobal, this.LocalOrigin);
-            // vec3.transformMat4(this._pmxCalcCacheVec, this.LocalOrigin.rawElements, this.LocalToGlobal.rawElements);
+            var TargetGlobalPos = _Matrix2.default.transformPoint(this.localToGlobal, this.LocalOrigin);
+            // vec3.transformMat4(this._pmxCalcCacheVec, this.LocalOrigin.rawElements, this.localToGlobal.rawElements);
             for (var i = 0; i < this.BoneData.ikLinkCount; i++) {
                 var ikLinkData = this.BoneData.ikLinks[i];
                 var ikLinkTransform = this._getIkLinkTransformerByIndex(i);
@@ -26395,16 +26419,16 @@ var PMXBoneTransformer = function (_Transformer) {
     }, {
         key: "_getLink2Effector",
         value: function _getLink2Effector(link, effector) {
-            var ToLinkLocal = _Matrix2.default.inverse(link.LocalToGlobal);
+            var ToLinkLocal = _Matrix2.default.inverse(link.localToGlobal);
             var ep = effector.LocalOrigin;
-            var local2effectorLocal = _Matrix2.default.multiply(ToLinkLocal, effector.LocalToGlobal);
+            var local2effectorLocal = _Matrix2.default.multiply(ToLinkLocal, effector.localToGlobal);
             var effectorPos = _Matrix2.default.transformPoint(local2effectorLocal, ep);
             return effectorPos.subtractWith(link.LocalOrigin).normalizeThis();
         }
     }, {
         key: "_getLink2Target",
         value: function _getLink2Target(link, tp) {
-            var ToLinkLocal = _Matrix2.default.inverse(link.LocalToGlobal);
+            var ToLinkLocal = _Matrix2.default.inverse(link.localToGlobal);
             var effectorPos = _Matrix2.default.transformPoint(ToLinkLocal, tp);
             return effectorPos.subtractWith(link.LocalOrigin).normalizeThis();
         }
@@ -26541,7 +26565,7 @@ var PMXBoneTransformer = function (_Transformer) {
 
 exports.default = PMXBoneTransformer;
 
-},{"../../Core/Transform/Transformer":149,"../../Math/Matrix":266,"../../Math/Quaternion":270,"../../Math/Vector3":273,"gl-matrix":317}],286:[function(require,module,exports){
+},{"../../Core/Transform/Transformer":153,"../../Math/Matrix":271,"../../Math/Quaternion":275,"../../Math/Vector3":278,"gl-matrix":320}],290:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26595,7 +26619,7 @@ var PMXCoreInitializer = function () {
 PMXCoreInitializer._initialized = false;
 exports.default = PMXCoreInitializer;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../ShaderChunk/_PMXVertexShader.glsl":300}],287:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"../ShaderChunk/_PMXVertexShader.glsl":303}],291:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26677,9 +26701,9 @@ var PMXGeometry = function (_BasicGeometry) {
             this.uvBuffer.update(this.uvBufferSource, this.uvBufferSource.length);
         }
     }, {
-        key: "applyAttributeVariables",
-        value: function applyAttributeVariables(pWrapper, attributes) {
-            _get(Object.getPrototypeOf(PMXGeometry.prototype), "applyAttributeVariables", this).call(this, pWrapper, attributes);
+        key: "__applyAttributeVariables",
+        value: function __applyAttributeVariables(pWrapper, attributes) {
+            _get(Object.getPrototypeOf(PMXGeometry.prototype), "__applyAttributeVariables", this).call(this, pWrapper, attributes);
             this.__assignAttributeIfExists(pWrapper, attributes, "edgeScaling", this.edgeSizeBuffer);
             this.__assignAttributeIfExists(pWrapper, attributes, "boneIndicies", this.boneIndexBuffer);
             this.__assignAttributeIfExists(pWrapper, attributes, "boneWeights", this.boneWeightBuffer);
@@ -26691,7 +26715,7 @@ var PMXGeometry = function (_BasicGeometry) {
 
 exports.default = PMXGeometry;
 
-},{"../../ContextComponents":8,"../../Core/Geometries/Base/BasicGeometry":21,"../../JThreeContext":262}],288:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../Core/Geometries/Base/BasicGeometry":21,"../../JThreeContext":267}],292:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26750,7 +26774,7 @@ var PMXMaterialMorphParamContainer = function () {
 
 exports.default = PMXMaterialMorphParamContainer;
 
-},{"../../Math/Vector3":273,"../../Math/Vector4":274}],289:[function(require,module,exports){
+},{"../../Math/Vector3":278,"../../Math/Vector4":279}],293:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -26760,9 +26784,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AsyncLoader = require("../../Core/Resources/AsyncLoader");
+var _ResourceResolver = require("../../Core/Resources/ResourceResolver");
 
-var _AsyncLoader2 = _interopRequireDefault(_AsyncLoader);
+var _ResourceResolver2 = _interopRequireDefault(_ResourceResolver);
 
 var _PMXPrimaryBufferMaterial = require("./Materials/PMXPrimaryBufferMaterial");
 
@@ -26799,10 +26823,6 @@ var _PMXSkeleton2 = _interopRequireDefault(_PMXSkeleton);
 var _PMXMorphManager = require("./PMXMorphManager");
 
 var _PMXMorphManager2 = _interopRequireDefault(_PMXMorphManager);
-
-var _PMXShadowMapMaterial = require("./Materials/PMXShadowMapMaterial");
-
-var _PMXShadowMapMaterial2 = _interopRequireDefault(_PMXShadowMapMaterial);
 
 var _PMXTextureManager = require("./PMXTextureManager");
 
@@ -26849,7 +26869,7 @@ var PMXModel = function (_SceneObject) {
             var mat = new _PMXMaterial2.default(_this, materialCount, offset);
             _this.addMaterial(mat);
             _this.addMaterial(new _PMXPrimaryBufferMaterial2.default(mat));
-            _this.addMaterial(new _PMXShadowMapMaterial2.default(mat));
+            // this.addMaterial(new PMXShadowMapMaterial(mat));
             _this.addMaterial(new _PMXHitAreaMaterial2.default(mat));
             _this._pmxMaterials[materialCount] = mat;
             _this._materialDictionary[currentMat.materialName] = mat;
@@ -26920,7 +26940,7 @@ var PMXModel = function (_SceneObject) {
     }, {
         key: "_loadDataFromUrl",
         value: function _loadDataFromUrl(url, directory) {
-            return PMXModel._asyncLoader.fetch(url, function (path) {
+            return PMXModel._cacheResolver.fetch(url, function (path) {
                 var deferred = _q2.default.defer();
                 var xhr = new XMLHttpRequest();
                 xhr.open("GET", path, true);
@@ -26942,12 +26962,12 @@ var PMXModel = function (_SceneObject) {
     return PMXModel;
 }(_SceneObject3.default);
 
-PMXModel._asyncLoader = new _AsyncLoader2.default();
+PMXModel._cacheResolver = new _ResourceResolver2.default();
 exports.default = PMXModel;
 
 }).call(this,require('_process'))
 
-},{"../../Core/Resources/AsyncLoader":110,"../../Core/SceneObjects/SceneObject":147,"../PMXData":299,"./Materials/PMXHitAreaMaterial":280,"./Materials/PMXMaterial":281,"./Materials/PMXPrimaryBufferMaterial":282,"./Materials/PMXShadowMapMaterial":283,"./PMXCoreInitializer":286,"./PMXGeometry":287,"./PMXMorphManager":291,"./PMXSkeleton":292,"./PMXTextureManager":293,"_process":316,"q":335}],290:[function(require,module,exports){
+},{"../../Core/Resources/ResourceResolver":125,"../../Core/SceneObjects/SceneObject":151,"../PMXData":302,"./Materials/PMXHitAreaMaterial":285,"./Materials/PMXMaterial":286,"./Materials/PMXPrimaryBufferMaterial":287,"./PMXCoreInitializer":290,"./PMXGeometry":291,"./PMXMorphManager":295,"./PMXSkeleton":296,"./PMXTextureManager":297,"_process":319,"q":338}],294:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27171,7 +27191,7 @@ var PMXMaterialMorph = function (_PMXMorph4) {
 
 exports.default = PMXMorph;
 
-},{}],291:[function(require,module,exports){
+},{}],295:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27236,7 +27256,7 @@ var PMXMorphManager = function () {
 
 exports.default = PMXMorphManager;
 
-},{"./PMXMorph":290}],292:[function(require,module,exports){
+},{"./PMXMorph":294}],296:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27345,7 +27365,7 @@ var PMXSkeleton = function () {
 
 exports.default = PMXSkeleton;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"./PMXBone":284}],293:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"./PMXBone":288}],297:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -27441,7 +27461,7 @@ exports.default = PMXTextureManager;
 
 }).call(this,require('_process'))
 
-},{"../../Base/JThreeLogger":2,"../../ContextComponents":8,"../../JThreeContext":262,"_process":316,"q":335}],294:[function(require,module,exports){
+},{"../../Base/JThreeLogger":2,"../../ContextComponents":8,"../../JThreeContext":267,"_process":319,"q":338}],298:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27528,15 +27548,13 @@ var PMXNode = function (_SceneObjectNodeBase) {
 
 exports.default = PMXNode;
 
-},{"../../ContextComponents":8,"../../JThreeContext":262,"../Core/PMXModel":289,"./../../Goml/Nodes/SceneObjects/SceneObjectNodeBase":208}],295:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.pmx.forward\" group=\"builtin.forward\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n  <register name=\"builtin.buffer\"/>\n</uniform-register>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec3 normal;\n      attribute vec2 uv;\n      attribute vec4 boneWeights;\n      attribute vec4 boneIndicies;\n      varying vec3 vNormal;\n      varying vec4 vPosition;\n      varying vec2 vUV;\n      varying vec2 vSphereUV;\n      varying vec4 vBaseColor;\n\n      @vert{\n        @import \"jthree.pmx.vertex\"\n        uniform mat4 _matV;\n        uniform mat4 _matPV;\n        @{register:2}\n        uniform sampler2D boneMatriciesTexture;\n        uniform float boneCount;\n        uniform vec4 diffuse;\n        uniform vec3 ambient;\n        uniform vec3 ambientCoefficient;\n\n        void main(void){\n          vUV = uv;\n          mat4 boneTransform=calcBoneTransform(boneMatriciesTexture,boneCount,boneWeights,boneIndicies);\n          vPosition=gl_Position = calcPosition(boneTransform,_matPV,position);\n          vNormal = calcNormal(boneTransform,_matV,normal);\n          vSphereUV = calcSphereUV(vNormal);\n          vBaseColor.rgb = diffuse.rgb + ambient.rgb;\n          vBaseColor.a = diffuse.a;\n          vBaseColor = clamp(vBaseColor,0.,1.);\n        }\n      }\n      @frag{\n        @{type:\"buffer\",name:\"DLIGHT\",register:0}\n        uniform sampler2D _dlBuffer;\n        @{type:\"buffer\",name:\"SLIGHT\",register:1}\n        uniform sampler2D _slBuffer;\n\n        uniform vec4 specular;\n        @{register:3}\n        uniform sampler2D texture;\n        @{register:4}\n        uniform sampler2D sphere;\n        @{register:5}\n        uniform sampler2D toon;\n        uniform int textureUsed;\n        uniform int sphereMode;\n        uniform int toonFlag;\n        uniform vec4 addTexCoeff;\n        uniform vec4 mulTexCoeff;\n        uniform vec4 addSphereCoeff;\n        uniform vec4 mulSphereCoeff;\n        uniform vec4 addToonCoeff;\n        uniform vec4 mulToonCoeff;\n\n        vec2 calcLightUV(vec4 projectionSpacePos)\n        {\n           return (projectionSpacePos.xy / projectionSpacePos.w + vec2(1,1)) / 2.;\n        }\n\n        vec4 blendPMXTexture(sampler2D source,vec2 uv,vec4 addCoeff,vec4 mulCoeff)\n        {\n            vec4 result = texture2D(source,uv);\n            result.rgb = mix(mix(result.rgb,vec3(0,0,0),addCoeff.a),vec3(1,1,1),1.-mulCoeff.a);\n            result.rgb = result.rgb * mulCoeff.rgb + addCoeff.rgb;\n            return result;\n        }\n\n\n\n        void main(void){\n          vec2 lightUV=calcLightUV(vPosition);\n          vec3 dlc = texture2D(_dlBuffer,lightUV).rgb;\n          vec3 slc = texture2D(_slBuffer,lightUV).rgb;\n          vec4 dc = vBaseColor;\n          if(textureUsed == 1)\n          {\n            dc *= blendPMXTexture(texture,vUV,addTexCoeff,mulTexCoeff);\n          }\n          if(sphereMode == 1){\n            dc.rgb *= texture2D(sphere,vSphereUV).rgb;\n          }else if(sphereMode == 2){\n            dc.rgb += texture2D(sphere,vSphereUV).rgb;\n          }\n          if(toonFlag==1)\n          {\n          \t float brightness = max(max(dlc.r,dlc.g),dlc.b);\n              dc.rgb = dlc * blendPMXTexture(toon,vec2(0,1.-brightness),addToonCoeff ,mulToonCoeff ).rgb * dc.rgb;\n          }else\n          {\n              dc.rgb = dlc * dc.rgb;\n          }\n          dc.rgb += slc * specular.rgb;\n          gl_FragColor = dc;\n        }\n\n      }\n      ]]>\n    </glsl>\n  </pass>\n  <pass>\n    <cull mode=\"front\"/>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec3 normal;\n      attribute vec4 boneWeights;\n      attribute vec4 boneIndicies;\n      attribute float edgeScaling;\n      @vert{\n        @import \"jthree.pmx.vertex\"\n        uniform mat4 _matPV;\n        uniform vec2 _resolution;\n        @{register:2}\n        uniform sampler2D boneMatriciesTexture;\n        uniform float boneCount;\n        uniform float edgeSize;\n        void main(void){\n          mat4 boneTransform=calcBoneTransform(boneMatriciesTexture,boneCount,boneWeights,boneIndicies);\n          mat4 matPVM = _matPV * boneTransform;\n          vec4 p0 = matPVM * vec4(position ,1);\n          vec4 p1 = matPVM * vec4(position + normal ,1);\n          p0.xy /= p0.w;\n          p1.xy /= p1.w;\n          float coeff = length(_resolution/2.0 * abs(p0.xy - p1.xy));\n          coeff = 1.0 / coeff;\n          coeff *= edgeSize * edgeScaling;\n          if(coeff > 5.0)coeff = 5.;\n          gl_Position = matPVM * vec4(position + coeff * normal,1);\n        }\n      }\n      @frag{\n\n        uniform vec4 edgeColor;\n\n        void main()\n        {\n          gl_FragColor = edgeColor;\n        }\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
-},{}],296:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.pmx.hitarea\" group=\"jthree.materials.hitarea\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n</uniform-register>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec4 boneWeights;\n      attribute vec4 boneIndicies;\n\n      @vert{\n        @import \"jthree.pmx.vertex\"\n        uniform mat4 _matPV;\n        @{register:0}\n        uniform sampler2D boneMatriciesTexture;\n        uniform float boneCount;\n\n        void main(void){\n          mat4 boneTransform=calcBoneTransform(boneMatriciesTexture,boneCount,boneWeights,boneIndicies);\n          gl_Position = calcPosition(boneTransform,_matPV,position);\n        }\n      }\n      @frag{\n\n        uniform vec4 indexColor;\n\n        void main()\n        {\n        \tgl_FragColor = indexColor;\n        }\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
-},{}],297:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.gbuffer.pmx.1\" group=\"jthree.basic.gbuffer.1\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n</uniform-register>\n<passes>\n  <pass>\n    <blend enabled=\"false\"/>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec3 normal;\n      attribute vec2 uv;\n      attribute vec4 boneWeights;\n      attribute vec4 boneIndicies;\n      varying vec4 vPosition;\n      varying vec3 vNormal;\n\n      @vert{\n        @import \"jthree.pmx.vertex\"\n        uniform mat4 _matV;\n        uniform mat4 _matPV;\n        @{register:2}\n        uniform sampler2D boneMatriciesTexture;\n        uniform float boneCount;\n\n        void main(void){\n          mat4 boneTransform=calcBoneTransform(boneMatriciesTexture,boneCount,boneWeights,boneIndicies);\n          gl_Position = calcPosition(boneTransform,_matPV,position);\n          vNormal= calcNormal(boneTransform,_matV,normal);\n        }\n      }\n      @frag{\n        @import \"builtin.packing\"\n        @import \"builtin.gbuffer-packing\"\n\n        vec2 compressNormal()\n        {\n        \tfloat p = sqrt(vNormal.z * 8. + 8.);\n        \treturn vNormal.xy/p + 0.5;\n        }\n\n        vec4 packedNormal()\n        {\n          vec2 cNor = compressNormal();\n          return vec4(packRanged16(cNor.x,CNOR_MIN,CNOR_MAX),packRanged16(cNor.y,CNOR_MIN,CNOR_MAX));\n        }\n\n        void main(void)\n        {\n        \tgl_FragColor = packedNormal();\n        }\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
-},{}],298:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.pmx.shadowmap\" group=\"jthree.materials.shadowmap\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n</uniform-register>\n<passes>\n  <depth enabled=\"true\" mode=\"less\" mask=\"true\"/>\n  <cull mode=\"none\"/>\n  <blend enabled=\"false\"/>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec4 boneWeights;\n      attribute vec4 boneIndicies;\n\n      varying vec4 vPosition;\n\n      @vert{\n      @import \"jthree.pmx.vertex\"\n      uniform mat4 matL;\n      @{register:2}\n      uniform sampler2D boneMatriciesTexture;\n      uniform float boneCount;\n      void main(void)\n      {\n        mat4 boneTransform=calcBoneTransform(boneMatriciesTexture,boneCount,boneWeights,boneIndicies);\n        vPosition=gl_Position = calcPosition(boneTransform,matL,position);\n      }\n      }\n\n      @frag{\n      @import \"jthree.builtin.shadowfragment\"\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
-},{}],299:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../JThreeContext":267,"../Core/PMXModel":293,"./../../Goml/Nodes/SceneObjects/SceneObjectNodeBase":213}],299:[function(require,module,exports){
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.pmx.forward\" group=\"builtin.forward\" order=\"300\">\n<registers>\n  <register name=\"builtin.basic\"/>\n  <register name=\"builtin.buffer\"/>\n</registers>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec3 normal;\n      attribute vec2 uv;\n      attribute vec4 boneWeights;\n      attribute vec4 boneIndicies;\n      varying vec3 vNormal;\n      varying vec4 vPosition;\n      varying vec2 vUV;\n      varying vec2 vSphereUV;\n      varying vec4 vBaseColor;\n\n      @vert{\n        @import \"jthree.pmx.vertex\"\n        uniform mat4 _matV;\n        uniform mat4 _matPV;\n        @{register:2}\n        uniform sampler2D boneMatriciesTexture;\n        uniform float boneCount;\n        uniform vec4 diffuse;\n        uniform vec3 ambient;\n        uniform vec3 ambientCoefficient;\n\n        void main(void){\n          vUV = uv;\n          mat4 boneTransform=calcBoneTransform(boneMatriciesTexture,boneCount,boneWeights,boneIndicies);\n          vPosition=gl_Position = calcPosition(boneTransform,_matPV,position);\n          vNormal = calcNormal(boneTransform,_matV,normal);\n          vSphereUV = calcSphereUV(vNormal);\n          vBaseColor.rgb = diffuse.rgb + ambient.rgb;\n          vBaseColor.a = diffuse.a;\n          vBaseColor = clamp(vBaseColor,0.,1.);\n        }\n      }\n      @frag{\n        @{type:\"buffer\",name:\"DLIGHT\",register:0}\n        uniform sampler2D _dlBuffer;\n        @{type:\"buffer\",name:\"SLIGHT\",register:1}\n        uniform sampler2D _slBuffer;\n\n        uniform vec4 specular;\n        @{register:3}\n        uniform sampler2D texture;\n        @{register:4}\n        uniform sampler2D sphere;\n        @{register:5}\n        uniform sampler2D toon;\n        uniform int textureUsed;\n        uniform int sphereMode;\n        uniform int toonFlag;\n        uniform vec4 addTexCoeff;\n        uniform vec4 mulTexCoeff;\n        uniform vec4 addSphereCoeff;\n        uniform vec4 mulSphereCoeff;\n        uniform vec4 addToonCoeff;\n        uniform vec4 mulToonCoeff;\n\n        vec2 calcLightUV(vec4 projectionSpacePos)\n        {\n           return (projectionSpacePos.xy / projectionSpacePos.w + vec2(1,1)) / 2.;\n        }\n\n        vec4 blendPMXTexture(sampler2D source,vec2 uv,vec4 addCoeff,vec4 mulCoeff)\n        {\n            vec4 result = texture2D(source,uv);\n            result.rgb = mix(mix(result.rgb,vec3(0,0,0),addCoeff.a),vec3(1,1,1),1.-mulCoeff.a);\n            result.rgb = result.rgb * mulCoeff.rgb + addCoeff.rgb;\n            return result;\n        }\n\n\n\n        void main(void){\n          vec2 lightUV=calcLightUV(vPosition);\n          vec3 dlc = texture2D(_dlBuffer,lightUV).rgb;\n          vec3 slc = texture2D(_slBuffer,lightUV).rgb;\n          vec4 dc = vBaseColor;\n          if(textureUsed == 1)\n          {\n            dc *= blendPMXTexture(texture,vUV,addTexCoeff,mulTexCoeff);\n          }\n          if(sphereMode == 1){\n            dc.rgb *= texture2D(sphere,vSphereUV).rgb;\n          }else if(sphereMode == 2){\n            dc.rgb += texture2D(sphere,vSphereUV).rgb;\n          }\n          if(toonFlag==1)\n          {\n          \t float brightness = max(max(dlc.r,dlc.g),dlc.b);\n              dc.rgb = dlc * blendPMXTexture(toon,vec2(0,1.-brightness),addToonCoeff ,mulToonCoeff ).rgb * dc.rgb;\n          }else\n          {\n              dc.rgb = dlc * dc.rgb;\n          }\n          dc.rgb += slc * specular.rgb;\n          gl_FragColor = dc;\n        }\n\n      }\n      ]]>\n    </glsl>\n  </pass>\n  <pass>\n    <cull mode=\"front\"/>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec3 normal;\n      attribute vec4 boneWeights;\n      attribute vec4 boneIndicies;\n      attribute float edgeScaling;\n      @vert{\n        @import \"jthree.pmx.vertex\"\n        uniform mat4 _matPV;\n        uniform vec2 _resolution;\n        @{register:2}\n        uniform sampler2D boneMatriciesTexture;\n        uniform float boneCount;\n        uniform float edgeSize;\n        void main(void){\n          mat4 boneTransform=calcBoneTransform(boneMatriciesTexture,boneCount,boneWeights,boneIndicies);\n          mat4 matPVM = _matPV * boneTransform;\n          vec4 p0 = matPVM * vec4(position ,1);\n          vec4 p1 = matPVM * vec4(position + normal ,1);\n          p0.xy /= p0.w;\n          p1.xy /= p1.w;\n          float coeff = length(_resolution/2.0 * abs(p0.xy - p1.xy));\n          coeff = 1.0 / coeff;\n          coeff *= edgeSize * edgeScaling;\n          if(coeff > 5.0)coeff = 5.;\n          gl_Position = matPVM * vec4(position + coeff * normal,1);\n        }\n      }\n      @frag{\n\n        uniform vec4 edgeColor;\n\n        void main()\n        {\n          gl_FragColor = edgeColor;\n        }\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
+},{}],300:[function(require,module,exports){
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.pmx.hitarea\" group=\"jthree.materials.hitarea\" order=\"300\">\n<registers>\n  <register name=\"builtin.basic\"/>\n</registers>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec4 boneWeights;\n      attribute vec4 boneIndicies;\n\n      @vert{\n        @import \"jthree.pmx.vertex\"\n        uniform mat4 _matPV;\n        @{register:0}\n        uniform sampler2D boneMatriciesTexture;\n        uniform float boneCount;\n\n        void main(void){\n          mat4 boneTransform=calcBoneTransform(boneMatriciesTexture,boneCount,boneWeights,boneIndicies);\n          gl_Position = calcPosition(boneTransform,_matPV,position);\n        }\n      }\n      @frag{\n\n        uniform vec4 indexColor;\n\n        void main()\n        {\n        \tgl_FragColor = indexColor;\n        }\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
+},{}],301:[function(require,module,exports){
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.gbuffer.pmx.1\" group=\"jthree.basic.gbuffer.1\" order=\"300\">\n<registers>\n  <register name=\"builtin.basic\"/>\n</registers>\n<passes>\n  <pass>\n    <blend enabled=\"false\"/>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec3 normal;\n      attribute vec2 uv;\n      attribute vec4 boneWeights;\n      attribute vec4 boneIndicies;\n      varying vec4 vPosition;\n      varying vec3 vNormal;\n\n      @vert{\n        @import \"jthree.pmx.vertex\"\n        uniform mat4 _matV;\n        uniform mat4 _matPV;\n        @{register:2}\n        uniform sampler2D boneMatriciesTexture;\n        uniform float boneCount;\n\n        void main(void){\n          mat4 boneTransform=calcBoneTransform(boneMatriciesTexture,boneCount,boneWeights,boneIndicies);\n          gl_Position = calcPosition(boneTransform,_matPV,position);\n          vNormal= calcNormal(boneTransform,_matV,normal);\n        }\n      }\n      @frag{\n        @import \"builtin.packing\"\n        @import \"builtin.gbuffer-packing\"\n\n        vec2 compressNormal()\n        {\n        \tfloat p = sqrt(vNormal.z * 8. + 8.);\n        \treturn vNormal.xy/p + 0.5;\n        }\n\n        vec4 packedNormal()\n        {\n          vec2 cNor = compressNormal();\n          return vec4(packRanged16(cNor.x,CNOR_MIN,CNOR_MAX),packRanged16(cNor.y,CNOR_MIN,CNOR_MAX));\n        }\n\n        void main(void)\n        {\n        \tgl_FragColor = packedNormal();\n        }\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
+},{}],302:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28106,9 +28124,9 @@ var PMXData = function () {
 
 exports.default = PMXData;
 
-},{"../Core/Resources/ImageLoader":116}],300:[function(require,module,exports){
+},{"../Core/Resources/ImageLoader":119}],303:[function(require,module,exports){
 module.exports = "//Fetch bone transform matrix from specified texture and index.\nmat4 boneMatrixFromTexture(sampler2D boneMatTexture,float boneCount,float index)\n{\n  float y =index / boneCount+1./boneCount/2.;\n  return mat4(\n  texture2D(boneMatTexture,vec2(0.125,y)),\n  texture2D(boneMatTexture,vec2(0.375,y)),\n  texture2D(boneMatTexture,vec2(0.625,y)),\n  texture2D(boneMatTexture,vec2(0.875,y)));\n}\n//Compute transform matrix from specified bone skinning configuration\nmat4 calcBoneTransform(sampler2D boneMatTexture,float boneCount,vec4 boneWeights,vec4 boneIndicies)\n{\n  return boneWeights.x*boneMatrixFromTexture(boneMatTexture,boneCount,boneIndicies.x)\n        +boneWeights.y*boneMatrixFromTexture(boneMatTexture,boneCount,boneIndicies.y)\n        +boneWeights.z*boneMatrixFromTexture(boneMatTexture,boneCount,boneIndicies.z)\n        +boneWeights.w*boneMatrixFromTexture(boneMatTexture,boneCount,boneIndicies.w);\n}\n//Compute skinned position\nvec4 calcPosition(mat4 boneTransform,mat4 matPV,vec3 position)\n{\n  return matPV * boneTransform * vec4(position,1.0);\n}\n//Compute skinned normal\nvec3 calcNormal(mat4 boneTransform,mat4 matV,vec3 normal)\n{\n  return normalize((matV*boneTransform*vec4(normal,0)).xyz);\n}\n//Compute skinned spherical normal\nvec2 calcSphereUV(vec3 viewSpaceNormal)\n{\n  return viewSpaceNormal.xy/2.+vec2(0.5,0.5);\n}\n"
-},{}],301:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28280,7 +28298,7 @@ var VMDNode = function (_GomlTreeNodeBase) {
 
 exports.default = VMDNode;
 
-},{"../../ContextComponents":8,"../../Goml/GomlTreeNodeBase":178,"../../JThreeContext":262,"../../Math/Quaternion":270,"../../Math/Vector3":273,"../Parser/VMDData":303}],302:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../Goml/GomlTreeNodeBase":183,"../../JThreeContext":267,"../../Math/Quaternion":275,"../../Math/Vector3":278,"../Parser/VMDData":306}],305:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28347,7 +28365,7 @@ var BezierCurve = function () {
 BezierCurve._epsilon = 1.0E-3;
 exports.default = BezierCurve;
 
-},{}],303:[function(require,module,exports){
+},{}],306:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28356,9 +28374,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _AsyncLoader = require("../../Core/Resources/AsyncLoader");
+var _ResourceResolver = require("../../Core/Resources/ResourceResolver");
 
-var _AsyncLoader2 = _interopRequireDefault(_AsyncLoader);
+var _ResourceResolver2 = _interopRequireDefault(_ResourceResolver);
 
 var _glMatrix = require("gl-matrix");
 
@@ -28606,7 +28624,7 @@ var VMDData = function () {
     }], [{
         key: "loadFromUrl",
         value: function loadFromUrl(url) {
-            return VMDData._asyncLoader.fetch(url, function (path) {
+            return VMDData._cacheResolver.fetch(url, function (path) {
                 var d = _q2.default.defer();
                 var oReq = new XMLHttpRequest();
                 oReq.open("GET", path, true);
@@ -28628,10 +28646,10 @@ var VMDData = function () {
     return VMDData;
 }();
 
-VMDData._asyncLoader = new _AsyncLoader2.default();
+VMDData._cacheResolver = new _ResourceResolver2.default();
 exports.default = VMDData;
 
-},{"../../Core/Resources/AsyncLoader":110,"./BezierCurve":302,"gl-matrix":317,"q":335}],304:[function(require,module,exports){
+},{"../../Core/Resources/ResourceResolver":125,"./BezierCurve":305,"gl-matrix":320,"q":338}],307:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28696,7 +28714,7 @@ var XGeometry = function (_BasicGeometry) {
 
 exports.default = XGeometry;
 
-},{"../../ContextComponents":8,"../../Core/Geometries/Base/BasicGeometry":21,"../../JThreeContext":262}],305:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../Core/Geometries/Base/BasicGeometry":21,"../../JThreeContext":267}],308:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28731,7 +28749,7 @@ var XMaterial = function (_BasicMaterial) {
     function XMaterial(_material) {
         _classCallCheck(this, XMaterial);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(XMaterial).call(this, require("../Material/Forward.xmml")));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(XMaterial).call(this, require("../Material/Forward.xmml"), "x.forward"));
 
         _this._material = _material;
         _this.shaderVariables = {
@@ -28767,7 +28785,7 @@ var XMaterial = function (_BasicMaterial) {
 
 exports.default = XMaterial;
 
-},{"../../ContextComponents":8,"../../Core/Materials/BasicMaterial":36,"../../JThreeContext":262,"../Material/Forward.xmml":309}],306:[function(require,module,exports){
+},{"../../ContextComponents":8,"../../Core/Materials/BasicMaterial":36,"../../JThreeContext":267,"../Material/Forward.xmml":312}],309:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28840,7 +28858,7 @@ var XModel = function (_SceneObject) {
 
 exports.default = XModel;
 
-},{"../../Core/Materials/Buffering/HitAreaMaterial":37,"../../Core/SceneObjects/SceneObject":147,"../XFileData":311,"./XGeometry":304,"./XMaterial":305,"./XPrimaryBufferMaterial":307}],307:[function(require,module,exports){
+},{"../../Core/Materials/Buffering/HitAreaMaterial":37,"../../Core/SceneObjects/SceneObject":151,"../XFileData":314,"./XGeometry":307,"./XMaterial":308,"./XPrimaryBufferMaterial":310}],310:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28867,7 +28885,7 @@ var XPrimaryMaterial = function (_BasicMaterial) {
     function XPrimaryMaterial(_material) {
         _classCallCheck(this, XPrimaryMaterial);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(XPrimaryMaterial).call(this, require("../Material/Primary.xmml")));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(XPrimaryMaterial).call(this, require("../Material/Primary.xmml"), "x.gbuffer.1"));
 
         _this._material = _material;
         _this.shaderVariables = {
@@ -28893,7 +28911,7 @@ var XPrimaryMaterial = function (_BasicMaterial) {
 
 exports.default = XPrimaryMaterial;
 
-},{"../../Core/Materials/BasicMaterial":36,"../Material/Primary.xmml":310}],308:[function(require,module,exports){
+},{"../../Core/Materials/BasicMaterial":36,"../Material/Primary.xmml":313}],311:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28955,11 +28973,11 @@ var XNode = function (_SceneObjectNodeBase) {
 
 exports.default = XNode;
 
-},{"../Core/XModel":306,"./../../Goml/Nodes/SceneObjects/SceneObjectNodeBase":208}],309:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.x.basic\" group=\"builtin.forward\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n  <register name=\"builtin.buffer\"/>\n</uniform-register>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec3 normal;\n      attribute vec2 uv;\n\n      @vert {\n      @import \"jthree.builtin.vertex\"\n        uniform mat4 _matPVM;\n        uniform mat4 _matVM;\n      }\n\n      varying vec3 vNormal;\n      varying vec2 vUv;\n      varying vec4 vPosition;\n\n      vec2 calcLightUV(vec4 projectionSpacePos)\n      {\n         return (projectionSpacePos.xy/projectionSpacePos.w+vec2(1,1))/2.;\n      }\n\n      @vert{\n        void main(void)\n        {\n          BasicVertexTransformOutput o =  basicVertexTransform(position,normal,uv,_matPVM,_matVM);\n          gl_Position = vPosition = o.position;\n          vNormal = o.normal;\n          vUv = o.uv;\n        }\n      }\n\n      @frag{\n        @{register:1,type:\"buffer\",name:\"DLIGHT\"}\n        uniform sampler2D _dlBuffer;\n        @{register:2,type:\"buffer\",name:\"SLIGHT\"}\n        uniform sampler2D _slBuffer;\n        uniform vec4 faceColor;\n        @{register:3,flag:\"_textureUsed\"}\n        uniform sampler2D texture;\n        uniform int _textureUsed;\n        uniform vec3 emissiveColor;\n        uniform vec3 specularColor;\n        void main(void)\n        {\n          vec2 lUV = vPosition.xy/vPosition.w /2.0 + vec2(.5);\n          gl_FragColor=faceColor;\n          if(_textureUsed == 1){\n            gl_FragColor = texture2D(texture,vUv);\n          }\n          gl_FragColor.rgb *= (texture2D(_dlBuffer,lUV).rgb + emissiveColor);\n          gl_FragColor.rgb *= texture2D(_slBuffer,lUV).rgb * specularColor;\n          ////calculate light uv\n        }\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
-},{}],310:[function(require,module,exports){
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.gbuffer.x.1\" group=\"jthree.basic.gbuffer.1\" order=\"300\">\n<uniform-register>\n  <register name=\"builtin.basic\"/>\n</uniform-register>\n<passes>\n  <pass>\n    <blend enabled=\"true\" src=\"1\" dst=\"0\"/>\n    <glsl>\n      <![CDATA[\n      attribute vec4 position;\n      attribute vec3 normal;\n      varying vec3 vNormal;\n\n      @vert{\n        uniform mat4 _matVM;\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n        \tgl_Position =_matPVM * position;\n        \tvNormal =normalize(( _matVM * vec4(normal,0)).xyz);\n        }\n      }\n\n      @frag{\n        @import \"builtin.packing\"\n        @import \"builtin.gbuffer-packing\"\n\n        vec2 compressNormal()\n        {\n        \tfloat p = sqrt(vNormal.z * 8. + 8.);\n        \treturn vNormal.xy/p + 0.5;\n        }\n\n        vec4 packedNormal()\n        {\n          vec2 cNor = compressNormal();\n          return vec4(packRanged16(cNor.x,CNOR_MIN,CNOR_MAX),packRanged16(cNor.y,CNOR_MIN,CNOR_MAX));\n        }\n\n        void main(void)\n        {\n        \tgl_FragColor = packedNormal();\n        }\n      }\n\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
-},{}],311:[function(require,module,exports){
+},{"../Core/XModel":309,"./../../Goml/Nodes/SceneObjects/SceneObjectNodeBase":213}],312:[function(require,module,exports){
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.x.basic\" group=\"builtin.forward\" order=\"300\">\n<registers>\n  <register name=\"builtin.basic\"/>\n  <register name=\"builtin.buffer\"/>\n</registers>\n<passes>\n  <pass>\n    <glsl>\n      <![CDATA[\n      attribute vec3 position;\n      attribute vec3 normal;\n      attribute vec2 uv;\n\n      @vert {\n      @import \"jthree.builtin.vertex\"\n        uniform mat4 _matPVM;\n        uniform mat4 _matVM;\n      }\n\n      varying vec3 vNormal;\n      varying vec2 vUv;\n      varying vec4 vPosition;\n\n      vec2 calcLightUV(vec4 projectionSpacePos)\n      {\n         return (projectionSpacePos.xy/projectionSpacePos.w+vec2(1,1))/2.;\n      }\n\n      @vert{\n        void main(void)\n        {\n          BasicVertexTransformOutput o =  basicVertexTransform(position,normal,uv,_matPVM,_matVM);\n          gl_Position = vPosition = o.position;\n          vNormal = o.normal;\n          vUv = o.uv;\n        }\n      }\n\n      @frag{\n        @{register:1,type:\"buffer\",name:\"DLIGHT\"}\n        uniform sampler2D _dlBuffer;\n        @{register:2,type:\"buffer\",name:\"SLIGHT\"}\n        uniform sampler2D _slBuffer;\n        uniform vec4 faceColor;\n        @{register:3,flag:\"_textureUsed\"}\n        uniform sampler2D texture;\n        uniform int _textureUsed;\n        uniform vec3 emissiveColor;\n        uniform vec3 specularColor;\n        void main(void)\n        {\n          vec2 lUV = vPosition.xy/vPosition.w /2.0 + vec2(.5);\n          gl_FragColor=faceColor;\n          if(_textureUsed == 1){\n            gl_FragColor = texture2D(texture,vUv);\n          }\n          gl_FragColor.rgb *= (texture2D(_dlBuffer,lUV).rgb + emissiveColor);\n          gl_FragColor.rgb *= texture2D(_slBuffer,lUV).rgb * specularColor;\n          ////calculate light uv\n        }\n      }\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
+},{}],313:[function(require,module,exports){
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<material name=\"jthree.gbuffer.x.1\" group=\"jthree.basic.gbuffer.1\" order=\"300\">\n<registers>\n  <register name=\"builtin.basic\"/>\n</registers>\n<passes>\n  <pass>\n    <blend enabled=\"true\" src=\"1\" dst=\"0\"/>\n    <glsl>\n      <![CDATA[\n      attribute vec4 position;\n      attribute vec3 normal;\n      varying vec3 vNormal;\n\n      @vert{\n        uniform mat4 _matVM;\n        uniform mat4 _matPVM;\n\n        void main(void)\n        {\n        \tgl_Position =_matPVM * position;\n        \tvNormal =normalize(( _matVM * vec4(normal,0)).xyz);\n        }\n      }\n\n      @frag{\n        @import \"builtin.packing\"\n        @import \"builtin.gbuffer-packing\"\n\n        vec2 compressNormal()\n        {\n        \tfloat p = sqrt(vNormal.z * 8. + 8.);\n        \treturn vNormal.xy/p + 0.5;\n        }\n\n        vec4 packedNormal()\n        {\n          vec2 cNor = compressNormal();\n          return vec4(packRanged16(cNor.x,CNOR_MIN,CNOR_MAX),packRanged16(cNor.y,CNOR_MIN,CNOR_MAX));\n        }\n\n        void main(void)\n        {\n        \tgl_FragColor = packedNormal();\n        }\n      }\n\n      ]]>\n    </glsl>\n  </pass>\n</passes>\n</material>\n"
+},{}],314:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28980,9 +28998,9 @@ var _Vector3 = require("../Math/Vector4");
 
 var _Vector4 = _interopRequireDefault(_Vector3);
 
-var _AsyncLoader = require("../Core/Resources/AsyncLoader");
+var _ResourceResolver = require("../Core/Resources/ResourceResolver");
 
-var _AsyncLoader2 = _interopRequireDefault(_AsyncLoader);
+var _ResourceResolver2 = _interopRequireDefault(_ResourceResolver);
 
 var _q = require("q");
 
@@ -29211,10 +29229,10 @@ var XFileData = function () {
     return XFileData;
 }();
 
-XFileData._loader = new _AsyncLoader2.default();
+XFileData._loader = new _ResourceResolver2.default();
 exports.default = XFileData;
 
-},{"../Core/Resources/AsyncLoader":110,"../Core/Resources/ImageLoader":116,"../Math/Vector3":273,"../Math/Vector4":274,"q":335}],312:[function(require,module,exports){
+},{"../Core/Resources/ImageLoader":119,"../Core/Resources/ResourceResolver":125,"../Math/Vector3":278,"../Math/Vector4":279,"q":338}],315:[function(require,module,exports){
 "use strict";
 
 var _Init = require("./Init");
@@ -29225,11 +29243,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _Init2.default.init();
 
-},{"./Init":223}],313:[function(require,module,exports){
+},{"./Init":228}],316:[function(require,module,exports){
 module.exports=module.exports = {"aliceblue":"#F0F8FF","antiquewhite":"#FAEBD7","aqua":"#00FFFF","aquamarine":"#7FFFD4","azure":"#F0FFFF","beige":"#F5F5DC","bisque":"#FFE4C4","black":"#000000","blanchedalmond":"#FFEBCD","blue":"#0000FF","blueviolet":"#8A2BE2","brown":"#A52A2A","burlywood":"#DEB887","cadetblue":"#5F9EA0","chartreuse":"#7FFF00","chocolate":"#D2691E","coral":"#FF7F50","cornflowerblue":"#6495ED","cornsilk":"#FFF8DC","crimson":"#DC143C","cyan":"#00FFFF","darkblue":"#00008B","darkcyan":"#008B8B","darkgoldenrod":"#B8860B","darkgray":"#A9A9A9","darkgreen":"#006400","darkgrey":"#A9A9A9","darkkhaki":"#BDB76B","darkmagenta":"#8B008B","darkolivegreen":"#556B2F","darkorange":"#FF8C00","darkorchid":"#9932CC","darkred":"#8B0000","darksalmon":"#E9967A","darkseagreen":"#8FBC8F","darkslateblue":"#483D8B","darkslategray":"#2F4F4F","darkslategrey":"#2F4F4F","darkturquoise":"#00CED1","darkviolet":"#9400D3","deeppink":"#FF1493","deepskyblue":"#00BFFF","dimgray":"#696969","dimgrey":"#696969","dodgerblue":"#1E90FF","firebrick":"#B22222","floralwhite":"#FFFAF0","forestgreen":"#228B22","fuchsia":"#FF00FF","gainsboro":"#DCDCDC","ghostwhite":"#F8F8FF","gold":"#FFD700","goldenrod":"#DAA520","gray":"#808080","green":"#008000","greenyellow":"#ADFF2F","grey":"#808080","honeydew":"#F0FFF0","hotpink":"#FF69B4","indianred":"#CD5C5C","indigo":"#4B0082","ivory":"#FFFFF0","khaki":"#F0E68C","lavender":"#E6E6FA","lavenderblush":"#FFF0F5","lawngreen":"#7CFC00","lemonchiffon":"#FFFACD","lightblue":"#ADD8E6","lightcoral":"#F08080","lightcyan":"#E0FFFF","lightgoldenrodyellow":"#FAFAD2","lightgray":"#D3D3D3","lightgreen":"#90EE90","lightgrey":"#D3D3D3","lightpink":"#FFB6C1","lightsalmon":"#FFA07A","lightseagreen":"#20B2AA","lightskyblue":"#87CEFA","lightslategray":"#778899","lightslategrey":"#778899","lightsteelblue":"#B0C4DE","lightyellow":"#FFFFE0","lime":"#00FF00","limegreen":"#32CD32","linen":"#FAF0E6","magenta":"#FF00FF","maroon":"#800000","mediumaquamarine":"#66CDAA","mediumblue":"#0000CD","mediumorchid":"#BA55D3","mediumpurple":"#9370DB","mediumseagreen":"#3CB371","mediumslateblue":"#7B68EE","mediumspringgreen":"#00FA9A","mediumturquoise":"#48D1CC","mediumvioletred":"#C71585","midnightblue":"#191970","mintcream":"#F5FFFA","mistyrose":"#FFE4E1","moccasin":"#FFE4B5","navajowhite":"#FFDEAD","navy":"#000080","oldlace":"#FDF5E6","olive":"#808000","olivedrab":"#6B8E23","orange":"#FFA500","orangered":"#FF4500","orchid":"#DA70D6","palegoldenrod":"#EEE8AA","palegreen":"#98FB98","paleturquoise":"#AFEEEE","palevioletred":"#DB7093","papayawhip":"#FFEFD5","peachpuff":"#FFDAB9","peru":"#CD853F","pink":"#FFC0CB","plum":"#DDA0DD","powderblue":"#B0E0E6","purple":"#800080","red":"#FF0000","rosybrown":"#BC8F8F","royalblue":"#4169E1","saddlebrown":"#8B4513","salmon":"#FA8072","sandybrown":"#F4A460","seagreen":"#2E8B57","seashell":"#FFF5EE","sienna":"#A0522D","silver":"#C0C0C0","skyblue":"#87CEEB","slateblue":"#6A5ACD","slategray":"#708090","slategrey":"#708090","snow":"#FFFAFA","springgreen":"#00FF7F","steelblue":"#4682B4","tan":"#D2B48C","teal":"#008080","thistle":"#D8BFD8","tomato":"#FF6347","turquoise":"#40E0D0","violet":"#EE82EE","wheat":"#F5DEB3","white":"#FFFFFF","whitesmoke":"#F5F5F5","yellow":"#FFFF00","yellowgreen":"#9ACD32"}
-},{}],314:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 module.exports = "<div style=\"background:black;height:100%;width:100%;\">\n  <div style=\"position:relative;top: 50%;-webkit-transform: translateY(-50%);-ms-transform: translateY(-50%);transform: translateY(-50%);\">\n      <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 128 128\" style=\"width:128px;height:128px;display:block;position:relative;left: 50%;-webkit-transform: translateX(-50%);-ms-transform: translateX(-50%);transform: translateX(-50%);\" xml:space=\"preserve\">\n        <g>\n          <path style=\"fill:none;stroke:#FFFFFF;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;\" d=\"M64,55.967L1.5,20.701l14.223,62.696l11.873,10.601L16.819,29.244l4.079,24.204l21.555,15.126l3.713,42.002L64,126.5V55.967z\"/>\n          <path style=\"fill:none;stroke:#FFFFFF;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;\" d=\"M126.5,20.701L64,1.5L1.5,20.701l15.021,8.476L64,11.686l23.507,8.655L39.754,42.286L64,55.967L126.5,20.701z\"/>\n          <path style=\"fill:none;stroke:#FFFFFF;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;\" d=\"M64,109.793l38.989-32.105l3.905-23.793L64,83.405V55.967l62.5-35.266l-13.822,62.696L64,126.5V109.793z\"/>\n        </g>\n      </svg>\n    <div style=\"height:5px;background:white;width:30%;margin-left:auto;margin-right:auto;margin-top:30px;border:white solid 2px;\">\n      <div class=\"x-j3-loader-progress\" style=\"background:lime;height:5px;width:0%;\"/>\n    </div>\n  </div>\n</div>\n"
-},{}],315:[function(require,module,exports){
+},{}],318:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -29529,7 +29547,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],316:[function(require,module,exports){
+},{}],319:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -29622,7 +29640,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],317:[function(require,module,exports){
+},{}],320:[function(require,module,exports){
 /**
  * @fileoverview gl-matrix - High performance matrix and vector operations
  * @author Brandon Jones
@@ -29660,7 +29678,7 @@ exports.quat = require("./gl-matrix/quat.js");
 exports.vec2 = require("./gl-matrix/vec2.js");
 exports.vec3 = require("./gl-matrix/vec3.js");
 exports.vec4 = require("./gl-matrix/vec4.js");
-},{"./gl-matrix/common.js":318,"./gl-matrix/mat2.js":319,"./gl-matrix/mat2d.js":320,"./gl-matrix/mat3.js":321,"./gl-matrix/mat4.js":322,"./gl-matrix/quat.js":323,"./gl-matrix/vec2.js":324,"./gl-matrix/vec3.js":325,"./gl-matrix/vec4.js":326}],318:[function(require,module,exports){
+},{"./gl-matrix/common.js":321,"./gl-matrix/mat2.js":322,"./gl-matrix/mat2d.js":323,"./gl-matrix/mat3.js":324,"./gl-matrix/mat4.js":325,"./gl-matrix/quat.js":326,"./gl-matrix/vec2.js":327,"./gl-matrix/vec3.js":328,"./gl-matrix/vec4.js":329}],321:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29732,7 +29750,7 @@ glMatrix.equals = function(a, b) {
 
 module.exports = glMatrix;
 
-},{}],319:[function(require,module,exports){
+},{}],322:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30170,7 +30188,7 @@ mat2.multiplyScalarAndAdd = function(out, a, b, scale) {
 
 module.exports = mat2;
 
-},{"./common.js":318}],320:[function(require,module,exports){
+},{"./common.js":321}],323:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30641,7 +30659,7 @@ mat2d.equals = function (a, b) {
 
 module.exports = mat2d;
 
-},{"./common.js":318}],321:[function(require,module,exports){
+},{"./common.js":321}],324:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31389,7 +31407,7 @@ mat3.equals = function (a, b) {
 
 module.exports = mat3;
 
-},{"./common.js":318}],322:[function(require,module,exports){
+},{"./common.js":321}],325:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33527,7 +33545,7 @@ mat4.equals = function (a, b) {
 
 module.exports = mat4;
 
-},{"./common.js":318}],323:[function(require,module,exports){
+},{"./common.js":321}],326:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34129,7 +34147,7 @@ quat.equals = vec4.equals;
 
 module.exports = quat;
 
-},{"./common.js":318,"./mat3.js":321,"./vec3.js":325,"./vec4.js":326}],324:[function(require,module,exports){
+},{"./common.js":321,"./mat3.js":324,"./vec3.js":328,"./vec4.js":329}],327:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34718,7 +34736,7 @@ vec2.equals = function (a, b) {
 
 module.exports = vec2;
 
-},{"./common.js":318}],325:[function(require,module,exports){
+},{"./common.js":321}],328:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35497,7 +35515,7 @@ vec3.equals = function (a, b) {
 
 module.exports = vec3;
 
-},{"./common.js":318}],326:[function(require,module,exports){
+},{"./common.js":321}],329:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -36108,7 +36126,7 @@ vec4.equals = function (a, b) {
 
 module.exports = vec4;
 
-},{"./common.js":318}],327:[function(require,module,exports){
+},{"./common.js":321}],330:[function(require,module,exports){
 // json5.js
 // Modern JSON. See README.md for details.
 //
@@ -36877,7 +36895,7 @@ JSON5.stringify = function (obj, replacer, space) {
     return internalStringify(topLevelHolder, '', true);
 };
 
-},{}],328:[function(require,module,exports){
+},{}],331:[function(require,module,exports){
 /**
  * lodash 4.0.0 (Custom Build) <https://lodash.com/>
  * Build: `lodash modularize exports="npm" -o ./`
@@ -36914,7 +36932,7 @@ var isArray = Array.isArray;
 
 module.exports = isArray;
 
-},{}],329:[function(require,module,exports){
+},{}],332:[function(require,module,exports){
 /**
  * lodash 3.0.8 (Custom Build) <https://lodash.com/>
  * Build: `lodash modularize exports="npm" -o ./`
@@ -36991,7 +37009,7 @@ function isObject(value) {
 
 module.exports = isFunction;
 
-},{}],330:[function(require,module,exports){
+},{}],333:[function(require,module,exports){
 /**
  * lodash 3.0.3 (Custom Build) <https://lodash.com/>
  * Build: `lodash modularize exports="npm" -o ./`
@@ -37072,7 +37090,7 @@ function isNumber(value) {
 
 module.exports = isNumber;
 
-},{}],331:[function(require,module,exports){
+},{}],334:[function(require,module,exports){
 /**
  * lodash 4.0.3 (Custom Build) <https://lodash.com/>
  * Build: `lodash modularize exports="npm" -o ./`
@@ -37192,7 +37210,7 @@ function isPlainObject(value) {
 
 module.exports = isPlainObject;
 
-},{}],332:[function(require,module,exports){
+},{}],335:[function(require,module,exports){
 /**
  * lodash 4.0.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash modularize exports="npm" -o ./`
@@ -37289,7 +37307,7 @@ function isString(value) {
 
 module.exports = isString;
 
-},{}],333:[function(require,module,exports){
+},{}],336:[function(require,module,exports){
 /**
  * lodash 3.0.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -37321,7 +37339,7 @@ function isUndefined(value) {
 
 module.exports = isUndefined;
 
-},{}],334:[function(require,module,exports){
+},{}],337:[function(require,module,exports){
 /* eslint-disable no-unused-vars */
 'use strict';
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -37362,7 +37380,7 @@ module.exports = Object.assign || function (target, source) {
 	return to;
 };
 
-},{}],335:[function(require,module,exports){
+},{}],338:[function(require,module,exports){
 (function (process){
 // vim:ts=4:sts=4:sw=4:
 /*!
@@ -39415,7 +39433,7 @@ return Q;
 
 }).call(this,require('_process'))
 
-},{"_process":316}]},{},[312])
+},{"_process":319}]},{},[315])
 
 
 //# sourceMappingURL=j3.js.map
