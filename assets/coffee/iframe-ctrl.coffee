@@ -46,8 +46,8 @@ class IframeCtrl
           </script>
           <script type="text/javascript">
             //<![CDATA[
-              // your js here """ +
-              js + """
+              /* your js here */
+              """ + js + """
             //]]>
           </script>
         </body>
